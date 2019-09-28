@@ -5,11 +5,14 @@
 # Site
 title: 程序员江湖
 subtitle: 黄小斜的技术博客
-description: 作者是 985 硕士，蚂蚁金服 JAVA 工程师，专注于 JAVA 后端技术栈：SpringBoot、MySQL、分布式、中间件、微服务，同时也懂点投资理财，偶尔讲点算法和计算机理论基础，坚持学习和写作，相信终身学习的力量！
+description: 微信公众号【黄小斜】 作者是 985 硕士，蚂蚁金服 JAVA 工程师，专注于 JAVA 后端技术栈：SpringBoot、MySQL、分布式、中间件、微服务，同时也懂点投资理财，偶尔讲点算法和计算机理论基础，坚持学习和写作，相信终身学习的力量！
 keywords:
 author: 黄小斜
 language: zh-Hans 
 timezone:
+
+Plugins:
+- hexo-generator-cname
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
@@ -89,3 +92,10 @@ deploy:
   ignore_hidden: false
   ignore_pattern:
           public: .
+
+
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 10000

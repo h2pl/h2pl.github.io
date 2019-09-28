@@ -89,4 +89,18 @@
   {% include '_third-party/scroll-cookie.swig' %}
   {% include '_third-party/exturl.swig' %}
 </body>
+
+<% if (typeof(post) != undefined) {%> 
+    <script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+  <script>
+    var article = document.getElementsByTagName("article")[0];
+    const btw = new BTWPlugin();
+    btw.init({
+        id: article.id,
+        blogId: '15310-1569337169307-875',
+        name: '黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/09/24/uEtDHI.jpg',
+        keyword: '验证码',
+    });
+  </script>
 </html>
