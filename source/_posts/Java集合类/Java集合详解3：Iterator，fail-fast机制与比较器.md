@@ -1,6 +1,6 @@
 ---
 title: Java集合详解3：一文读懂Iterator，fail-fast机制与比较器
-date: 2019-09-26 22:03:44
+date: 2019-09-26 22:03:43
 tags:
     - Iterator
 categories:
@@ -22,7 +22,8 @@ categories:
 
 今天我们来探索一下LIterator，fail-fast机制与比较器的源码。
 
-本文参考 cmsblogs.com/p=1185
+本文参考 www.cmsblogs.com/p=1185
+
 <!-- more -->
 
 ## Iterator

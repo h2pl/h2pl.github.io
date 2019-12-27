@@ -1,6 +1,6 @@
 ---
 title: Java集合详解5：深入理解LinkedHashMap和LRU缓存
-date: 2019-09-28 22:03:44
+date: 2019-09-28 22:03:45
 tags:
     - HashMap
     - HashTable
@@ -21,6 +21,7 @@ categories:
 > www.how2playlife.com
 
 今天我们来深入探索一下LinkedHashMap的底层原理，并且使用linkedhashmap来实现LRU缓存。
+
 <!-- more -->
 
 

@@ -390,7 +390,6 @@ valine:
   guest_info: nick,mail,link # custom comment header
   pageSize: 10 # pagination size
 
-
 # Support for youyan comments system.
 # You can get your uid from http://www.uyan.cc
 #youyan_uid: your uid

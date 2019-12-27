@@ -1,6 +1,6 @@
 ---
 title: Java集合详解6：这一次，从头到尾带你解读Java中的红黑树
-date: 2019-09-28 22:03:44
+date: 2019-09-28 22:03:46
 tags:
     - 红黑树
     - TreeMap
@@ -19,6 +19,7 @@ categories:
 文章首发于我的个人博客：
 
 > www.how2playlife.com
+
 <!-- more -->
 
 ## 什么是红黑树

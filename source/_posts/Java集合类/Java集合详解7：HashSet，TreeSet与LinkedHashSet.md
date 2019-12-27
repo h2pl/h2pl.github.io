@@ -1,6 +1,6 @@
 ---
 title: Java集合详解7：一文搞清楚HashSet，TreeSet与LinkedHashSet的异同
-date: 2019-09-29 22:03:44
+date: 2019-09-29 22:03:47
 tags:
     - HashSet
     - TreeSet
@@ -26,7 +26,7 @@ categories:
 今天我们来探索一下HashSet，TreeSet与LinkedHashSet的基本原理与源码实现，由于这三个set都是基于之前文章的三个map进行实现的，所以推荐大家先看一下前面有关map的文章，结合使用味道更佳。
 
 本文参考
-http://cmsblogs.com/?p=599
+www.cmsblogs.com/?p=599
 <!-- more -->
 
 ## HashSet

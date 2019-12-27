@@ -1,6 +1,6 @@
 ---
 title: Java集合类详解2：一文读懂Queue和LinkedList
-date: 2019-09-25 22:03:44
+date: 2019-09-25 22:03:42
 tags:
     - Linkedlist
 categories:

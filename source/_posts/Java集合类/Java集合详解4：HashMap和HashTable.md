@@ -23,7 +23,9 @@ categories:
 
 今天我们来探索一下HashMap和HashTable机制与比较器的源码。
 
-本文参考http://cmsblogs.com/?p=176
+本文参考www.cmsblogs.com/?p=176
+
+<!-- more -->
 
 ## HashMap
 

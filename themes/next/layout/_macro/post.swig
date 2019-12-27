@@ -14,6 +14,7 @@
   {##################}
   {### POST BLOCK ###}
   {##################}
+<div id = "container">
   <div class="post-block">
     <link itemprop="mainEntityOfPage" href="{{ config.url }}{{ url_for(post.path) }}">
 
@@ -428,9 +429,22 @@
       {% endif %}
     </footer>
   </div>
+  </div>
+
   {######################}
   {### END POST BLOCK ###}
   {######################}
   </article>
 
 {% endmacro %}
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script>
