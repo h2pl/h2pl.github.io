@@ -354,3 +354,34 @@ LockSupport 的 park/unpark 方法，虽然与平时Object 中wait/notify 同样
 面向的对象主体不同。LockSupport() 操作的是线程对象，直接传入的就是Thread ,而wait() 属于具体对象，notifyAll() 也是针对所有线程进行唤醒。
 wait/notify 需要获取对象的监视器，即synchronized修饰，而park/unpark 不需要获取对象的监视器。
 实现的机制不同，因此两者没有交集。也就是说 LockSupport 阻塞的线程，notify/notifyAll 没法唤醒。但是 park 之后，同样可以被中断(interrupt()) !
+
+## 微信公众号
+
+### 个人公众号：程序员黄小斜
+
+微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。
+
+关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。
+
+![](https://img-blog.csdnimg.cn/20190829222750556.jpg)
+
+
+### 技术公众号：Java技术江湖
+
+微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！
+
+关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。
+
+![](https://img-blog.csdnimg.cn/20190805090108984.jpg)
+
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script>

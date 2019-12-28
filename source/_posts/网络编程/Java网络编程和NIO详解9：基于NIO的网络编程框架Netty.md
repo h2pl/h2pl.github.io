@@ -1,3 +1,11 @@
+---
+title: Java网络编程和NIO详解9：基于NIO的网络编程框架Netty
+date: 2019-12-13 23:19:43
+tags:
+    - 网络编程
+categories:
+    - 网络编程
+---
 本文转自：https://sylvanassun.github.io/2017/11/30/2017-11-30-netty_introduction/
 
 本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看
@@ -1351,6 +1359,27 @@ new EchoClient(host, port).start();
 *   [epoll(7) - Linux manual page](http://man7.org/linux/man-pages/man7/epoll.7.html)
 
 *   [Java NIO](http://tutorials.jenkov.com/java-nio/)
+
+
+## 微信公众号
+
+### 个人公众号：程序员黄小斜
+
+微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。
+
+关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。
+
+![](https://img-blog.csdnimg.cn/20190829222750556.jpg)
+
+
+### 技术公众号：Java技术江湖
+
+微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！
+
+关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。
+
+![](https://img-blog.csdnimg.cn/20190805090108984.jpg)
+
 <script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
 <script>
     const btw = new BTWPlugin();
