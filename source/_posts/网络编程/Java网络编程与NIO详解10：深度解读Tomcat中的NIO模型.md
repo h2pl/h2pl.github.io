@@ -192,9 +192,9 @@ NIO只是优化了网络IO的读写，如果系统的瓶颈不在这里，比如
     const btw = new BTWPlugin();
     btw.init({
         id: 'container',
-        blogId: '15310-1569337169307-875',
-        name: '黄小斜',
-        qrcode: 'https://s2.ax1x.com/2019/09/24/uEtDHI.jpg',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
         keyword: '验证码',
     });
 </script>

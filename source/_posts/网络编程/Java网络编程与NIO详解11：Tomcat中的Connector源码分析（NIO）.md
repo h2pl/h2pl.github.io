@@ -828,3 +828,14 @@ protected SocketProcessorBase<NioChannel> createSocketProcessor(
 后续的流程，感兴趣的读者请自行分析，本文就说到这里了。
 
 （全文完）
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script>

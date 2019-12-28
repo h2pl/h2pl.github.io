@@ -1,11 +1,3 @@
----
-title: Java网络编程和NIO详解9：基于NIO的网络编程框架Netty
-date: 2019-12-13 23:19:43
-tags:
-    - 网络编程
-categories:
-    - 网络编程
----
 本文转自：https://sylvanassun.github.io/2017/11/30/2017-11-30-netty_introduction/
 
 本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看
@@ -1359,3 +1351,14 @@ new EchoClient(host, port).start();
 *   [epoll(7) - Linux manual page](http://man7.org/linux/man-pages/man7/epoll.7.html)
 
 *   [Java NIO](http://tutorials.jenkov.com/java-nio/)
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script>

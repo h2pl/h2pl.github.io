@@ -290,3 +290,15 @@ epoll 是在 Linux 2.5.44 中首度登场的。不像 select 和 poll ，它提�
 > 注 2 ：有的新手会把文件描述符是否标记为阻塞 I/O 等同于 I/O 多路复用函数是否阻塞。其实文件描述符是否标记为阻塞，决定了你 `read` 或 `write` 它时如果它未准备好是阻塞等待，还是立即返回 EAGAIN ；而 I/O 多路复用函数除非你把 timeout 设置为 0 ，否则它总是会阻塞住你的程序。
 
 > 注 3 ：上面的例子只是入门，可能是不准确或不全面的：一是数据要立即处理防止丢失；二是 EPOLLIN/EPOLLOUT 不完全等同于可读可写事件，具体要去搜索 poll/epoll 的事件具体有哪些；三是大多数实际例子里，比如一个 tcp server ，都会在运行中不断增加/删除的文件描述符而不是记住固定的 3 4 5 几个描述符（用这种例子更能看出 epoll 的优势）；四是 epoll 的优势更多的体现在处理大量闲连接的情况，如果场景是处理少量短连接，用 select 反而更好，而且用 select 的代码能运行在所有平台上。
+
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script>

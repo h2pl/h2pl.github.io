@@ -666,3 +666,14 @@ socket写数据
 [http://www.jianshu.com/p/0d497fe5484a](https://www.jianshu.com/p/0d497fe5484a)
 [http://remcarpediem.com/2017/04/02/Netty](https://link.jianshu.com/?t=http://remcarpediem.com/2017/04/02/Netty)源码-三-I-O模型和Java-NIO底层原理/
 圣思园netty课程
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script>

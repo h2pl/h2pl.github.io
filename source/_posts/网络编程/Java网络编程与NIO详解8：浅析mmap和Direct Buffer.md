@@ -578,3 +578,16 @@ thunk方法：
 [http://www.infoq.com/cn/news/2014/12/external-memory-heap-memory](https://link.jianshu.com/?t=http://www.infoq.com/cn/news/2014/12/external-memory-heap-memory)
 [http://www.jianshu.com/p/85e931636f27](https://www.jianshu.com/p/85e931636f27)
 圣思园《并发与Netty》课程
+
+
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script>

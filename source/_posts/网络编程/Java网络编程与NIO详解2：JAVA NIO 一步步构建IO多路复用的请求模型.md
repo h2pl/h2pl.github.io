@@ -531,3 +531,16 @@ public class NioNonBlockingHttpClient {
 ## [](https://github.com/jasonGeng88/blog/blob/master/201708/java-nio.md#%E5%90%8E%E7%BB%AD)后续
 
 *   Netty 下的异步请求实现
+
+
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script>

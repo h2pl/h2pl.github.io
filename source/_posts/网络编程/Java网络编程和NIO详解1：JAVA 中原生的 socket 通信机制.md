@@ -369,3 +369,15 @@ _关于启动的线程数，一般 CPU 密集型会设置在 N+1（N为CPU核数
 
 *   JAVA 中是如何实现 IO多路复用
 *   Netty 下的实现异步请求的
+
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script>

@@ -1,11 +1,3 @@
----
-title: Spring源码剖析4：懒加载的单例Bean获取过程分析
-date: 2019-09-14 23:04:43
-tags:
-    - spring
-categories:
-    - spring
----
 本文转自五月的仓颉 https://www.cnblogs.com/xrq730
 
 本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看
