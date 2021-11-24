@@ -3,11 +3,11 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Java技术江湖
+title: 黄小斜学Java
 subtitle: 黄小斜的技术博客
-description: 微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年。这一次，我们一起出发。关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。 <br> <br> 微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。
+description: 本博客后续不再维护更新，新的文章内容请移步我的微信公众号【黄小斜学Java】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。 <br> <br> 微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。
 keywords:
-author: 程序员黄小斜
+author: 黄小斜学Java
 language: zh-Hans 
 timezone:
 
@@ -17,7 +17,7 @@ Plugins:
 plugins:
   readmore:
     blogId: '15310-1577469423472-640'
-    name: 程序员黄小斜
+    name: 黄小斜学Java
     qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg'
     keyword: 关键词
 
