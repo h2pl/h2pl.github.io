@@ -5,10 +5,10 @@
 # Site
 title: 黄小斜学Java
 subtitle: 黄小斜的技术博客
-description: 本博客后续不再维护更新，新的文章内容请移步我的微信公众号【黄小斜学Java】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。 <br> <br> 微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。
+description: 本博客后续不再维护更新，新的文章内容请移步我的微信公众号【黄小斜学Java】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。
 keywords:
 author: 黄小斜学Java
-language: zh-Hans 
+language  : zh-Hans
 timezone:
 
 Plugins:
