@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Web,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《走进JavaWeb技术世界》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰">
+<meta name="keywords" content="Web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="走进JavaWeb技术世界1：JavaWeb的由来和基础知识">
+<meta property="og:url" content="http://yoursite.com/2019/10/14/走进JavaWeb技术世界/走进JavaWeb技术世界1：JavaWeb的由来和基础知识/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《走进JavaWeb技术世界》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130358732-639047052.webp">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130358904-1951595187.webp">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130359318-309106335.webp">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130359489-1405737926.webp">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130359667-1843065714.webp">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130359840-877994653.webp">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130400036-383481569.webp">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130400263-672191254.webp">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130400442-2098958889.webp">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:24.010Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="走进JavaWeb技术世界1：JavaWeb的由来和基础知识">
+<meta name="twitter:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《走进JavaWeb技术世界》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰">
+<meta name="twitter:image" content="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130358732-639047052.webp">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/14/走进JavaWeb技术世界/走进JavaWeb技术世界1：JavaWeb的由来和基础知识/">
+
+
+
+
+
+  <title>走进JavaWeb技术世界1：JavaWeb的由来和基础知识 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/走进JavaWeb技术世界/走进JavaWeb技术世界1：JavaWeb的由来和基础知识/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">走进JavaWeb技术世界1：JavaWeb的由来和基础知识</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-14T15:56:26+08:00">
+                2019-10-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/" itemprop="url" rel="index">
+                    <span itemprop="name">Java技术江湖</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/JavaWeb/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaWeb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/14/走进JavaWeb技术世界/走进JavaWeb技术世界1：JavaWeb的由来和基础知识/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/14/走进JavaWeb技术世界/走进JavaWeb技术世界1：JavaWeb的由来和基础知识/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章首发于我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>本文是微信公众号【Java技术江湖】的《走进JavaWeb技术世界》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透彻，也整合了很多我认为不错的技术博客内容，引用其中了一些比较好的博客文章，如有侵权，请联系作者。</p>
+<p>该系列博文会告诉你如何从入门到进阶，从servlet到框架，从ssm再到SpringBoot，一步步地学习JavaWeb基础知识，并上手进行实战，接着了解JavaWeb项目中经常要使用的技术和组件，包括日志组件、Maven、Junit，等等内容，以便让你更完整地了解整个JavaWeb技术体系，形成自己的知识框架。为了更好地总结和检验你的学习成果，本系列文章也会提供每个知识点对应的面试题以及参考答案。</p>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+<a id="more"></a>
+
+
+
+<h2 id="什么是-Java-Web"><a href="#什么是-Java-Web" class="headerlink" title="什么是 Java Web"></a>什么是 Java Web</h2><p>如果你是70、80后的程序员，你一定要看一看这篇文章，保证满满的回忆。如果你是90后，那你更要看看这篇文章，因为你能找到java web发展的历史。</p>
+<p>言归正传，Java语言能长期霸占语言排行榜一个重要的原因就是强大的web开发能力，web开发是java的基石（在EJB推出的时候当时的Sun用基石来描述EJB），所以了解java web开发原理是非常重要的。如果仅仅跟大家聊java web开发原理未免有点单薄，今天我将把java web开发包含的主体内容跟头条的读者一起分享一下（一直计划写关于java web的文章，一直也没时间写，今天就当时开个头吧）。</p>
+<h3 id="Web开发的历史"><a href="#Web开发的历史" class="headerlink" title="Web开发的历史"></a>Web开发的历史</h3><p>web开发的历史其实并不久远，要搞清楚java web开发的特点（主要是优点），首先要了解web开发的历史（简单的回归一下）。早期的web是非常简单的结构，用户发出请求（request），服务器给出回应（response），这个时期的web应用，我们称为web site（网站），特点是一些列静态内容的集合。看一个图示：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130358732-639047052.webp" alt></p>
+<p>图中的服务器保持了一系列html脚本来响应用户的请求，可以说这个时期的web应用还是比较简单的，但是却确立了两个重要的对象：一个request（代表请求），另一个是response（代表回应）。如果把web开发的历史比喻成一部美国大片的话，那么request和response绝对是这部大片的那女主角，而且每一部都是不可或缺的主角（简单的说就是死不了）。</p>
+<p>看到这个图，不知道第一批从事web开发的80后是否和我一样，已经有点感触了，当年为了搞清楚这个结构，曾经连续多少个通宵做实验（实验环境比较恶劣）。没关系，这仅仅是个开始，我想当你看完这篇文章的时候，你会泪流满面的（相信我）。为了配合一下这张结构图，在web发展过程中，有一个小插曲，就是在web site向web application发展的过程中，出现了一个小“玩意儿”，就是applet，很多人了解java都是从使用java applet开始的（70，80后那一批程序员）。当时风靡校园（我当时在读大一）的网易聊天室，哎呀那个火啊（大家回忆一下你在学校机房上网时的兴奋），这个聊天室就是采用了applet构建的，当时applet给静态页面一个动态交互的可能，着实火了一段时间。现在知道applet的程序员，你已经暴露年龄了。看一张图片吧：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130358904-1951595187.webp" alt></p>
+<p>我想这个时候，泪点低的70、80后已经有点湿润了吧。湿润的，自觉在这里停留一分钟，对着屏幕来张合影，发个朋友圈。</p>
+<p>过了这个插曲，真正的三层web开发来了，一个里程碑式的web处理方式CGI，看一张图：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130359318-309106335.webp" alt></p>
+<p>CGI的推出，使得web开发正式进入了动态处理时代，服务器能与客户有真正意义上的交流了，有能存储数据的数据库了，虽然CGI的使用周期并不长，但是一定要纪念一下它，毕竟它是里程碑式的变革。java web技术正是踩着CGI的肩膀来到了广大程序员的面前，java web解决了CGI的性能问题。CGI是以进程为单位管理请求的，而java web则是以线程为单位，处理能力更强，占用的资源更少，这个核心的组件就是Servlet。看一组资源占用图，先看CGI的：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130359489-1405737926.webp" alt></p>
+<p>再看一下java web中的servlet资源图：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130359667-1843065714.webp" alt></p>
+<p>孰优孰劣一目了然，Servlet解决相同数量的请求，却占用较少的系统资源，这就是为什么广大程序员抛弃了CGI转向java web的原因。</p>
+<p>另外，开发一个Servlet并不复杂，看一个Servlet编写的HelloWorld应用：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130359840-877994653.webp" alt></p>
+<p>这个代码结构是不是很亲切，是不是很有Coding的感觉，其实Servlet就是个java 类而已，只不过增加了几个限制而已，所以开发一个Servlet并不复杂。然后就是把它部署到web服务器上（Tomcat这个老人家现在身体依然硬朗！），然后就等待客户的请求就可以了。这是Servlet的三层部署图：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130400036-383481569.webp" alt></p>
+<p>java web开发的技术体系还包括javabean和jsp，采用MVC结构来组合这三个技术是java web开发的基础内容，先看一下MVC的功能图：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130400263-672191254.webp" alt></p>
+<p>再看一下组合使用Servlet+javaBean+JSP的Model2开发结构：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1813823/201910/1813823-20191020130400442-2098958889.webp" alt></p>
+<p>这个结构是标准的Java web开发结构，现在是不是很少能看到这么“干净”的描述图了？以上就是标准的java web 开发的历史描述，当然这并不是说这些内容已经过时了，反而它一直是官方的标准解决方案。只不过web发展迎来了另一个阶段，繁荣的开源架构时代来了。。。</p>
+<h3 id="开源框架时代"><a href="#开源框架时代" class="headerlink" title="开源框架时代"></a>开源框架时代</h3><p>这个时代的典型代表就是Struts、Spring和Hibernate，简称SSH。</p>
+<p>严格的说，这部分内容并不是官方解决方案，但是这些方案却得到了广大程序员的拥护，一方面原因是EJB的方案太重了，另一方面开源架构使用起来非常方便和灵活，所以从03年以后这些开源框架得到了普通的使用。</p>
+<p>下面我简单描述一下这三个框架：</p>
+<p>Struts基于MVC结构的解决方案，分为struts1（已经淘汰了，用过Struts1的程序员已经老了）和struts2两个版本，和Python一样，这两个版本不兼容，目前Struts2的最新版本是2.5.14.1，简单的说Struts就是构建了现成的MVC框架，程序员往这个框架里加代码就可以了，使用起来非常方便。</p>
+<p>Hibernate框架完成了面向对象与面向关系的映射，让java程序以面向对象的方式操作面向关系的数据库。整体结构基于DAO进行扩展，很多操作只需要配置一下就可以了，极其方便。</p>
+<p>Spring提供了javaBean的容器，池化了javabean，提高了性能，而且核心代码不到2M，小巧且强大。</p>
+<p>关于这三个框架我在头条将写专门的文章介绍，今天就不再进行扩展了。</p>
+<p>今天看到这个问题，有感而发，原来我们80后真的老了，80后的程序员，看到这篇文章，有没有所感触？关注我吧，我们一起回忆，再一起继续奋斗！</p>
+<h2 id="Java-Web基础知识"><a href="#Java-Web基础知识" class="headerlink" title="Java Web基础知识"></a>Java Web基础知识</h2><h3 id="一、HTTP协议"><a href="#一、HTTP协议" class="headerlink" title="一、HTTP协议"></a>一、HTTP协议</h3><p>HTTP(超文本传输协议)，它是一种主流B/S架构中应用的通信协议。具有以下特点：</p>
+<p>1、无状态</p>
+<p>服务端不会记录客户端每次提交的请求，服务器一旦相应客户端之后，就会结束本次的通信过程。客户端下一次的请求是一个新的 连接，和上一次通信没有任何关系。</p>
+<p>2、简单灵活</p>
+<p>HTTP是基于请求（request）和响应（response）的模型</p>
+<p>3、支持客户端与服务端</p>
+<p>支持主流的B/S架构的通信以及C/S架构的通信。</p>
+<p>注意：C/S架构可选的协议有多种，例如：TCP/IP,UDP,HTTP</p>
+<p>​ 而B/S架构通常只支持HTTP协议</p>
+<h3 id="二、服务器"><a href="#二、服务器" class="headerlink" title="二、服务器"></a>二、服务器</h3><h4 id="1、概念"><a href="#1、概念" class="headerlink" title="1、概念"></a>1、概念</h4><p>服务器通常由硬件和软件部分构成，统一对用户提供多种不同的服务。</p>
+<p>1、硬件：包括响应的CPU、内存、磁盘等等</p>
+<p>2、软件：包括操作系统、运行环境、服务器软件、数据库等等</p>
+<h4 id="2、web服务器"><a href="#2、web服务器" class="headerlink" title="2、web服务器"></a>2、web服务器</h4><p>web服务器是提供服务端程序运行的一个环境，它本身也是一个软件。</p>
+<p>例如：将我们编写HTML文件放入到web服务器中，那么外界就可以通过浏览器访问我们的html页面</p>
+<p>常见的web服务器有Apache，Tomcat、Jetty、Nginx等等。</p>
+<p>而Tomcat、Jetty这些web服务器更准确的说是一个Servlet容器。</p>
+<h3 id="三、JavaWeb项目结构"><a href="#三、JavaWeb项目结构" class="headerlink" title="三、JavaWeb项目结构"></a>三、JavaWeb项目结构</h3><table>
+<thead>
+<tr>
+<th>项目根目录，例如：myweb、ch01</th>
+<th></th>
+<th></th>
+<th>通常存放静态资源文件（如：html等等）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td>WEB-INF</td>
+<td></td>
+<td>这个目录是当前项目私有的一个文件夹，只能提供给项目内部访问，对于客户端来说是访问不到了，通常这个目录下存放的是Java源代码、编译后的字节码文件以及Servlet的核心配置文件web.xml</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>src</td>
+<td>存放java源代码的目录</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>classes</td>
+<td>存放编译后的字节码文件</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>lib</td>
+<td>lib目录存放当前项目所需要的jar文件</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>JSP</td>
+<td>用于存放JSP动态页面</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>web.xml</td>
+<td>项目的配置文件，用于配置Servlet的请求映射、过滤器、监听器等等信息。每一个web项目都对应一个web.xml配置文件</td>
+</tr>
+<tr>
+<td></td>
+<td>META-INF</td>
+<td></td>
+<td>配置应用程序、扩展程序、类加载服务等等</td>
+</tr>
+</tbody></table>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://blog.csdn.net/shanhanyu/article/details/80515791" target="_blank" rel="noopener">https://blog.csdn.net/shanhanyu/article/details/80515791</a><br><a href="https://www.jianshu.com/p/d9b770a78da1" target="_blank" rel="noopener">https://www.jianshu.com/p/d9b770a78da1</a><br><a href="https://www.cnblogs.com/albertrui/p/8427661.html" target="_blank" rel="noopener">https://www.cnblogs.com/albertrui/p/8427661.html</a><br><a href="https://blog.csdn.net/qq_41911570/article/details/83279327" target="_blank" rel="noopener">https://blog.csdn.net/qq_41911570/article/details/83279327</a></p>
+<blockquote>
+<p>本文由博客一文多发平台 <a href="https://openwrite.cn?from=article_bottom" target="_blank" rel="noopener">OpenWrite</a> 发布！</p>
+</blockquote>
+<h2 id="参考文章-1"><a href="#参考文章-1" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://blog.csdn.net/shanhanyu/article/details/80515791" target="_blank" rel="noopener">https://blog.csdn.net/shanhanyu/article/details/80515791</a><br><a href="https://www.jianshu.com/p/d9b770a78da1" target="_blank" rel="noopener">https://www.jianshu.com/p/d9b770a78da1</a><br><a href="https://www.cnblogs.com/albertrui/p/8427661.html" target="_blank" rel="noopener">https://www.cnblogs.com/albertrui/p/8427661.html</a><br><a href="https://blog.csdn.net/qq_41911570/article/details/83279327" target="_blank" rel="noopener">https://blog.csdn.net/qq_41911570/article/details/83279327</a></p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Web/" rel="tag"># Web</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/14/走进JavaWeb技术世界/走进JavaWeb技术世界3：JDBC的进化与连接池技术/" rel="next" title="走进JavaWeb技术世界1：JavaWeb的由来和基础知识">
+                <i class="fa fa-chevron-left"></i> 走进JavaWeb技术世界1：JavaWeb的由来和基础知识
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/14/并发编程/Java并发指南14：JUC中常用的Unsafe和Locksupport/" rel="prev" title="Java并发指南14：JUC中常用的Unsafe和Locksupport">
+                Java并发指南14：JUC中常用的Unsafe和Locksupport <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是-Java-Web"><span class="nav-number">1.</span> <span class="nav-text">什么是 Java Web</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Web开发的历史"><span class="nav-number">1.1.</span> <span class="nav-text">Web开发的历史</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开源框架时代"><span class="nav-number">1.2.</span> <span class="nav-text">开源框架时代</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-Web基础知识"><span class="nav-number">2.</span> <span class="nav-text">Java Web基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、HTTP协议"><span class="nav-number">2.1.</span> <span class="nav-text">一、HTTP协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、服务器"><span class="nav-number">2.2.</span> <span class="nav-text">二、服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、概念"><span class="nav-number">2.2.1.</span> <span class="nav-text">1、概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、web服务器"><span class="nav-number">2.2.2.</span> <span class="nav-text">2、web服务器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、JavaWeb项目结构"><span class="nav-number">2.3.</span> <span class="nav-text">三、JavaWeb项目结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">3.</span> <span class="nav-text">参考文章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章-1"><span class="nav-number">4.</span> <span class="nav-text">参考文章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">5.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">5.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">5.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,2454 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="网络编程,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本文转自：https://sylvanassun.github.io/2017/11/30/2017-11-30-netty_introduction/ 本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章将同步到我的个人博客：  www.ho">
+<meta name="keywords" content="网络编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java网络编程和NIO详解9：基于NIO的网络编程框架Netty">
+<meta property="og:url" content="http://yoursite.com/2019/12/13/网络编程/Java网络编程和NIO详解9：基于NIO的网络编程框架Netty/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本文转自：https://sylvanassun.github.io/2017/11/30/2017-11-30-netty_introduction/ 本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章将同步到我的个人博客：  www.ho">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img-blog.csdn.net/20140606104845234?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc3VpZmVuZzMwNTE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="https://img-blog.csdn.net/20140606104919140?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc3VpZmVuZzMwNTE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="https://img-blog.csdn.net/20140606104949484?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc3VpZmVuZzMwNTE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="https://img-blog.csdn.net/20140606105016890?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc3VpZmVuZzMwNTE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="https://img-blog.csdn.net/20140606105045406?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc3VpZmVuZzMwNTE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="https://img-blog.csdn.net/20140606105113171?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc3VpZmVuZzMwNTE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://wx2.sinaimg.cn/large/63503acbly1flys7n7hvaj20h90doglj.jpg">
+<meta property="og:image" content="http://wx3.sinaimg.cn/large/63503acbly1flz1e7kzblj20wb0ftq3l.jpg">
+<meta property="og:image" content="file:///C:/Users/xiaok/Pictures/%E5%A4%8D%E4%B9%A0%E6%96%87%E6%A1%A3%E5%9B%BE%E7%89%87_%E5%8B%BF%E5%88%A0/%E6%AF%94%E7%89%B9%E6%88%AA%E5%9B%BE2019-01-12-16-40-18.png?lastModify=1549709160">
+<meta property="og:image" content="http://wx2.sinaimg.cn/large/63503acbly1flz1e8lh7rj20wb0ft0ty.jpg">
+<meta property="og:image" content="http://wx3.sinaimg.cn/large/63503acbly1flz1e989dfj20wh0g80tw.jpg">
+<meta property="og:image" content="http://wx3.sinaimg.cn/large/63503acbly1flz1e9uk8aj20wb0ft3zn.jpg">
+<meta property="og:image" content="http://wx2.sinaimg.cn/large/63503acbly1flz1eai66rj20wb0g8aau.jpg">
+<meta property="og:image" content="https://netty.io/images/components.png">
+<meta property="og:image" content="http://tutorials.jenkov.com/images/java-nio/buffers-modes.png">
+<meta property="og:image" content="http://wx2.sinaimg.cn/large/63503acbly1fm103i127ej20xe0f074y.jpg">
+<meta property="og:image" content="http://wx3.sinaimg.cn/large/63503acbly1fm1er9l4jfj213h0fcq3d.jpg">
+<meta property="og:image" content="http://wx3.sinaimg.cn/large/63503acbly1fm296hz0p9j20ff0kc3z2.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:23.999Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java网络编程和NIO详解9：基于NIO的网络编程框架Netty">
+<meta name="twitter:description" content="本文转自：https://sylvanassun.github.io/2017/11/30/2017-11-30-netty_introduction/ 本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章将同步到我的个人博客：  www.ho">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20140606104845234?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc3VpZmVuZzMwNTE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/12/13/网络编程/Java网络编程和NIO详解9：基于NIO的网络编程框架Netty/">
+
+
+
+
+
+  <title>Java网络编程和NIO详解9：基于NIO的网络编程框架Netty | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/13/网络编程/Java网络编程和NIO详解9：基于NIO的网络编程框架Netty/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java网络编程和NIO详解9：基于NIO的网络编程框架Netty</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-13T23:19:43+08:00">
+                2019-12-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/网络编程/" itemprop="url" rel="index">
+                    <span itemprop="name">网络编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/12/13/网络编程/Java网络编程和NIO详解9：基于NIO的网络编程框架Netty/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/12/13/网络编程/Java网络编程和NIO详解9：基于NIO的网络编程框架Netty/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><p>本文转自：<a href="https://sylvanassun.github.io/2017/11/30/2017-11-30-netty_introduction/" target="_blank" rel="noopener">https://sylvanassun.github.io/2017/11/30/2017-11-30-netty_introduction/</a></p>
+<p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章将同步到我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>本文是微信公众号【Java技术江湖】的《不可轻视的Java网络编程》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透彻，也整合了很多我认为不错的技术博客内容，引用其中了一些比较好的博客文章，如有侵权，请联系作者。</p>
+<p>该系列博文会告诉你如何从计算机网络的基础知识入手，一步步地学习Java网络基础，从socket到nio、bio、aio和netty等网络编程知识，并且进行实战，网络编程是每一个Java后端工程师必须要学习和理解的知识点，进一步来说，你还需要掌握Linux中的网络编程原理，包括IO模型、网络编程框架netty的进阶原理，才能更完整地了解整个Java网络编程的知识体系，形成自己的知识框架。</p>
+<p>为了更好地总结和检验你的学习成果，本系列文章也会提供部分知识点对应的面试题以及参考答案。</p>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+<a id="more"></a>
+
+<h2 id="Netty概述"><a href="#Netty概述" class="headerlink" title="Netty概述"></a>Netty概述</h2><p><strong>Netty是一个基于异步与事件驱动的网络应用程序框架，它支持快速与简单地开发可维护的高性能的服务器与客户端。</strong></p>
+<p>所谓<strong>事件驱动就是由通过各种事件响应来决定程序的流程</strong>，在Netty中到处都充满了异步与事件驱动，这种特点使得应用程序可以以任意的顺序响应在任意的时间点产生的事件，它带来了非常高的可伸缩性，让你的应用可以在需要处理的工作不断增长时，通过某种可行的方式或者扩大它的处理能力来适应这种增长。</p>
+<p>Netty提供了高性能与易用性，它具有以下特点：</p>
+<ul>
+<li><p><strong>拥有设计良好且统一的API</strong>，支持NIO与OIO（阻塞IO）等多种传输类型，支持真正的无连接UDP Socket。</p>
+</li>
+<li><p><strong>简单而强大的线程模型</strong>，可高度定制线程（池）。(定制化的Reactor模型)</p>
+</li>
+<li><p><strong>良好的模块化与解耦</strong>，支持可扩展和灵活的事件模型，可以很轻松地分离关注点以复用逻辑组件（可插拔的）。</p>
+</li>
+<li><p><strong>性能高效</strong>，拥有比Java核心API更高的吞吐量，通过zero-copy功能以实现最少的内存复制消耗。</p>
+</li>
+<li><p><strong>内置了许多常用的协议编解码器</strong>，如HTTP、SSL、WebScoket等常见协议可以通过Netty做到开箱即用。用户也可以利用Netty简单方便地实现自己的应用层协议。</p>
+</li>
+</ul>
+<p>大多数人使用Netty主要还是为了<strong>提高应用的性能</strong>，而高性能则离不开非阻塞IO。Netty的非阻塞IO是基于Java NIO的，并且对其进行了封装（直接使用Java NIO API在高复杂度下的应用中是一项非常繁琐且容易出错的操作，而Netty帮你封装了这些复杂操作）。</p>
+<h2 id="etty简介"><a href="#etty简介" class="headerlink" title="etty简介"></a>etty简介</h2><pre>读完这一章，我们基本上可以了解到Netty所有重要的组件，对Netty有一个全面的认识，这对下一步深入学习Netty是十分重要的，而学完这一章，我们其实已经可以用Netty解决一些常规的问题了。</pre>
+
+<h3 id="Netty都有哪些组件？"><a href="#Netty都有哪些组件？" class="headerlink" title="Netty都有哪些组件？"></a>Netty都有哪些组件？</h3><pre>为了更好的理解和进一步深入Netty，我们先总体认识一下Netty用到的组件及它们在整个Netty架构中是怎么协调工作的。Netty应用中必不可少的组件：</pre>
+
+<ul>
+<li><p>Bootstrap or ServerBootstrap</p>
+</li>
+<li><p>EventLoop</p>
+</li>
+<li><p>EventLoopGroup</p>
+</li>
+<li><p>ChannelPipeline</p>
+</li>
+<li><p>Channel</p>
+</li>
+<li><p>Future or ChannelFuture</p>
+</li>
+<li><p>ChannelInitializer</p>
+</li>
+<li><p>ChannelHandler</p>
+</li>
+<li><p>Bootstrap，一个Netty应用通常由一个Bootstrap开始，它主要作用是配置整个Netty程序，<strong>串联起各个组件</strong>。</p>
+<p>Handler，为了支持各种协议和处理数据的方式，便诞生了Handler组件。Handler主要用来<strong>处理各种事件</strong>，这里的事件很广泛，比如可以是<strong>连接、数据接收、异常、数据转换</strong>等。</p>
+<p><strong>ChannelInboundHandler</strong>，一个最常用的Handler。这个Handler的作用就是<strong>处理接收到数据</strong>时的事件，也就是说，我们的业务逻辑一般就是写在这个Handler里面的，ChannelInboundHandler就是用来处理我们的<strong>核心业务逻辑</strong>。</p>
+<p>ChannelInitializer，当一个链接建立时，我们需要知道<strong>怎么来接收或者发送数据</strong>，当然，我们有各种各样的Handler实现来处理它，那么ChannelInitializer便是用来<strong>配置这些Handler，它会提供一个ChannelPipeline，并把Handler加入到ChannelPipeline。</strong></p>
+<p>ChannelPipeline，一个Netty应用基于ChannelPipeline机制，这种机制需要<strong>依赖于EventLoop和EventLoopGroup，因为它们三个都和事件或者事件处理相关。</strong></p>
+<p>EventLoops的目的是为Channel处理IO操作，一个EventLoop可以为多个Channel服务。</p>
+<p>EventLoopGroup会包含多个EventLoop。</p>
+<p>Channel代表了一个Socket链接，或者其它和IO操作相关的组件，它和EventLoop一起用来参与IO处理。</p>
+<p>Future，在Netty中所有的IO操作都是<strong>异步的</strong>，因此，你<strong>不能立刻得知消息是否被正确处理</strong>，但是我们<strong>可以过一会等它执行完成或者直接注册一个监听</strong>，具体的实现就是通过Future和ChannelFutures,他们可以注册一个监听，当操作执行成功或失败时监听会自动触发。总之<strong>，所有的操作都会返回一个ChannelFuture</strong>。</p>
+</li>
+</ul>
+<h3 id="Netty是如何处理连接请求和业务逻辑的呢？"><a href="#Netty是如何处理连接请求和业务逻辑的呢？" class="headerlink" title="Netty是如何处理连接请求和业务逻辑的呢？"></a>Netty是如何处理连接请求和业务逻辑的呢？</h3><p>Channels、Events 和 IO</p>
+<p>Netty是一个<strong>非阻塞的、事件驱动的、网络编程</strong>框架。当然，我们很容易理解Netty会用线程来处理IO事件，对于熟悉多线程编程的人来说，你或许会想到如何同步你的代码，但是Netty不需要我们考虑这些，具体是这样：</p>
+<p>一个Channel会对应一个EventLoop，而一个<strong>EventLoop会对应着一个线程</strong>，也就是说，仅有一个线程在负责一个Channel的IO操作。</p>
+<p>关于这些名词之间的关系，可以见下图：</p>
+<p><img src="https://img-blog.csdn.net/20140606104845234?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc3VpZmVuZzMwNTE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt></p>
+<p>如图所示：当一个连接到达，Netty会注册一个channel，然后EventLoopGroup会<strong>分配一个EventLoop绑定到这个channel</strong>,在这个channel的整个生命周期过程中，都会由绑定的这个EventLoop来为它服务，而这个<strong>EventLoop就是一个线程</strong>。</p>
+<p>说到这里，那么EventLoops和EventLoopGroups关系是如何的呢？我们前面说过一个EventLoopGroup包含多个Eventloop，但是我们看一下下面这幅图，这幅图是一个继承树，从这幅图中我们可以看出，EventLoop其实继承自EventloopGroup，也就是说，在某些情况下，我们可以把一个EventLoopGroup当做一个EventLoop来用。</p>
+<pre>​</pre>
+
+<p><a href="https://img-blog.csdn.net/20140606104919140?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc3VpZmVuZzMwNTE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" target="_blank" rel="noopener"><img src="https://img-blog.csdn.net/20140606104919140?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc3VpZmVuZzMwNTE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt></a></p>
+<h3 id="如何配置一个Netty应用？"><a href="#如何配置一个Netty应用？" class="headerlink" title="如何配置一个Netty应用？"></a>如何配置一个Netty应用？</h3><p>BootsStrapping</p>
+<p>我们<strong>利用BootsStrap来配置netty 应用</strong>，它有两种类型，一种用于Client端：BootsStrap，另一种用于Server端：ServerBootstrap，要想区别如何使用它们，你仅需要记住一个用在Client端，一个用在Server端。下面我们来详细介绍一下这两种类型的区别：</p>
+<p>1.第一个最明显的区别是，ServerBootstrap用于Server端，通过调用<strong>bind()</strong>方法来绑定到一个端口监听连接；Bootstrap用于Client端，需要调用<strong>connect</strong>()方法来连接服务器端，但我们也可以通过调用<strong>bind()方法返回的ChannelFuture</strong>中获取Channel从而去connect服务器端。</p>
+<p>2.<strong>客户端</strong>的Bootstrap一般用<strong>一个EventLoopGroup</strong>，而<strong>服务器</strong>端的ServerBootstrap会用到<strong>两个</strong>（这两个也可以是同一个实例）。为何服务器端要用到两个EventLoopGroup呢？这么设计有明显的好处，如果一个ServerBootstrap有两个EventLoopGroup，那么就可以把<strong>第一个</strong>EventLoopGroup用来<strong>专门负责绑定到端口监听连接事件</strong>，而把<strong>第二个</strong>EventLoopGroup用来<strong>处理每个接收到的连接</strong>，下面我们用一幅图来展现一下这种模式：</p>
+<p><img src="https://img-blog.csdn.net/20140606104949484?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc3VpZmVuZzMwNTE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt></p>
+<p>PS: 如果仅由一个EventLoopGroup处理所有请求和连接的话，在并发量很大的情况下，这个EventLoopGroup有可能会忙于处理已经接收到的连接而不能及时处理新的连接请求，<strong>用两个的话</strong>，会有专门的线程来处理连接请求，不会导致请求超时的情况，大大<strong>提高了并发处理能力</strong>。</p>
+<p>我们知道一个Channel需要由一个EventLoop来绑定，而且两者<strong>一旦绑定就不会再改变</strong>。一般情况下一个EventLoopGroup中的<strong>EventLoop数量会少于Channel数量</strong>，那么就很<strong>有可能出现一个多个Channel公用一个EventLoop</strong>的情况，这就意味着如果一个Channel中的<strong>EventLoop很忙</strong>的话，会<strong>影响</strong>到这个Eventloop<strong>对其它Channel的处理</strong>，<strong>这也就是为什么我们不能阻塞EventLoop的原因。</strong></p>
+<p>当然，我们的Server也可以只用一个EventLoopGroup,由一个实例来处理连接请求和IO事件，请看下面这幅图：</p>
+<p><img src="https://img-blog.csdn.net/20140606105016890?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc3VpZmVuZzMwNTE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt></p>
+<h3 id="Netty是如何处理数据的？"><a href="#Netty是如何处理数据的？" class="headerlink" title="Netty是如何处理数据的？"></a>Netty是如何处理数据的？</h3><p>Netty核心ChannelHandler</p>
+<p>下面我们来看一下netty中是怎样处理数据的，回想一下我们前面讲到的Handler，对了，就是它。说到Handler我们就不得不提ChannelPipeline，ChannelPipeline负责<strong>安排Handler的顺序及其执行</strong>，下面我们就来详细介绍一下他们：</p>
+<p>ChannelPipeline and handlers</p>
+<p>我们的应用程序中用到的最多的应该就是ChannelHandler，我们可以这么想象，数据在一个ChannelPipeline中流动，而ChannelHandler便是其中的一个个的小阀门，这些数据都会经过每一个ChannelHandler并且被它处理。这里有一个公共接口ChannelHandler:</p>
+<p><img src="https://img-blog.csdn.net/20140606105045406?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc3VpZmVuZzMwNTE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt></p>
+<p>从上图中我们可以看到，ChannelHandler有两个子类ChannelInboundHandler和ChannelOutboundHandler，这两个类对应了两个数据流向，如果数据是<strong>从外部流入</strong>我们的应用程序，我们就看做是<strong>inbound</strong>，相反便是outbound。其实ChannelHandler和Servlet有些类似，一个ChannelHandler处理完接收到的数据会传给下一个Handler，或者什么不处理，直接传递给下一个。下面我们看一下ChannelPipeline是如何安排ChannelHandler的：</p>
+<p><img src="https://img-blog.csdn.net/20140606105113171?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc3VpZmVuZzMwNTE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt></p>
+<p>从上图中我们可以看到，<strong>一个ChannelPipeline可以把两种Handler（ChannelInboundHandler和ChannelOutboundHandler）混合在一起</strong>，当一个数据流进入ChannelPipeline时，它会从ChannelPipeline头部开始传给第一个ChannelInboundHandler，当第一个处理完后再传给下一个，一直传递到管道的尾部。与之相对应的是，当数据被写出时，它会从管道的尾部开始，先经过管道尾部的“最后”一个ChannelOutboundHandler，当它处理完成后会传递给前一个ChannelOutboundHandler。</p>
+<p><strong>数据在各个Handler之间传递</strong>，这需要调用方法中传递的<strong>ChanneHandlerContext</strong>来操作， 在netty的API中提供了两个基类分<strong>ChannelOutboundHandlerAdapter</strong>和<strong>ChannelInboundHandlerAdapter</strong>，他们<strong>仅仅实现了调用ChanneHandlerContext来把消息传递给下一个Handler</strong>，因为我们只关心处理数据，因此我们的程序中<strong>可以继承这两个基类来帮助我们做这些</strong>，而<strong>我们仅需实现处理数据</strong>的部分即可。</p>
+<p>我们知道InboundHandler和OutboundHandler在ChannelPipeline中是<strong>混合在一起</strong>的，那么它们<strong>如何区分</strong>彼此呢？其实很容易，因为<strong>它们各自实现的是不同的接口</strong>，对于inbound event，Netty会自动跳过OutboundHandler,相反若是outbound event，ChannelInboundHandler会被忽略掉。</p>
+<p>当一个ChannelHandler被加入到ChannelPipeline中时，它便会获得一个ChannelHandlerContext的引用，而<strong>ChannelHandlerContext可以用来读写Netty中的数据流</strong>。因此，现在可以有两种方式来发送数据，一种是把数据直接写入Channel，一种是把数据写入ChannelHandlerContext，它们的区别是写入Channel的话，数据流会从Channel的头开始传递，而如果写入ChannelHandlerContext的话，数据流会流入管道中的下一个Handler。</p>
+<h3 id="如何处理我们的业务逻辑？"><a href="#如何处理我们的业务逻辑？" class="headerlink" title="如何处理我们的业务逻辑？"></a>如何处理我们的业务逻辑？</h3><p>Encoders, Decoders and Domain Logic</p>
+<p>Netty中会有很多Handler，具体是哪种Handler还要看它们继承的是InboundAdapter还是OutboundAdapter。当然，Netty中还提供了一些列的<strong>Adapter来帮助我们简化开发</strong>，我们知道在Channelpipeline中<strong>每一个Handler都负责把Event传递给下一个Handler</strong>，如果有了这些辅助Adapter，这些<strong>额外的工作都可自动完成</strong>，我们只需覆盖实现我们真正关心的部分即可。此外，还有一些Adapter会提供一些额外的功能，比如编码和解码。那么下面我们就来看一下其中的三种常用的ChannelHandler：</p>
+<p>Encoders和Decoders</p>
+<p>因为我们在网络传输时只能传输字节流，因此，在发送数据之前，我们必须把我们的message型转换为bytes，与之对应，我们在接收数据后，必须把接收到的bytes再转换成message。我们把bytes to message这个过程称作Decode(解码成我们可以理解的)，把message to bytes这个过程成为Encode。</p>
+<p>Netty中提供了很多现成的编码/解码器，我们一般从他们的名字中便可知道他们的用途，如<strong>ByteToMessageDecoder</strong>、<strong>MessageToByteEncoder</strong>，如专门用来处理Google Protobuf协议的<strong>ProtobufEncoder</strong>、 <strong>ProtobufDecoder</strong>。</p>
+<p>我们前面说过，具体是哪种Handler就要看它们继承的是InboundAdapter还是OutboundAdapter，对于<strong>Decoders</strong>,很容易便可以知道它是继承自<strong>ChannelInboundHandlerAdapter</strong>或 ChannelInboundHandler，因为解码的意思是把ChannelPipeline<strong>传入的bytes解码成我们可以理解的message</strong>（即Java Object），而ChannelInboundHandler正是处理Inbound Event，而Inbound Event中传入的正是字节流。Decoder会覆盖其中的“ChannelRead()”方法，在这个方法中来调用具体的decode方法解码传递过来的字节流，然后通过调用ChannelHandlerContext.fireChannelRead(decodedMessage)方法把编码好的Message传递给下一个Handler。与之类似，Encoder就不必多少了。</p>
+<p>Domain Logic</p>
+<p>其实我们最最关心的事情就是<strong>如何处理接收到的解码后的数据</strong>，我们真正的业务逻辑便是处理接收到的数据。Netty提供了一个最常用的基类<strong>SimpleChannelInboundHandler</strong><t>，其中<strong>T就是这个Handler处理的数据的类型</strong>（上一个Handler已经替我们解码好了），消息到达这个Handler时，Netty会自动调用这个Handler中的<strong>channelRead0</strong>(ChannelHandlerContext,T)方法，T是传递过来的数据对象，在这个方法中我们便可以任意写我们的业务逻辑了。</t></p>
+<p>Netty从某方面来说就是一套NIO框架，在Java NIO基础上做了封装，所以要想学好Netty我建议先理解好Java NIO，</p>
+<p>NIO可以称为New IO也可以称为Non-blocking IO，它比Java旧的阻塞IO在性能上要高效许多（如果让每一个连接中的IO操作都单独创建一个线程，那么阻塞IO并不会比NIO在性能上落后，但不可能创建无限多的线程，在连接数非常多的情况下会很糟糕）。</p>
+<ul>
+<li><p>ByteBuffer：NIO的数据传输是基于缓冲区的，ByteBuffer正是NIO数据传输中所使用的缓冲区抽象。<strong>ByteBuffer支持在堆外分配内存</strong>，并且尝试避免在执行I/O操作中的多余复制。一般的I/O操作都需要进行系统调用，这样会先切换到内核态，内核态要先从文件读取数据到它的缓冲区，只有等数据准备完毕后，才会从内核态把数据写到用户态，所谓的<strong>阻塞IO</strong>其实就是说的<strong>在等待数据准备好的这段时间内进行阻塞</strong>。如果想要避免这个额外的内核操作，可以通过使用mmap（虚拟内存映射）的方式来让用户态直接操作文件。</p>
+</li>
+<li><p>Channel：它类似于(fd)文件描述符，简单地来说它<strong>代表了一个实体</strong>（如一个硬件设备、文件、Socket或者一个能够执行一个或多个不同的I/O操作的程序组件）。你可以从一个Channel中读取数据到缓冲区，也可以将一个缓冲区中的数据写入到Channel。</p>
+</li>
+<li><p>Selector：选择器是NIO实现的关键，NIO采用的是I/O多路复用的方式来实现非阻塞，Selector通过在<strong>一个线程中监听每个Channel的IO事件来确定有哪些已经准备好进行IO操作的Channel</strong>，因此可<strong>以在任何时间检查任意的读操作或写操作的完成状态</strong>。这种方式<strong>避免了等待IO操作准备数据时的阻塞</strong>，使用较少的线程便可以处理许多连接，减少了线程切换与维护的开销。</p>
+<p><a href="http://wx2.sinaimg.cn/large/63503acbly1flys7n7hvaj20h90doglj.jpg" target="_blank" rel="noopener"><img src="http://wx2.sinaimg.cn/large/63503acbly1flys7n7hvaj20h90doglj.jpg" alt></a></p>
+</li>
+</ul>
+<p>了解了NIO的实现思想之后，我觉得还很有必要了解一下Unix中的I/O模型，Unix中拥有以下5种I/O模型：</p>
+<ul>
+<li><p>阻塞I/O（Blocking I/O）</p>
+</li>
+<li><p>非阻塞I/O（Non-blocking I/O）</p>
+</li>
+<li><p>I/O多路复用（I/O multiplexing (select and poll)）</p>
+</li>
+<li><p>信号驱动I/O（signal driven I/O (SIGIO)）</p>
+</li>
+<li><p>异步I/O（asynchronous I/O (the POSIX aio_functions)）</p>
+</li>
+</ul>
+<p><a href="http://wx3.sinaimg.cn/large/63503acbly1flz1e7kzblj20wb0ftq3l.jpg" target="_blank" rel="noopener"><img src="http://wx3.sinaimg.cn/large/63503acbly1flz1e7kzblj20wb0ftq3l.jpg" alt></a></p>
+<p><img src="file:///C:/Users/xiaok/Pictures/%E5%A4%8D%E4%B9%A0%E6%96%87%E6%A1%A3%E5%9B%BE%E7%89%87_%E5%8B%BF%E5%88%A0/%E6%AF%94%E7%89%B9%E6%88%AA%E5%9B%BE2019-01-12-16-40-18.png?lastModify=1549709160" alt></p>
+<p>阻塞I/O模型是最常见的I/O模型，通常我们使用的InputStream/OutputStream都是基于阻塞I/O模型。在上图中，我们使用UDP作为例子，recvfrom()函数是UDP协议用于接收数据的函数，它需要<strong>使用系统调用并一直阻塞到内核将数据准备好</strong>，之后再由内核缓冲区复制数据到用户态（即是recvfrom()接收到数据），所谓<strong>阻塞就是在等待内核准备数据的这段时间内什么也不干</strong>。</p>
+<p>举个生活中的例子，阻塞I/O就像是你去餐厅吃饭，在等待饭做好的时间段中，你只能在餐厅中坐着干等（如果你在玩手机那么这就是非阻塞I/O了）。</p>
+<p><a href="http://wx2.sinaimg.cn/large/63503acbly1flz1e8lh7rj20wb0ft0ty.jpg" target="_blank" rel="noopener"><img src="http://wx2.sinaimg.cn/large/63503acbly1flz1e8lh7rj20wb0ft0ty.jpg" alt></a></p>
+<blockquote>
+<p>在非阻塞I/O模型中，内核在<strong>数据尚未准备好</strong>的情况下回<strong>返回一个错误码<code>EWOULDBLOCK</code></strong>，而<strong>recvfrom</strong>并没有在失败的情况下选择阻塞休眠，而是<strong>不断地向内核询问是否已经准备完毕</strong>，在上图中，前三次内核都返回了<code>EWOULDBLOCK</code>，直到第四次询问时，内核数据准备完毕，然后开始将内核中缓存的数据复制到用户态。这种不断询问内核以查看某种状态是否完成的方式被称为<strong>polling（轮询）</strong>。</p>
+</blockquote>
+<p>非阻塞I/O就像是你在点外卖，只不过你非常心急，<strong>每隔一段时间就要打电话问外卖小哥有没有到</strong>。</p>
+<p><a href="http://wx3.sinaimg.cn/large/63503acbly1flz1e989dfj20wh0g80tw.jpg" target="_blank" rel="noopener"><img src="http://wx3.sinaimg.cn/large/63503acbly1flz1e989dfj20wh0g80tw.jpg" alt></a></p>
+<p>I/O多路复用的思想跟非阻塞I/O是一样的，只不过在<strong>非阻塞I/O</strong>中，是在<strong>recvfrom的用户态（或一个线程）中去轮询内核</strong>，这种方式会<strong>消耗大量的CPU时间</strong>。而<strong>I/O多路复用</strong>则是通过select()或poll()<strong>系统调用来负责进行轮询</strong>，以实现监听I/O读写事件的状态。如上图中，select监听到一个datagram可读时，就交由recvfrom去发送系统调用将内核中的数据复制到用户态。</p>
+<p>这种方式的优点很明显，通过<strong>I/O多路复用</strong>可以<strong>监听多个文件描述符</strong>，且在<strong>内核中完成监控的任务</strong>。但缺点是至少需要两个系统调用（select()与recvfrom()）。</p>
+<p>I/O多路复用同样适用于点外卖这个例子，只不过你在等外卖的期间完全可以做自己的事情，当外卖到的时候会<strong>通过外卖APP或者由外卖小哥打电话来通知你</strong>(因为内核会帮你轮询)。</p>
+<p>Unix中提供了两种I/O多路复用函数，select()和poll()。select()的兼容性更好，但它在单个进程中所能监控的文件描述符是有限的，这个值与<code>FD_SETSIZE</code>相关，32位系统中默认为1024，64位系统中为2048。select()还有一个缺点就是他轮询的方式，它采取了<strong>线性扫描的轮询方式</strong>，每次都要遍历FD_SETSIZE个文件描述符，不管它们是否活不活跃的。poll()本质上与select()的实现<strong>没有区别</strong>，不过在数据结构上区别很大，用户必须分配一个pollfd结构数组，该数组维护在内核态中，正因如此，<strong>poll()并不像select()那样拥有大小上限的限制</strong>，但缺点同样也很明显，<strong>大量的fd数组会在用户态与内核态之间不断复制</strong>，不管这样的复制是否有意义。</p>
+<p>还有一种比select()与poll()更加高效的实现叫做epoll()，它是由Linux内核2.6推出的可伸缩的I/O多路复用实现，目的是为了替代select()与poll()。epoll()同样<strong>没有文件描述符上限的限制</strong>，它<strong>使用一个文件描述符来管理多个文件描述符</strong>，并<strong>使用一个红黑树来作为存储结构</strong>。同时它还支持边缘触发（edge-triggered）与水平触发（level-triggered）两种模式（poll()只支持水平触发），在<strong>边缘触发模式</strong>下，<strong><code>epoll_wait</code>仅会在新的事件对象首次被加入到epoll时返回</strong>，而在<strong>水平触发</strong>模式下，<strong><code>epoll_wait</code>会在事件状态未变更前不断地触发</strong>。也就是说，边缘触发模式<strong>只会</strong>在文件描述符<strong>变为就绪状态时通知一次</strong>，水平触发模式会<strong>不断地通知</strong>该文件描述符<strong>直到被处理</strong>。</p>
+<p>关于<code>epoll_wait</code>请参考如下epoll API。</p>
+<pre>// 创建一个epoll对象并返回它的文件描述符。
+// 参数flags允许修改epoll的行为，它只有一个有效值EPOLL_CLOEXEC。
+int epoll_create1(int flags);
+// 配置对象，该对象负责描述监控哪些文件描述符和哪些事件。
+int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
+// 等待与epoll_ctl注册的任何事件，直至事件发生一次或超时。
+// 返回在events中发生的事件，最多同时返回maxevents个。
+int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);</pre>
+
+<p>epoll另一亮点是<strong>采用了事件驱动的方式而不是轮询</strong>，在<strong>epoll_ctl</strong>中注册的文件描述符<strong>在事件触发的时候会通过一个回调机制</strong>来激活该文件描述符，<strong><code>epoll_wait</code>便可以收到通知</strong>。这样效率就不会与文件描述符的数量成正比</p>
+<p>在Java NIO2（从JDK1.7开始引入）中，只要Linux内核版本在2.6以上，就会采用epoll，如下源码所示（DefaultSelectorProvider.java）。</p>
+<pre>public static SelectorProvider create() {
+String osname = AccessController.doPrivileged(
+new GetPropertyAction("os.name"));
+if ("SunOS".equals(osname)) {
+return new sun.nio.ch.DevPollSelectorProvider();
+}
+// use EPollSelectorProvider for Linux kernels >= 2.6
+if ("Linux".equals(osname)) {
+String osversion = AccessController.doPrivileged(
+new GetPropertyAction("os.version"));
+String[] vers = osversion.split("\\.", 0);
+if (vers.length >= 2) {
+try {
+int major = Integer.parseInt(vers[0]);
+int minor = Integer.parseInt(vers[1]);
+if (major > 2 || (major == 2 && minor >= 6)) {
+return new sun.nio.ch.EPollSelectorProvider();
+}
+} catch (NumberFormatException x) {
+// format not recognized
+}
+}
+}
+return new sun.nio.ch.PollSelectorProvider();
+}</pre>
+
+<p><a href="http://wx3.sinaimg.cn/large/63503acbly1flz1e9uk8aj20wb0ft3zn.jpg" target="_blank" rel="noopener"><img src="http://wx3.sinaimg.cn/large/63503acbly1flz1e9uk8aj20wb0ft3zn.jpg" alt></a></p>
+<p>信号驱动I/O模型使用到了<strong>信号</strong>，内核在数据<strong>准备就绪</strong>时会<strong>通过信号来进行通知</strong>。我们首先<strong>开启</strong>了一个信号驱动I/O套接字，并使用sigaction系统调用来安装信号处理程序，内核直接返回，不会阻塞用户态。当datagram准备好时，内核会发送SIGIN信号，recvfrom接收到信号后会发送系统调用开始进行I/O操作。</p>
+<p>这种模型的优点是<strong>主进程（线程）不会被阻塞</strong>，当数据准备就绪时，<strong>通过信号处理程序</strong>来通知主进程（线程）准备进行I/O操作与对数据的处理。</p>
+<p><a href="http://wx2.sinaimg.cn/large/63503acbly1flz1eai66rj20wb0g8aau.jpg" target="_blank" rel="noopener"><img src="http://wx2.sinaimg.cn/large/63503acbly1flz1eai66rj20wb0g8aau.jpg" alt></a></p>
+<p>我们之前讨论的各种I/O模型无论是阻塞还是非阻塞，它们所说的<strong>阻塞都是指的数据准备阶段</strong>。<strong>异步I/O</strong>模型<strong>同样依赖</strong>于<strong>信号</strong>处理程序来进行通知，但与以上I/O模型都不相同的是，异步I/O模型通知的是<strong>I/O操作</strong>已经完成，而不是<strong>数据准备</strong>完成。</p>
+<p>可以说<strong>异步I/O模型才是真正的非阻塞</strong>，主进程只管做自己的事情，然后在I/O操作完成时调用回调函数来完成一些对数据的处理操作即可。</p>
+<p>闲扯了这么多，想必大家已经对I/O模型有了一个深刻的认识。之后，我们将会结合部分源码（Netty4.X）来探讨Netty中的各大核心组件，以及如何使用Netty，你会发现实现一个Netty程序是多么简单（而且还伴随了高性能与可维护性）。</p>
+<p><img src="https://netty.io/images/components.png" alt></p>
+<h3 id="ByteBuf"><a href="#ByteBuf" class="headerlink" title="ByteBuf"></a>ByteBuf</h3><hr>
+<p>网络传输的基本单位是字节，在Java NIO中提供了ByteBuffer作为字节缓冲区容器，但该类的API使用起来不太方便，所以Netty实现了ByteBuf作为其替代品，下面是使用ByteBuf的优点：</p>
+<ul>
+<li><p>相比ByteBuffer使用起来<strong>更加简单</strong>。</p>
+</li>
+<li><p>通过内置的复合缓冲区类型实现了透明的<strong>zero-copy</strong>。</p>
+</li>
+<li><p><strong>容量</strong>可以<strong>按需增长</strong>。</p>
+</li>
+<li><p><strong>读和写</strong>使用了<strong>不同的索引指针</strong>。</p>
+</li>
+<li><p>支持<strong>链式调用</strong>。</p>
+</li>
+<li><p>支持<strong>引用计数与池化</strong>。</p>
+</li>
+<li><p>可以被用户<strong>自定义的缓冲区类型</strong>扩展。</p>
+</li>
+</ul>
+<p>在讨论ByteBuf之前，我们先需要了解一下ByteBuffer的实现，这样才能比较深刻地明白它们之间的区别。</p>
+<p>ByteBuffer继承于<code>abstract class Buffer</code>（所以还有LongBuffer、IntBuffer等其他类型的实现），本质上它只是一个有限的线性的元素序列，包含了三个重要的属性。</p>
+<ul>
+<li><p>Capacity：缓冲区中元素的容量大小，你只能将capacity个数量的元素写入缓冲区，一旦缓冲区已满就需要清理缓冲区才能继续写数据。</p>
+</li>
+<li><p>Position：指向下一个写入数据位置的索引指针，初始位置为0，最大为capacity-1。当写模式转换为读模式时，position需要被重置为0。</p>
+</li>
+<li><p>Limit：在写模式中，limit是可以写入缓冲区的最大索引，也就是说它在写模式中等价于缓冲区的容量。在读模式中，limit表示可以读取数据的最大索引。</p>
+</li>
+</ul>
+<p><a href="http://tutorials.jenkov.com/images/java-nio/buffers-modes.png" target="_blank" rel="noopener"><img src="http://tutorials.jenkov.com/images/java-nio/buffers-modes.png" alt></a></p>
+<p>由于Buffer中只维护了position一个索引指针，所以它在读写模式之间的切换需要调用一个flip()方法来重置指针。使用Buffer的流程一般如下：</p>
+<ul>
+<li><p>写入数据到缓冲区。</p>
+</li>
+<li><p>调用flip()方法。</p>
+</li>
+<li><p>从缓冲区中读取数据</p>
+</li>
+<li><p>调用buffer.clear()或者buffer.compact()清理缓冲区，以便下次写入数据。</p>
+</li>
+</ul>
+<pre>RandomAccessFile aFile = new RandomAccessFile("data/nio-data.txt", "rw");
+FileChannel inChannel = aFile.getChannel();
+// 分配一个48字节大小的缓冲区
+ByteBuffer buf = ByteBuffer.allocate(48);
+int bytesRead = inChannel.read(buf); // 读取数据到缓冲区
+while (bytesRead != -1) {
+buf.flip(); // 将position重置为0
+while(buf.hasRemaining()){
+System.out.print((char) buf.get()); // 读取数据并输出到控制台
+}
+buf.clear(); // 清理缓冲区
+bytesRead = inChannel.read(buf);
+}
+aFile.close();
+Buffer中核心方法的实现也非常简单，主要就是在操作指针position。</pre>
+
+<p>Buffer中核心方法的实现也非常简单，主要就是在操作指针position。</p>
+<pre>/**
+* Sets this buffer's mark at its position.
+*
+* @return This buffer
+*/
+public final Buffer mark() {
+mark = position; // mark属性是用来标记当前索引位置的
+return this;
+}
+// 将当前索引位置重置为mark所标记的位置
+public final Buffer reset() {
+int m = mark;
+if (m < 0)
+throw new InvalidMarkException();
+position = m;
+return this;
+}
+// 翻转这个Buffer，将limit设置为当前索引位置，然后再把position重置为0
+public final Buffer flip() {
+limit = position;
+position = 0;
+mark = -1;
+return this;
+}
+// 清理缓冲区
+// 说是清理,也只是把postion与limit进行重置,之后再写入数据就会覆盖之前的数据了
+public final Buffer clear() {
+position = 0;
+limit = capacity;
+mark = -1;
+return this;
+}
+// 返回剩余空间
+public final int remaining() {
+return limit - position;
+}</pre>
+
+<p>Java NIO中的<strong>Buffer API操作的麻烦之处就在于读写转换需要手动重置指针。而ByteBuf没有这种繁琐性，它维护了两个不同的索引，一个用于读取，一个用于写入</strong>。当你从ByteBuf读取数据时，它的readerIndex将会被递增已经被读取的字节数，同样的，当你写入数据时，writerIndex则会递增。readerIndex的最大范围在writerIndex的所在位置，如果试图移动readerIndex超过该值则会触发异常。</p>
+<p>ByteBuf中名称以read或write开头的方法将会递增它们其对应的索引，而名称以get或set开头的方法则不会。ByteBuf同样可以指定一个最大容量，试图移动writerIndex超过该值则会触发异常。</p>
+<pre>public byte readByte() {
+ this.checkReadableBytes0(1); // 检查readerIndex是否已越界
+ int i = this.readerIndex;
+ byte b = this._getByte(i);
+ this.readerIndex = i + 1; // 递增readerIndex
+ return b;
+}
+private void checkReadableBytes0(int minimumReadableBytes) {
+ this.ensureAccessible();
+ if(this.readerIndex > this.writerIndex - minimumReadableBytes) {
+ throw new IndexOutOfBoundsException(String.format("readerIndex(%d) + length(%d) exceeds writerIndex(%d): %s", new Object[]{Integer.valueOf(this.readerIndex), Integer.valueOf(minimumReadableBytes), Integer.valueOf(this.writerIndex), this}));
+ }
+}
+public ByteBuf writeByte(int value) {
+ this.ensureAccessible();
+ this.ensureWritable0(1); // 检查writerIndex是否会越过capacity
+ this._setByte(this.writerIndex++, value);
+ return this;
+}
+private void ensureWritable0(int minWritableBytes) {
+ if(minWritableBytes > this.writableBytes()) {
+ if(minWritableBytes > this.maxCapacity - this.writerIndex) {
+ throw new IndexOutOfBoundsException(String.format("writerIndex(%d) + minWritableBytes(%d) exceeds maxCapacity(%d): %s", new Object[]{Integer.valueOf(this.writerIndex), Integer.valueOf(minWritableBytes), Integer.valueOf(this.maxCapacity), this}));
+ } else {
+ int newCapacity = this.alloc().calculateNewCapacity(this.writerIndex + minWritableBytes, this.maxCapacity);
+ this.capacity(newCapacity);
+ }
+ }
+}
+// get与set只对传入的索引进行了检查，然后对其位置进行get或set
+public byte getByte(int index) {
+ this.checkIndex(index);
+ return this._getByte(index);
+}
+public ByteBuf setByte(int index, int value) {
+ this.checkIndex(index);
+ this._setByte(index, value);
+ return this;
+}</pre>
+
+<p>ByteBuf同样支持在<strong>堆内和堆外进行分配</strong>。在<strong>堆内分配</strong>也被称为<strong>支撑数组模式</strong>，它能在<strong>没有使用池化</strong>的情况下<strong>提供快速的分配和释放</strong>。</p>
+<pre>ByteBuf heapBuf = Unpooled.copiedBuffer(bytes);
+if (heapBuf.hasArray()) { // 判断是否有一个支撑数组
+byte[] array = heapBuf.array();
+// 计算第一个字节的偏移量
+int offset = heapBuf.arrayOffset() + heapBuf.readerIndex();
+int length = heapBuf.readableBytes(); // 获得可读字节
+handleArray(array,offset,length); // 调用你的处理方法
+}
+</pre>
+
+<p>另一种模式为<strong>堆外分配</strong>，Java NIO ByteBuffer类在JDK1.4时就已经允许JVM实现通过JNI调用来在堆外分配内存（调用malloc()函数在JVM堆外分配内存），这主要是<strong>为了避免额外的缓冲区复制操作</strong>。</p>
+<pre>ByteBuf directBuf = Unpooled.directBuffer(capacity);
+if (!directBuf.hasArray()) {
+int length = directBuf.readableBytes();
+byte[] array = new byte[length];
+// 将字节复制到数组中
+directBuf.getBytes(directBuf.readerIndex(),array);
+handleArray(array,0,length);
+}
+</pre>
+
+<p>ByteBuf还支持第三种模式，它被称为<strong>复合缓冲区</strong>，为多个ByteBuf<strong>提供</strong>了一个<strong>聚合视图</strong>。在这个视图中，你可以根据需要添加或者删除ByteBuf实例，ByteBuf的子类<strong>CompositeByteBuf实现了该模式</strong>。</p>
+<p>一个适合使用<strong>复合缓冲区的场景是HTTP协议</strong>，通过HTTP协议传输的消息都会被分成两部分——头部和主体，如果这两部分由应用程序的不同模块产生，将在消息发送时进行组装，并且该应用程序还会为多个消息复用相同的消息主体，这样对于每个消息都将会创建一个新的头部，产生了很多不必要的内存操作。使用CompositeByteBuf是一个很好的选择，它消除了这些额外的复制，以帮助你复用这些消息。</p>
+<pre>CompositeByteBuf messageBuf = Unpooled.compositeBuffer();
+ByteBuf headerBuf = ....;
+ByteBuf bodyBuf = ....;
+messageBuf.addComponents(headerBuf,bodyBuf);
+for (ByteBuf buf : messageBuf) {
+System.out.println(buf.toString());
+}
+</pre>
+
+<p>CompositeByteBuf透明的实现了<strong>zero-copy</strong>，zero-copy其实就是避免数据在两个内存区域中来回的复制。从操作系统层面上来讲，zero-copy指的是<strong>避免在内核态与用户态之间的数据缓冲区复制（通过mmap避免）</strong>，而Netty中的zero-copy更偏向于在用户态中的数据操作的优化，就像使用CompositeByteBuf来复用多个ByteBuf以避免额外的复制，也可以使用wrap()方法来将一个字节数组包装成ByteBuf，又或者使用ByteBuf的slice()方法把它分割为多个共享同一内存区域的ByteBuf，这些都是为了优化内存的使用率。</p>
+<p>那么如何创建ByteBuf呢？在上面的代码中使用到了<strong>Unpooled</strong>，它是Netty提供的一个用于创建与分配ByteBuf的工具类，建议都使用这个工具类来创建你的缓冲区，不要自己去调用构造函数。经常使用的是wrappedBuffer()与copiedBuffer()，它们一个是用于将一个字节数组或ByteBuffer包装为一个ByteBuf，一个是根据传入的字节数组与ByteBuffer/ByteBuf来复制出一个新的ByteBuf。</p>
+<pre>// 通过array.clone()来复制一个数组进行包装
+public static ByteBuf copiedBuffer(byte[] array) {
+return array.length == 0?EMPTY_BUFFER:wrappedBuffer((byte[])array.clone());
+}
+// 默认是堆内分配
+public static ByteBuf wrappedBuffer(byte[] array) {
+return (ByteBuf)(array.length == 0?EMPTY_BUFFER:new UnpooledHeapByteBuf(ALLOC, array, array.length));
+}
+// 也提供了堆外分配的方法
+private static final ByteBufAllocator ALLOC;
+public static ByteBuf directBuffer(int initialCapacity) {
+return ALLOC.directBuffer(initialCapacity);
+}
+</pre>
+
+<p>相对底层的分配方法是使用ByteBufAllocator，Netty实现了PooledByteBufAllocator和UnpooledByteBufAllocator，前者使用了<a href="https://github.com/jemalloc/jemalloc" target="_blank" rel="noopener">jemalloc（一种malloc()的实现）</a>来分配内存，并且实现了对ByteBuf的池化以提高性能。后者分配的是未池化的ByteBuf，其分配方式与之前讲的一致。</p>
+<pre>Channel channel = ...;
+ByteBufAllocator allocator = channel.alloc();
+ByteBuf buffer = allocator.directBuffer();
+do something.......
+</pre>
+
+<p>为了优化内存使用率，<strong>Netty提供了一套手动的方式来追踪不活跃对象</strong>，像UnpooledHeapByteBuf这种分配在堆内的对象得益于JVM的GC管理，无需额外操心，而UnpooledDirectByteBuf是在堆外分配的，它的内部基于DirectByteBuffer，DirectByteBuffer会先向Bits类申请一个额度（Bits还拥有一个全局变量totalCapacity，记录了所有DirectByteBuffer总大小），每次申请前都会查看是否已经超过-XX:MaxDirectMemorySize所设置的上限，<strong>如果超限就会尝试调用System.gc()</strong>，<strong>以试图回收一部分内存，然后休眠100毫秒，如果内存还是不足，则只能抛出OOM异常</strong>。堆外内存的回收虽然有了这么一层保障，但为了提高性能与使用率，主动回收也是很有必要的。由于Netty还实现了ByteBuf的池化，像PooledHeapByteBuf和PooledDirectByteBuf就必须<strong>依赖于手动的方式来进行回收</strong>（放回池中）。</p>
+<p>Netty使用了<strong>引用计数器的方式来追踪那些不活跃的对象</strong>。引用计数的接口为<strong>ReferenceCounted</strong>，它的思想很简单，只要ByteBuf对象的<strong>引用计数大于0</strong>，就保证该对象<strong>不会被释放回收</strong>，可以通过<strong>手动调用release()与retain()</strong>方法来操作该对象的引用计数值<strong>递减或递增</strong>。用户也可以通过自定义一个ReferenceCounted的实现类，以满足自定义的规则。</p>
+<pre>package io.netty.buffer;
+public abstract class AbstractReferenceCountedByteBuf extends AbstractByteBuf {
+// 由于ByteBuf的实例对象会非常多,所以这里没有将refCnt包装为AtomicInteger
+// 而是使用一个全局的AtomicIntegerFieldUpdater来负责操作refCnt
+private static final AtomicIntegerFieldUpdater<abstractreferencecountedbytebuf> refCntUpdater = AtomicIntegerFieldUpdater.newUpdater(AbstractReferenceCountedByteBuf.class, "refCnt");
+// 每个ByteBuf的初始引用值都为1
+private volatile int refCnt = 1;
+public int refCnt() {
+return this.refCnt;
+}
+protected final void setRefCnt(int refCnt) {
+this.refCnt = refCnt;
+}
+public ByteBuf retain() {
+return this.retain0(1);
+}
+// 引用计数值递增increment，increment必须大于0
+public ByteBuf retain(int increment) {
+return this.retain0(ObjectUtil.checkPositive(increment, "increment"));
+}
+public static int checkPositive(int i, String name) {
+if(i <= 0) { throw new illegalargumentexception(name + ": " i (expected:> 0)");
+} else {
+return i;
+} 
+}
+// 使用CAS操作不断尝试更新值
+private ByteBuf retain0(int increment) {
+int refCnt;
+int nextCnt;
+do {
+refCnt = this.refCnt;
+nextCnt = refCnt + increment;
+if(nextCnt <= increment) { throw new illegalreferencecountexception(refcnt, increment); } while(!refcntupdater.compareandset(this, refcnt, nextcnt)); return this; public boolean release() this.release0(1); release(int decrement) this.release0(objectutil.checkpositive(decrement, "decrement")); private release0(int int refcnt; do refcnt="this.refCnt;" if(refcnt < -decrement); - decrement)); this.deallocate(); true; else false; protected abstract void deallocate(); pre>
+
+<h3 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h3><hr>
+<p>Netty中的Channel与Java NIO的概念一样，都是对<strong>一个实体或连接的抽象</strong>，但<strong>Netty提供了一套更加通用的API</strong>。就以网络套接字为例，在Java中OIO与NIO是截然不同的两套API，假设你之前使用的是OIO而又想更改为NIO实现，那么几乎需要重写所有代码。而在Netty中，只需要更改短短几行代码（更改Channel与EventLoop的实现类，如把OioServerSocketChannel替换为NioServerSocketChannel），就可以完成OIO与NIO（或其他）之间的转换。</p>
+<p><a href="http://wx2.sinaimg.cn/large/63503acbly1fm103i127ej20xe0f074y.jpg" target="_blank" rel="noopener"><img src="http://wx2.sinaimg.cn/large/63503acbly1fm103i127ej20xe0f074y.jpg" alt></a></p>
+<p>每个Channel最终都会被分配一个<strong>ChannelPipeline</strong>和<strong>ChannelConfig</strong>，前者持有所有负责<strong>处理入站与出站数据</strong>以及<strong>事件</strong>的ChannelHandler，后者包含了该Channel的<strong>所有配置设置</strong>，并且<strong>支持热更新</strong>，由于不同的传输类型可能具有其特别的配置，所以该类可能会实现为ChannelConfig的不同子类。</p>
+<p><strong>Channel是线程安全的</strong>（与之后要讲的线程模型有关），因此你完全可以在多个线程中复用同一个Channel，就像如下代码所示。</p>
+<pre>final Channel channel = ...
+final ByteBuf buffer = Unpooled.copiedBuffer("Hello,World!", CharsetUtil.UTF_8).retain();
+Runnable writer = new Runnable() {
+@Override
+public void run() {
+channel.writeAndFlush(buffer.duplicate());
+}
+};
+Executor executor = Executors.newCachedThreadPool();
+executor.execute(writer);
+executor.execute(writer);
+.......
+</pre>
+
+<p>Netty除了支持常见的NIO与OIO，还内置了其他的传输类型。</p>
+<table>
+<thead>
+<tr>
+<th>Nmae</th>
+<th>Package</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NIO</td>
+<td>io.netty.channel.socket.nio</td>
+<td>以Java NIO为基础实现</td>
+</tr>
+<tr>
+<td>OIO</td>
+<td>io.netty.channel.socket.oio</td>
+<td>以java.net为基础实现，使用阻塞I/O模型</td>
+</tr>
+<tr>
+<td>Epoll</td>
+<td>io.netty.channel.epoll</td>
+<td>由JNI驱动epoll()实现的更高性能的非阻塞I/O，它<strong>只能使用在Linux</strong></td>
+</tr>
+<tr>
+<td>Local</td>
+<td>io.netty.channel.local</td>
+<td><strong>本地传输</strong>，在JVM内部通过<strong>管道</strong>进行通信</td>
+</tr>
+<tr>
+<td>Embedded</td>
+<td>io.netty.channel.embedded</td>
+<td>允许在不需要真实网络传输的环境下使用ChannelHandler，主要用于对ChannelHandler进行<strong>测试</strong></td>
+</tr>
+</tbody></table>
+<p>NIO、OIO、Epoll我们应该已经很熟悉了，下面主要说说Local与Embedded。</p>
+<p>Local传输用于在<strong>同一个JVM中</strong>运行的客户端和服务器程序之间的<strong>异步通信</strong>，与服务器Channel相关联的SocketAddress并没有绑定真正的物理网络地址，它会被存储在注册表中，并在Channel关闭时注销。因此Local传输不会接受真正的网络流量，也就是说它不能与其他传输实现进行互操作。</p>
+<p>Embedded传输主要用于对ChannelHandler进行<strong>单元测试</strong>，ChannelHandler是用于<strong>处理消息的逻辑组件</strong>，Netty通过将入站消息与出站消息都写入到EmbeddedChannel中的方式（提供了write/readInbound()与write/readOutbound()来读写入站与出站消息）来实现对ChannelHandler的单元测试。</p>
+<h3 id="ChannelHandler"><a href="#ChannelHandler" class="headerlink" title="ChannelHandler"></a>ChannelHandler</h3><hr>
+<p>ChannelHandler充当了处理<strong>入站</strong>和<strong>出站</strong>数据的应用程序<strong>逻辑的容器</strong>，该类是基于<strong>事件驱动</strong>的，它会<strong>响应相关的事件</strong>然后去<strong>调用其关联的回调函数</strong>，例如当一个新的连接<strong>被建立</strong>时，ChannelHandler的<strong>channelActive</strong>()方法将<strong>会被调用</strong>。</p>
+<p>关于入站消息和出站消息的数据流向定义，如果以客户端为主视角来说的话，那么从<strong>客户端</strong>流向<strong>服务器</strong>的数据被称为<strong>出站</strong>，反之为入站。</p>
+<p>入站事件是可能被<strong>入站数据或者相关的状态更改而触发的事件</strong>，包括：连接已被激活、连接失活、读取入站数据、用户事件、发生异常等。</p>
+<p>出站事件是<strong>未来将会触发的某个动作的结果的事件</strong>，这些动作包括：打开或关闭远程节点的连接、将数据写（或冲刷）到套接字。</p>
+<p>ChannelHandler的主要用途包括：</p>
+<ul>
+<li><p>对<strong>入站与出站数据</strong>的业务<strong>逻辑处理</strong></p>
+</li>
+<li><p><strong>记录日志</strong></p>
+</li>
+<li><p><strong>将数据从一种格式转换为另一种格式</strong>，实现编解码器。以一次HTTP协议（或者其他应用层协议）的流程为例，数据在网络传输时的单位为字节，当客户端发送请求到服务器时，服务器需要通过解码器（处理入站消息）将字节解码为协议的消息内容，服务器在发送响应的时候（处理出站消息），还需要通过编码器将消息内容编码为字节。</p>
+</li>
+<li><p><strong>捕获异常</strong></p>
+</li>
+<li><p><strong>提供Channel生命周期内的通知</strong>，如Channel活动时与非活动时</p>
+</li>
+</ul>
+<p>Netty中到处都充满了异步与事件驱动，而<strong>回调函数</strong>正是用于<strong>响应事件之后的操作</strong>。由于异步会直接返回一个结果，所以Netty提供了ChannelFuture（实现了java.util.concurrent.Future）来作为异步调用返回的占位符，真正的结果会在未来的某个时刻完成，到时候就可以通过ChannelFuture对其进行访问，每个Netty的出站I/O操作都将会返回一个ChannelFuture。</p>
+<p>Netty还提供了<strong>ChannelFutureListener</strong>接口来<strong>监听ChannelFuture</strong>是否成功，并采取对应的操作。</p>
+<pre>Channel channel = ...
+ChannelFuture future = channel.connect(new InetSocketAddress("192.168.0.1",6666));
+// 注册一个监听器
+future.addListener(new ChannelFutureListener() {
+@Override
+public void operationComplete(ChannelFuture future) {
+if (future.isSuccess()) {
+// do something....
+} else {
+// 输出错误信息
+Throwable cause = future.cause();
+cause.printStackTrace();
+// do something....
+}
+}
+});
+</pre>
+
+<p>ChannelFutureListener接口中还提供了几个简单的默认实现，方便我们使用。</p>
+<pre>package io.netty.channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.util.concurrent.GenericFutureListener;
+public interface ChannelFutureListener extends GenericFutureListener<channelfuture> {
+// 在Future完成时关闭
+ChannelFutureListener CLOSE = new ChannelFutureListener() {
+public void operationComplete(ChannelFuture future) {
+future.channel().close();
+}
+};
+// 如果失败则关闭
+ChannelFutureListener CLOSE_ON_FAILURE = new ChannelFutureListener() {
+public void operationComplete(ChannelFuture future) {
+if(!future.isSuccess()) {
+future.channel().close();
+}
+}
+};
+// 将异常信息传递给下一个ChannelHandler
+ChannelFutureListener FIRE_EXCEPTION_ON_FAILURE = new ChannelFutureListener() {
+public void operationComplete(ChannelFuture future) {
+if(!future.isSuccess()) {
+future.channel().pipeline().fireExceptionCaught(future.cause());
+}
+}
+};
+}
+</channelfuture></pre>
+
+<p>ChannelHandler接口<strong>定义了对它生命周期进行监听的回调函数</strong>，在ChannelHandler被添加到ChannelPipeline或者被移除时都会调用这些函数。</p>
+<pre>package io.netty.channel;
+public interface ChannelHandler {
+void handlerAdded(ChannelHandlerContext var1) throws Exception;
+void handlerRemoved(ChannelHandlerContext var1) throws Exception;
+/** @deprecated */
+@Deprecated
+void exceptionCaught(ChannelHandlerContext var1, Throwable var2) throws Exception;
+// 该注解表明这个ChannelHandler可被其他线程复用
+@Inherited
+@Documented
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Sharable {
+}
+}
+
+</pre>
+
+<p><strong>入站消息与出站消息</strong>由其对应的接口<strong>ChannelInboundHandler与ChannelOutboundHandle</strong>r负责，这两个接口定义了监听Channel的<strong>生命周期的状态改变事件</strong>的回调函数。</p>
+<pre>package io.netty.channel;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+public interface ChannelInboundHandler extends ChannelHandler {
+// 当channel被注册到EventLoop时被调用
+void channelRegistered(ChannelHandlerContext var1) throws Exception;
+// 当channel已经被创建，但还未注册到EventLoop（或者从EventLoop中注销）被调用
+void channelUnregistered(ChannelHandlerContext var1) throws Exception;
+// 当channel处于活动状态（连接到远程节点）被调用
+void channelActive(ChannelHandlerContext var1) throws Exception;
+// 当channel处于非活动状态（没有连接到远程节点）被调用
+void channelInactive(ChannelHandlerContext var1) throws Exception;
+// 当从channel读取数据时被调用
+void channelRead(ChannelHandlerContext var1, Object var2) throws Exception;
+// 当channel的上一个读操作完成时被调用
+void channelReadComplete(ChannelHandlerContext var1) throws Exception;
+// 当ChannelInboundHandler.fireUserEventTriggered()方法被调用时被调用
+void userEventTriggered(ChannelHandlerContext var1, Object var2) throws Exception;
+// 当channel的可写状态发生改变时被调用
+void channelWritabilityChanged(ChannelHandlerContext var1) throws Exception;
+// 当处理过程中发生异常时被调用
+void exceptionCaught(ChannelHandlerContext var1, Throwable var2) throws Exception;
+}
+
+package io.netty.channel;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
+import java.net.SocketAddress;
+public interface ChannelOutboundHandler extends ChannelHandler {
+// 当请求将Channel绑定到一个地址时被调用
+// ChannelPromise是ChannelFuture的一个子接口，定义了如setSuccess(),setFailure()等方法
+void bind(ChannelHandlerContext var1, SocketAddress var2, ChannelPromise var3) throws Exception;
+// 当请求将Channel连接到远程节点时被调用
+void connect(ChannelHandlerContext var1, SocketAddress var2, SocketAddress var3, ChannelPromise var4) throws Exception;
+// 当请求将Channel从远程节点断开时被调用
+void disconnect(ChannelHandlerContext var1, ChannelPromise var2) throws Exception;
+// 当请求关闭Channel时被调用
+void close(ChannelHandlerContext var1, ChannelPromise var2) throws Exception;
+// 当请求将Channel从它的EventLoop中注销时被调用
+void deregister(ChannelHandlerContext var1, ChannelPromise var2) throws Exception;
+// 当请求从Channel读取数据时被调用
+void read(ChannelHandlerContext var1) throws Exception;
+// 当请求通过Channel将数据写到远程节点时被调用
+void write(ChannelHandlerContext var1, Object var2, ChannelPromise var3) throws Exception;
+// 当请求通过Channel将缓冲中的数据冲刷到远程节点时被调用
+void flush(ChannelHandlerContext var1) throws Exception;
+}
+</pre>
+
+<p>通过实现ChannelInboundHandler或者ChannelOutboundHandler就可以完成用户自定义的应用逻辑处理程序，不过Netty已经帮你实<strong>现了一些基本操作，用户只需要继承并扩展ChannelInboundHandlerAdapter或ChannelOutboundHandlerAdapter</strong>来作为自定义实现的起始点。</p>
+<p>ChannelInboundHandlerAdapter与ChannelOutboundHandlerAdapter都继承于ChannelHandlerAdapter，该抽象类简单实现了ChannelHandler接口。</p>
+<pre>public abstract class ChannelHandlerAdapter implements ChannelHandler {
+boolean added;
+public ChannelHandlerAdapter() {
+}
+// 该方法不允许将此ChannelHandler共享复用
+protected void ensureNotSharable() {
+if(this.isSharable()) {
+throw new IllegalStateException("ChannelHandler " + this.getClass().getName() + " is not allowed to be shared");
+}
+}
+// 使用反射判断实现类有没有@Sharable注解，以确认该类是否为可共享复用的
+public boolean isSharable() {
+Class clazz = this.getClass();
+Map cache = InternalThreadLocalMap.get().handlerSharableCache();
+Boolean sharable = (Boolean)cache.get(clazz);
+if(sharable == null) {
+sharable = Boolean.valueOf(clazz.isAnnotationPresent(Sharable.class));
+cache.put(clazz, sharable);
+}
+return sharable.booleanValue();
+}
+public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+}
+public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+}
+public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+ctx.fireExceptionCaught(cause);
+}
+}
+</pre>
+
+<p>ChannelInboundHandlerAdapter与ChannelOutboundHandlerAdapter<strong>默认只是简单地将请求传递给ChannelPipeline中的下一个ChannelHandler</strong>，源码如下：</p>
+<pre>public class ChannelInboundHandlerAdapter extends ChannelHandlerAdapter implements ChannelInboundHandler {
+public ChannelInboundHandlerAdapter() {
+}
+public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+ctx.fireChannelRegistered();
+}
+public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+ctx.fireChannelUnregistered();
+}
+public void channelActive(ChannelHandlerContext ctx) throws Exception {
+ctx.fireChannelActive();
+}
+public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+ctx.fireChannelInactive();
+}
+public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+ctx.fireChannelRead(msg);
+}
+public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+ctx.fireChannelReadComplete();
+}
+public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+ctx.fireUserEventTriggered(evt);
+}
+public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
+ctx.fireChannelWritabilityChanged();
+}
+public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+ctx.fireExceptionCaught(cause);
+}
+}
+public class ChannelOutboundHandlerAdapter extends ChannelHandlerAdapter implements ChannelOutboundHandler {
+public ChannelOutboundHandlerAdapter() {
+}
+public void bind(ChannelHandlerContext ctx, SocketAddress localAddress, ChannelPromise promise) throws Exception {
+ctx.bind(localAddress, promise);
+}
+public void connect(ChannelHandlerContext ctx, SocketAddress remoteAddress, SocketAddress localAddress, ChannelPromise promise) throws Exception {
+ctx.connect(remoteAddress, localAddress, promise);
+}
+public void disconnect(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
+ctx.disconnect(promise);
+}
+public void close(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
+ctx.close(promise);
+}
+public void deregister(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
+ctx.deregister(promise);
+}
+public void read(ChannelHandlerContext ctx) throws Exception {
+ctx.read();
+}
+public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
+ctx.write(msg, promise);
+}
+public void flush(ChannelHandlerContext ctx) throws Exception {
+ctx.flush();
+}
+}
+</pre>
+
+<p>对于处理入站消息，另外一种选择是<strong>继承SimpleChannelInboundHandler</strong>，它是Netty的一个继承于ChannelInboundHandlerAdapter的抽象类，并在其之上实现了<strong>自动释放资源的功能</strong>。</p>
+<p>我们在了解ByteBuf时就已经知道了<strong>Netty使用了一套自己实现的引用计数算法来主动释放资源</strong>，假设你的ChannelHandler继承于ChannelInboundHandlerAdapter或ChannelOutboundHandlerAdapter，那么你就有责任去管理你所分配的ByteBuf，一般来说，一个消息对象（<strong>ByteBuf</strong>）已经被消费（或丢弃）了，<strong>并不会传递给ChannelHandler链中的下一个处理器</strong>（如果该消息到达了实际的传输层，那么当它被写入或Channel关闭时，都会被自动释放），所以你就需要去手动释放它。通过一个简单的工具类<strong>ReferenceCountUtil的release方法</strong>，就可以做到这一点。</p>
+<pre>// 这个泛型为消息对象的类型
+public abstract class SimpleChannelInboundHandler<i> extends ChannelInboundHandlerAdapter {
+private final TypeParameterMatcher matcher;
+private final boolean autoRelease;
+protected SimpleChannelInboundHandler() {
+    this(true);
+}
+
+protected SimpleChannelInboundHandler(boolean autoRelease) {
+        this.matcher = TypeParameterMatcher.find(this, SimpleChannelInboundHandler.class, "I");
+        this.autoRelease = autoRelease;
+}
+
+protected SimpleChannelInboundHandler(Class<? extends I> inboundMessageType) {
+        this(inboundMessageType, true);
+}
+
+protected SimpleChannelInboundHandler(Class<? extends I> inboundMessageType, boolean autoRelease) {
+            this.matcher = TypeParameterMatcher.get(inboundMessageType);
+            this.autoRelease = autoRelease;
+}
+
+public boolean acceptInboundMessage(Object msg) throws Exception {
+        return this.matcher.match(msg);
+}
+
+// SimpleChannelInboundHandler只是替你做了ReferenceCountUtil.release()
+public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+boolean release = true;
+try {
+    if(this.acceptInboundMessage(msg)) {
+             this.channelRead0(ctx, msg);
+    } else {
+            release = false;
+            ctx.fireChannelRead(msg);
+    }
+} finally {
+        if(this.autoRelease && release) {
+            //ByteBuf的释放
+            ReferenceCountUtil.release(msg);
+        }
+    }
+}
+// 这个方法才是我们需要实现的方法
+protected abstract void channelRead0(ChannelHandlerContext var1, I var2) throws Exception;
+}
+// ReferenceCountUtil中的源码，release方法对消息对象的类型进行判断然后调用它的release()方法
+public static boolean release(Object msg) {
+return msg instanceof ReferenceCounted?((ReferenceCounted)msg).release():false;
+}
+</i></pre>
+
+<h3 id="ChannelPipeline"><a href="#ChannelPipeline" class="headerlink" title="ChannelPipeline"></a>ChannelPipeline</h3><hr>
+<p>为了<strong>模块化与解耦合</strong>，不可能由一个ChannelHandler来完成所有应用逻辑，所以Netty采用了拦截器链的设计。ChannelPipeline就是用来<strong>管理ChannelHandler实例链的容器</strong>，它的职责就是<strong>保证实例链的流动</strong>。</p>
+<p>每一个新创建的Channel都将会被分配一个新的ChannelPipeline，这种<strong>关联关系是永久</strong>性的，一个Channel一生只能对应一个ChannelPipeline。</p>
+<p><a href="http://wx3.sinaimg.cn/large/63503acbly1fm1er9l4jfj213h0fcq3d.jpg" target="_blank" rel="noopener"><img src="http://wx3.sinaimg.cn/large/63503acbly1fm1er9l4jfj213h0fcq3d.jpg" alt></a></p>
+<p>一个入站事件被触发时，它会先从ChannelPipeline的最左端（头部）开始一直传播到ChannelPipeline的最右端（尾部），而出站事件正好与入站事件顺序相反（从最右端一直传播到最左端）。这个<strong>顺序是定死</strong>的，Netty总是将ChannelPipeline的<strong>入站口作为头部</strong>，而将<strong>出站口作为尾部</strong>。在事件传播的过程中，ChannelPipeline会判断下一个ChannelHandler的类型是否和事件的运动方向相匹配，如果不匹配，就跳过该ChannelHandler并继续检查下一个（保证入站事件只会被ChannelInboundHandler处理），<strong>一个</strong>ChannelHandler也可以<strong>同时实现</strong>ChannelInboundHandler与ChannelOutboundHandler，它在<strong>入站事件与出站事件中都会被调用。</strong></p>
+<p>在阅读ChannelHandler的源码时，发现很多方法需要一个ChannelHandlerContext类型的参数，该接口是ChannelPipeline与ChannelHandler之间相关联的关键。ChannelHandlerContext可以通知ChannelPipeline中的当前ChannelHandler的下一个ChannelHandler，还可以动态地改变当前ChannelHandler在ChannelPipeline中的位置（通过调用ChannelPipeline中的各种方法来修改）。</p>
+<p>ChannelHandlerContext负责了在同一个ChannelPipeline中的ChannelHandler与其他ChannelHandler之间的交互，每个ChannelHandlerContext都对应了一个ChannelHandler。在DefaultChannelPipeline的源码中，已经表现的很明显了。</p>
+<pre>public class DefaultChannelPipeline implements ChannelPipeline {
+.........
+// 头部节点和尾部节点的引用变量
+// ChannelHandlerContext在ChannelPipeline中是以链表的形式组织的
+final AbstractChannelHandlerContext head;
+final AbstractChannelHandlerContext tail;
+.........
+// 添加一个ChannelHandler到链表尾部
+public final ChannelPipeline addLast(String name, ChannelHandler handler) {
+return this.addLast((EventExecutorGroup)null, name, handler);
+}
+public final ChannelPipeline addLast(EventExecutorGroup group, String name, ChannelHandler handler) {
+final AbstractChannelHandlerContext newCtx;
+synchronized(this) {
+// 检查ChannelHandler是否为一个共享对象(@Sharable)
+// 如果该ChannelHandler没有@Sharable注解，并且是已被添加过的那么就抛出异常
+checkMultiplicity(handler);
+// 返回一个DefaultChannelHandlerContext，注意该对象持有了传入的ChannelHandler
+newCtx = this.newContext(group, this.filterName(name, handler), handler);
+this.addLast0(newCtx);
+// 如果当前ChannelPipeline没有被注册，那么就先加到未决链表中
+if(!this.registered) {
+newCtx.setAddPending();
+this.callHandlerCallbackLater(newCtx, true);
+return this;
+}
+// 否则就调用ChannelHandler中的handlerAdded()
+EventExecutor executor = newCtx.executor();
+if(!executor.inEventLoop()) {
+newCtx.setAddPending();
+executor.execute(new Runnable() {
+public void run() {
+DefaultChannelPipeline.this.callHandlerAdded0(newCtx);
+}
+});
+return this;
+}
+}
+this.callHandlerAdded0(newCtx);
+return this;
+}
+// 将新的ChannelHandlerContext插入到尾部与尾部之前的节点之间
+private void addLast0(AbstractChannelHandlerContext newCtx) {
+AbstractChannelHandlerContext prev = this.tail.prev;
+newCtx.prev = prev;
+newCtx.next = this.tail;
+prev.next = newCtx;
+this.tail.prev = newCtx;
+}
+.....
+}
+</pre>
+
+<p>ChannelHandlerContext还定义了许多与Channel和ChannelPipeline重合的方法（像read()、write()、connect()这些用于出站的方法或者如fireChannelXXXX()这样用于<strong>入站的方法</strong>），不同之处在于<strong>调用Channel或者ChannelPipeline上的这些方法，它们将会从头沿着整个ChannelHandler实例链进行传播，而调用位于ChannelHandlerContext上的相同方法，则会从当前所关联的ChannelHandler开始，且只会传播给实例链中的下一个ChannelHandler</strong>。而且，<strong>事件之间的移动</strong>（从一个ChannelHandler到下一个ChannelHandler）也是<strong>通过ChannelHandlerContext中的方法调用完成</strong>的。</p>
+<pre>public class DefaultChannelPipeline implements ChannelPipeline {
+public final ChannelPipeline fireChannelRead(Object msg) {
+// 注意这里将头节点传入了进去
+AbstractChannelHandlerContext.invokeChannelRead(this.head, msg);
+return this;
+}
+}
+---------------------------------------------------------------
+
+abstract class AbstractChannelHandlerContext extends DefaultAttributeMap implements ChannelHandlerContext, ResourceLeakHint {
+static void invokeChannelRead(final AbstractChannelHandlerContext next, Object msg) {
+final Object m = next.pipeline.touch(ObjectUtil.checkNotNull(msg, "msg"), next);
+EventExecutor executor = next.executor();
+if(executor.inEventLoop()) {
+next.invokeChannelRead(m);
+} else {
+executor.execute(new Runnable() {
+public void run() {
+next.invokeChannelRead(m);
+}
+});
+}
+}
+private void invokeChannelRead(Object msg) {
+if(this.invokeHandler()) {
+try {
+((ChannelInboundHandler)this.handler()).channelRead(this, msg);
+} catch (Throwable var3) {
+this.notifyHandlerException(var3);
+}
+} else {
+// 寻找下一个ChannelHandler
+this.fireChannelRead(msg);
+}
+}
+public ChannelHandlerContext fireChannelRead(Object msg) {
+invokeChannelRead(this.findContextInbound(), msg);
+return this;
+}
+private AbstractChannelHandlerContext findContextInbound() {
+AbstractChannelHandlerContext ctx = this;
+do {
+ctx = ctx.next;
+} while(!ctx.inbound); // 直到找到一个ChannelInboundHandler
+return ctx;
+}
+}
+</pre>
+
+<h3 id="EventLoop"><a href="#EventLoop" class="headerlink" title="EventLoop"></a>EventLoop</h3><hr>
+<p>为了最大限度地提供高性能和可维护性，Netty设计了一套强大又易用的线程模型。在一个网络框架中，最重要的能力是能够快速高效地<strong>处理在连接的生命周期内发生的各种事件</strong>，与之相匹配的程序构造被称为<strong>事件循环</strong>，Netty定义了接口EventLoop来负责这项工作。</p>
+<p>如果是经常用Java进行多线程开发的童鞋想必经常会使用到线程池，也就是Executor这套API。Netty就是从Executor（java.util.concurrent）之上扩展了自己的EventExecutorGroup（io.netty.util.concurrent），同时为了与Channel的事件进行交互，还扩展了EventLoopGroup接口（io.netty.channel）。在io.netty.util.concurrent包下的EventExecutorXXX负责实现<strong>线程并发</strong>相关的工作，而在io.netty.channel包下的EventLoopXXX负责<strong>实现网络编程</strong>相关的工作（处理Channel中的事件）。</p>
+<p><a href="http://wx3.sinaimg.cn/large/63503acbly1fm296hz0p9j20ff0kc3z2.jpg" target="_blank" rel="noopener"><img src="http://wx3.sinaimg.cn/large/63503acbly1fm296hz0p9j20ff0kc3z2.jpg" alt></a></p>
+<p>在Netty的线程模型中，一个EventLoop将由一个永远不会改变的Thread驱动，而一个Channel一生只会使用一个EventLoop（但是一个EventLoop可能会被指派用于服务多个Channel），在Channel中的所有I/O操作和事件都由EventLoop中的线程处理，也就是说<strong>一个Channel的一生之中都只会使用到一个线程</strong>。不过在Netty3，只有入站事件会被EventLoop处理，所有出站事件都会由调用线程处理，这种设计导致了ChannelHandler的线程安全问题。Netty4简化了线程模型，通过在同一个线程处理所有事件，既解决了这个问题，还提供了一个更加简单的架构。</p>
+<pre>package io.netty.channel;
+public abstract class SingleThreadEventLoop extends SingleThreadEventExecutor implements EventLoop {
+protected static final int DEFAULT_MAX_PENDING_TASKS = Math.max(16, SystemPropertyUtil.getInt("io.netty.eventLoop.maxPendingTasks", 2147483647));
+    //内部队列
+private final Queue<runnable> tailTasks;
+protected SingleThreadEventLoop(EventLoopGroup parent, ThreadFactory threadFactory, boolean addTaskWakesUp) {
+this(parent, threadFactory, addTaskWakesUp, DEFAULT_MAX_PENDING_TASKS, RejectedExecutionHandlers.reject());
+}
+protected SingleThreadEventLoop(EventLoopGroup parent, Executor executor, boolean addTaskWakesUp) {
+this(parent, executor, addTaskWakesUp, DEFAULT_MAX_PENDING_TASKS, RejectedExecutionHandlers.reject());
+}
+protected SingleThreadEventLoop(EventLoopGroup parent, ThreadFactory threadFactory, boolean addTaskWakesUp, int maxPendingTasks, RejectedExecutionHandler rejectedExecutionHandler) {
+super(parent, threadFactory, addTaskWakesUp, maxPendingTasks, rejectedExecutionHandler);
+this.tailTasks = this.newTaskQueue(maxPendingTasks);
+}
+protected SingleThreadEventLoop(EventLoopGroup parent, Executor executor, boolean addTaskWakesUp, int maxPendingTasks, RejectedExecutionHandler rejectedExecutionHandler) {
+super(parent, executor, addTaskWakesUp, maxPendingTasks, rejectedExecutionHandler);
+this.tailTasks = this.newTaskQueue(maxPendingTasks);
+}
+// 返回它所在的EventLoopGroup
+public EventLoopGroup parent() {
+return (EventLoopGroup)super.parent();
+}
+public EventLoop next() {
+return (EventLoop)super.next();
+}
+// 注册Channel,这里ChannelPromise和Channel关联到了一起
+public ChannelFuture register(Channel channel) {
+return this.register((ChannelPromise)(new DefaultChannelPromise(channel, this)));
+}
+public ChannelFuture register(ChannelPromise promise) {
+ObjectUtil.checkNotNull(promise, "promise");
+promise.channel().unsafe().register(this, promise);
+return promise;
+}
+// 剩下这些函数都是用于调度任务
+public final void executeAfterEventLoopIteration(Runnable task) {
+ObjectUtil.checkNotNull(task, "task");
+if(this.isShutdown()) {
+reject();
+}
+if(!this.tailTasks.offer(task)) {
+this.reject(task);
+}
+if(this.wakesUpForTask(task)) {
+this.wakeup(this.inEventLoop());
+}
+}
+final boolean removeAfterEventLoopIterationTask(Runnable task) {
+return this.tailTasks.remove(ObjectUtil.checkNotNull(task, "task"));
+}
+protected boolean wakesUpForTask(Runnable task) {
+return !(task instanceof SingleThreadEventLoop.NonWakeupRunnable);
+}
+protected void afterRunningAllTasks() {
+this.runAllTasksFrom(this.tailTasks);
+}
+protected boolean hasTasks() {
+return super.hasTasks() || !this.tailTasks.isEmpty();
+}
+public int pendingTasks() {
+return super.pendingTasks() + this.tailTasks.size();
+}
+interface NonWakeupRunnable extends Runnable {
+}
+}
+</runnable></pre>
+
+<p>为了确保一个Channel的整个生命周期中的I/O事件会被一个EventLoop负责，Netty通过<strong>inEventLoop()</strong>方法来<strong>判断当前执行的线程的身份</strong>，确定它是否是分配给当前Channel以及它的EventLoop的那一个线程。</p>
+<p>如果当前（调用）线程正是EventLoop中的线程，那么所提交的任务将会被<strong>(true)直接执行</strong>，否则，EventLoop将调度该任务以便<strong>(false)稍后执行</strong>，并将它<strong>放入内部的任务队列</strong>（每个EventLoop都有它自己的任务队列，SingleThreadEventLoop的源码就能发现很多用于调度内部任务队列的方法），在下次处理它的事件时，将会执行队列中的那些任务。这种设计可以让任何线程与Channel直接交互，而无需在ChannelHandler中进行额外的同步。</p>
+<p>从性能上来考虑，千万<strong>不要将一个需要长时间来运行的任务放入到任务队列中</strong>，它会影响到该队列中的其他任务的执行。<strong>解决方案</strong>是<strong>使用一个专门的EventExecutor来执行它</strong>（ChannelPipeline提供了带有EventExecutorGroup参数的addXXX()方法，该方法可以<strong>将传入的ChannelHandler绑定到你传入的EventExecutor之中</strong>），这样它就会在另一条线程中执行，与其他任务隔离。</p>
+<pre>public abstract class SingleThreadEventExecutor extends AbstractScheduledEventExecutor implements OrderedEventExecutor {
+.....
+public void execute(Runnable task) {
+if(task == null) {
+throw new NullPointerException("task");
+} else {
+boolean inEventLoop = this.inEventLoop();
+if(inEventLoop) {
+this.addTask(task);
+} else {
+this.startThread();
+this.addTask(task);
+if(this.isShutdown() && this.removeTask(task)) {
+reject();
+}
+}
+if(!this.addTaskWakesUp && this.wakesUpForTask(task)) {
+this.wakeup(inEventLoop);
+}
+}
+}
+public boolean inEventLoop(Thread thread) {
+return thread == this.thread;
+}
+.....
+}
+</pre>
+
+<p>EventLoopGroup<strong>负责管理和分配EventLoop（创建EventLoop和为每个新创建的Channel分配EventLoop），根据不同的传输类型，EventLoop的创建和分配方式也不同</strong>。例如，使用NIO传输类型，EventLoopGroup就会只使用较少的EventLoop（一个EventLoop服务于多个Channel），这是因为NIO基于I/O多路复用，一个线程可以处理多个连接，而如果使用的是OIO，那么新创建一个Channel（连接）就需要分配一个EventLoop（线程）。</p>
+<h3 id="Bootstrap"><a href="#Bootstrap" class="headerlink" title="Bootstrap"></a>Bootstrap</h3><hr>
+<p>在深入了解地Netty的核心组件之后，发现它们的<strong>设计</strong>都很<strong>模块化</strong>，如果想要实现你自己的应用程序，就需要<strong>将这些组件组装到一起</strong>。Netty通过Bootstrap类，以对一个Netty应用程序进行配置（<strong>组装各个组件</strong>），并最终使它运行起来。对于客户端程序和服务器程序所使用到的Bootstrap类是不同的，后者需要使用ServerBootstrap，这样设计是因为，在如TCP这样有连接的协议中，服务器程序往往需要一个以上的Channel，通过父Channel来接受来自客户端的连接，然后创建子Channel用于它们之间的通信，而像UDP这样无连接的协议，它不需要每个连接都创建子Channel，只需要一个Channel即可。</p>
+<p>一个比较明显的差异就是Bootstrap与ServerBootstrap的group()方法，后者提供了一个接收2个EventLoopGroup的版本。</p>
+<pre>// 该方法在Bootstrap的父类AbstractBootstrap中，泛型B为它当前子类的类型（为了链式调用）
+public B group(EventLoopGroup group) {
+if(group == null) {
+throw new NullPointerException("group");
+} else if(this.group != null) {
+throw new IllegalStateException("group set already");
+} else {
+this.group = group;
+return this;
+}
+}
+// ServerBootstrap中的实现，它也支持只用一个EventLoopGroup
+public ServerBootstrap group(EventLoopGroup group) {
+return this.group(group, group);
+}
+public ServerBootstrap group(EventLoopGroup parentGroup, EventLoopGroup childGroup) {
+super.group(parentGroup);
+if(childGroup == null) {
+throw new NullPointerException("childGroup");
+} else if(this.childGroup != null) {
+throw new IllegalStateException("childGroup set already");
+} else {
+this.childGroup = childGroup;
+return this;
+}
+}
+</pre>
+
+<p>Bootstrap其实没有什么可以好说的，它就只是一个<strong>装配工</strong>，将各个组件拼装组合到一起，然后进行一些配置，有关它的详细API请参考<a href="http://netty.io/4.1/api/index.html" target="_blank" rel="noopener">Netty JavaDoc</a>。</p>
+<h3 id="Echo示例"><a href="#Echo示例" class="headerlink" title="Echo示例"></a>Echo示例</h3><p>下面我们将通过一个经典的Echo客户端与服务器的例子，来梳理一遍创建Netty应用的流程。</p>
+<p>首先实现的是服务器，我们先实现一个EchoServerInboundHandler，处理入站消息。</p>
+<pre>public class EchoServerInboundHandler extends ChannelInboundHandlerAdapter {
+@Override
+public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+ByteBuf in = (ByteBuf) msg;
+System.out.printf("Server received: %s \n", in.toString(CharsetUtil.UTF_8));
+// 由于读事件不是一次性就能把完整消息发送过来的，这里并没有调用writeAndFlush
+ctx.write(in); // 直接把消息写回给客户端(会被出站消息处理器处理,不过我们的应用没有实现任何出站消息处理器)
+}
+@Override
+public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+// 等读事件已经完成时,冲刷之前写数据的缓冲区
+// 然后添加了一个监听器，它会在Future完成时进行关闭该Channel.
+ctx.writeAndFlush(Unpooled.EMPTY_BUFFER)
+.addListener(ChannelFutureListener.CLOSE);
+}
+// 处理异常，输出异常信息，然后关闭Channel
+@Override
+public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+cause.printStackTrace();
+ctx.close();
+}
+}
+</pre>
+
+<p>服务器的应用逻辑只有这么多，剩下就是用ServerBootstrap进行配置了。</p>
+<pre>public class EchoServer {
+private final int port;
+public EchoServer(int port) {
+this.port = port;
+}
+public void start() throws Exception {
+final EchoServerInboundHandler serverHandler = new EchoServerInboundHandler();
+EventLoopGroup group = new NioEventLoopGroup(); // 传输类型使用NIO
+try {
+ServerBootstrap b = new ServerBootstrap();
+b.group(group) // 配置EventLoopGroup
+.channel(NioServerSocketChannel.class) // 配置Channel的类型
+.localAddress(new InetSocketAddress(port)) // 配置端口号
+.childHandler(new ChannelInitializer<socketchannel>() {
+// 实现一个ChannelInitializer，它可以方便地添加多个ChannelHandler
+@Override
+protected void initChannel(SocketChannel socketChannel) throws Exception {
+socketChannel.pipeline().addLast(serverHandler);
+}
+});
+// 绑定地址，同步等待它完成
+ChannelFuture f = b.bind().sync();
+// 关闭这个Future
+f.channel().closeFuture().sync();
+} finally {
+// 关闭应用程序，一般来说Netty应用只需要调用这个方法就够了
+group.shutdownGracefully().sync();
+}
+}
+public static void main(String[] args) throws Exception {
+if (args.length != 1) {
+System.err.printf(
+"Usage: %s <port> \n",
+EchoServer.class.getSimpleName()
+);
+return;
+}
+int port = Integer.parseInt(args[0]);
+new EchoServer(port).start();
+}
+}
+</port></socketchannel></pre>
+
+<p>接下来实现客户端，同样需要先实现一个入站消息处理器。</p>
+<pre>public class EchoClientInboundHandler extends SimpleChannelInboundHandler<bytebuf> {
+/**
+* 我们在Channel连接到远程节点直接发送一条消息给服务器
+*/
+@Override
+public void channelActive(ChannelHandlerContext ctx) throws Exception {
+ctx.writeAndFlush(Unpooled.copiedBuffer("Hello, Netty!", CharsetUtil.UTF_8));
+}
+@Override
+protected void channelRead0(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf) throws Exception {
+// 输出从服务器Echo的消息
+System.out.printf("Client received: %s \n", byteBuf.toString(CharsetUtil.UTF_8));
+}
+@Override
+public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+cause.printStackTrace();
+ctx.close();
+}
+}
+</bytebuf></pre>
+
+<p>然后配置客户端。</p>
+<pre>public class EchoClient {
+private final String host;
+private final int port;
+public EchoClient(String host, int port) {
+this.host = host;
+this.port = port;
+}
+public void start() throws Exception {
+EventLoopGroup group = new NioEventLoopGroup();
+try {
+Bootstrap b = new Bootstrap();
+b.group(group)
+.channel(NioSocketChannel.class)
+.remoteAddress(new InetSocketAddress(host, port)) // 服务器的地址
+.handler(new ChannelInitializer<socketchannel>() {
+@Override
+protected void initChannel(SocketChannel socketChannel) throws Exception {
+socketChannel.pipeline().addLast(new EchoClientInboundHandler());
+}
+});
+ChannelFuture f = b.connect().sync(); // 连接到服务器
+f.channel().closeFuture().sync();
+} finally {
+group.shutdownGracefully().sync();
+}
+}
+public static void main(String[] args) throws Exception {
+if (args.length != 2) {
+System.err.printf("Usage: %s <host> <port> \n", EchoClient.class.getSimpleName());
+return;
+}
+String host = args[0];
+int port = Integer.parseInt(args[1]);
+new EchoClient(host, port).start();
+}
+}
+</port></host></socketchannel></pre>
+
+<p>实现一个Netty应用程序就是如此简单，用户大多数都是在编写各种应用逻辑的ChannelHandler（或者使用Netty内置的各种实用ChannelHandler），然后只需要将它们全部添加到ChannelPipeline即可。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><hr>
+<ul>
+<li><p><a href="https://netty.io/" target="_blank" rel="noopener">Netty: Home</a></p>
+</li>
+<li><p><a href="https://notes.shichao.io/unp/ch6/#io-multiplexing-model" target="_blank" rel="noopener">Chapter 6. I/O Multiplexing: The select and poll Functions - Shichao’s Notes</a></p>
+</li>
+<li><p><a href="http://man7.org/linux/man-pages/man7/epoll.7.html" target="_blank" rel="noopener">epoll(7) - Linux manual page</a></p>
+</li>
+<li><p><a href="http://tutorials.jenkov.com/java-nio/" target="_blank" rel="noopener">Java NIO</a></p>
+</li>
+<li><p><a href="https://netty.io/" target="_blank" rel="noopener">Netty: Home</a></p>
+</li>
+<li><p><a href="https://notes.shichao.io/unp/ch6/#io-multiplexing-model" target="_blank" rel="noopener">Chapter 6. I/O Multiplexing: The select and poll Functions - Shichao’s Notes</a></p>
+</li>
+<li><p><a href="http://man7.org/linux/man-pages/man7/epoll.7.html" target="_blank" rel="noopener">epoll(7) - Linux manual page</a></p>
+</li>
+<li><p><a href="http://tutorials.jenkov.com/java-nio/" target="_blank" rel="noopener">Java NIO</a></p>
+</li>
+</ul>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></=></=></abstractreferencecountedbytebuf></pre></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/网络编程/" rel="tag"># 网络编程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/13/网络编程/Java网络编程与NIO详解8：浅析mmap和Direct Buffer/" rel="next" title="Java网络编程与NIO详解8：浅析mmap和Direct Buffer">
+                <i class="fa fa-chevron-left"></i> Java网络编程与NIO详解8：浅析mmap和Direct Buffer
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/13/网络编程/Java网络编程与NIO详解11：Tomcat中的Connector源码分析（NIO）/" rel="prev" title="Java网络编程与NIO详解11：Tomcat中的Connector源码分析（NIO）">
+                Java网络编程与NIO详解11：Tomcat中的Connector源码分析（NIO） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Netty概述"><span class="nav-number">1.</span> <span class="nav-text">Netty概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#etty简介"><span class="nav-number">2.</span> <span class="nav-text">etty简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Netty都有哪些组件？"><span class="nav-number">2.1.</span> <span class="nav-text">Netty都有哪些组件？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Netty是如何处理连接请求和业务逻辑的呢？"><span class="nav-number">2.2.</span> <span class="nav-text">Netty是如何处理连接请求和业务逻辑的呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何配置一个Netty应用？"><span class="nav-number">2.3.</span> <span class="nav-text">如何配置一个Netty应用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Netty是如何处理数据的？"><span class="nav-number">2.4.</span> <span class="nav-text">Netty是如何处理数据的？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何处理我们的业务逻辑？"><span class="nav-number">2.5.</span> <span class="nav-text">如何处理我们的业务逻辑？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ByteBuf"><span class="nav-number">2.6.</span> <span class="nav-text">ByteBuf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Channel"><span class="nav-number">2.7.</span> <span class="nav-text">Channel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ChannelHandler"><span class="nav-number">2.8.</span> <span class="nav-text">ChannelHandler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ChannelPipeline"><span class="nav-number">2.9.</span> <span class="nav-text">ChannelPipeline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EventLoop"><span class="nav-number">2.10.</span> <span class="nav-text">EventLoop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bootstrap"><span class="nav-number">2.11.</span> <span class="nav-text">Bootstrap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Echo示例"><span class="nav-number">2.12.</span> <span class="nav-text">Echo示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">4.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">4.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">4.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

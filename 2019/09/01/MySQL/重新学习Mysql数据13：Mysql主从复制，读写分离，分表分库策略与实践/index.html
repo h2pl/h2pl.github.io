@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="数据库,MySQL,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本文转自互联网 本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《重新学习MySQL数据库》其中一篇，本文部分内容来源于网络，为了把本">
+<meta name="keywords" content="数据库,MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重新学习Mysql数据13：Mysql主从复制，读写分离，分表分库策略与实践">
+<meta property="og:url" content="http://yoursite.com/2019/09/01/MySQL/重新学习Mysql数据13：Mysql主从复制，读写分离，分表分库策略与实践/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本文转自互联网 本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《重新学习MySQL数据库》其中一篇，本文部分内容来源于网络，为了把本">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190824171414385-1549042254.png">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190824171414592-1710110308.png">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190824171415114-995239105.png">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190824171415339-1589002733.png">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190824171415519-516549009.png">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190824171416563-1109228018.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:23.940Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="重新学习Mysql数据13：Mysql主从复制，读写分离，分表分库策略与实践">
+<meta name="twitter:description" content="本文转自互联网 本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《重新学习MySQL数据库》其中一篇，本文部分内容来源于网络，为了把本">
+<meta name="twitter:image" content="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190824171414385-1549042254.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/09/01/MySQL/重新学习Mysql数据13：Mysql主从复制，读写分离，分表分库策略与实践/">
+
+
+
+
+
+  <title>重新学习Mysql数据13：Mysql主从复制，读写分离，分表分库策略与实践 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/01/MySQL/重新学习Mysql数据13：Mysql主从复制，读写分离，分表分库策略与实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">重新学习Mysql数据13：Mysql主从复制，读写分离，分表分库策略与实践</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-01T15:56:26+08:00">
+                2019-09-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/" itemprop="url" rel="index">
+                    <span itemprop="name">Java技术江湖</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/MySQL/" itemprop="url" rel="index">
+                    <span itemprop="name">MySQL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/09/01/MySQL/重新学习Mysql数据13：Mysql主从复制，读写分离，分表分库策略与实践/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/09/01/MySQL/重新学习Mysql数据13：Mysql主从复制，读写分离，分表分库策略与实践/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><p>本文转自互联网</p>
+<p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章首发于我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>本文是微信公众号【Java技术江湖】的《重新学习MySQL数据库》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透彻，也整合了很多我认为不错的技术博客内容，引用其中了一些比较好的博客文章，如有侵权，请联系作者。</p>
+<p>该系列博文会告诉你如何从入门到进阶，从sql基本的使用方法，从MySQL执行引擎再到索引、事务等知识，一步步地学习MySQL相关技术的实现原理，更好地了解如何基于这些知识来优化sql，减少SQL执行时间，通过执行计划对SQL性能进行分析，再到MySQL的主从复制、主备部署等内容，以便让你更完整地了解整个MySQL方面的技术体系，形成自己的知识框架。</p>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+<a id="more"></a>
+
+
+<p>一、MySQL扩展具体的实现方式</p>
+<p>随着业务规模的不断扩大，需要选择合适的方案去应对数据规模的增长，以应对逐渐增长的访问压力和数据量。</p>
+<p>关于数据库的扩展主要包括：业务拆分、主从复制、读写分离、数据库分库与分表等。这篇文章主要讲述数据库分库与分表</p>
+<p>（1）业务拆分</p>
+<p>在 <a href="http://blog.csdn.net/xlgen157387/article/details/53230138" target="_blank" rel="noopener">大型网站应用之海量数据和高并发解决方案总结一二</a> 一篇文章中也具体讲述了为什么要对业务进行拆分。</p>
+<p>业务起步初始，为了加快应用上线和快速迭代，很多应用都采用集中式的架构。随着业务系统的扩大，系统变得越来越复杂，越来越难以维护，开发效率变得越来越低，并且对资源的消耗也变得越来越大，通过硬件提高系统性能的方式带来的成本也越来越高。</p>
+<p>因此，在选型初期，一个优良的架构设计是后期系统进行扩展的重要保障。</p>
+<p>例如：电商平台，包含了用户、商品、评价、订单等几大模块，最简单的做法就是在一个数据库中分别创建users、shops、comment、order四张表。</p>
+<p><img src="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190824171414385-1549042254.png" alt="这里写图片描述"></p>
+<p>但是，随着业务规模的增大，访问量的增大，我们不得不对业务进行拆分。每一个模块都使用单独的数据库来进行存储，不同的业务访问不同的数据库，将原本对一个数据库的依赖拆分为对4个数据库的依赖，这样的话就变成了4个数据库同时承担压力，系统的吞吐量自然就提高了。</p>
+<p><img src="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190824171414592-1710110308.png" alt="这里写图片描述"></p>
+<p>（2）主从复制</p>
+<p>一般是主写从读，一主多从</p>
+<p>1、<a href="http://blog.csdn.net/xlgen157387/article/details/51331244" target="_blank" rel="noopener">MySQL5.6 数据库主从（Master/Slave）同步安装与配置详解</a></p>
+<p>2、<a href="http://blog.csdn.net/xlgen157387/article/details/52451613" target="_blank" rel="noopener">MySQL主从复制的常见拓扑、原理分析以及如何提高主从复制的效率总结</a></p>
+<p>3、<a href="http://blog.csdn.net/xlgen157387/article/details/52452394" target="_blank" rel="noopener">使用mysqlreplicate命令快速搭建 Mysql 主从复制</a></p>
+<p>上述三篇文章中，讲述了如何配置主从数据库，以及如何实现数据库的读写分离，这里不再赘述，有需要的选择性点击查看。</p>
+<p><img src="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190824171415114-995239105.png" alt="这里写图片描述"></p>
+<p>上图是网上的一张关于MySQL的Master和Slave之间数据同步的过程图。</p>
+<p>主要讲述了MySQL主从复制的原理：数据复制的实际就是Slave从Master获取Binary log文件，然后再本地镜像的执行日志中记录的操作。由于主从复制的过程是异步的，因此Slave和Master之间的数据有可能存在延迟的现象，此时只能保证数据最终的一致性。</p>
+<p>（3）数据库分库与分表</p>
+<p>我们知道每台机器无论配置多么好它都有自身的物理上限，所以当我们应用已经能触及或远远超出单台机器的某个上限的时候，我们惟有寻找别的机器的帮助或者继续升级的我们的硬件，但常见的方案还是通过添加更多的机器来共同承担压力。</p>
+<p>我们还得考虑当我们的业务逻辑不断增长，我们的机器能不能通过线性增长就能满足需求？因此，使用数据库的分库分表，能够立竿见影的提升系统的性能，关于为什么要使用数据库的分库分表的其他原因这里不再赘述，主要讲具体的实现策略。请看下边章节。</p>
+<h2 id="二、分表实现策略"><a href="#二、分表实现策略" class="headerlink" title="二、分表实现策略"></a>二、分表实现策略</h2><p>关键字：用户ID、表容量</p>
+<p>对于大部分数据库的设计和业务的操作基本都与用户的ID相关，因此使用用户ID是最常用的分库的路由策略。用户的ID可以作为贯穿整个系统用的重要字段。因此，使用用户的ID我们不仅可以方便我们的查询，还可以将数据平均的分配到不同的数据库中。（当然，还可以根据类别等进行分表操作，分表的路由策略还有很多方式）</p>
+<p>接着上述电商平台假设，订单表order存放用户的订单数据，sql脚本如下（只是为了演示，省略部分细节）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `order` (</span><br><span class="line">  `order_id` bigint(32) primary key auto_increment,</span><br><span class="line">  `user_id` bigint(32),</span><br><span class="line">   ...</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>当数据比较大的时候，对数据进行分表操作，首先要确定需要将数据平均分配到多少张表中，也就是：表容量。</p>
+<p>这里假设有100张表进行存储，则我们在进行存储数据的时候，首先对用户ID进行取模操作，根据 <code>user_id%100</code> 获取对应的表进行存储查询操作，示意图如下：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190824171415339-1589002733.png" alt="这里写图片描述"></p>
+<p>例如，<code>user_id = 101</code> 那么，我们在获取值的时候的操作，可以通过下边的sql语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from order_1 where user_id= 101</span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>order_1</code>是根据 <code>101%100</code> 计算所得，表示分表之后的第一章order表。</p>
+<p>注意：</p>
+<p>在实际的开发中，如果你使用MyBatis做持久层的话，MyBatis已经提供了很好得支持数据库分表的功能，例如上述sql用MyBatis实现的话应该是：</p>
+<p>接口定义：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">/**</span><br><span class="line">  * 获取用户相关的订单详细信息</span><br><span class="line">  * @param tableNum 具体某一个表的编号</span><br><span class="line">  * @param userId 用户ID</span><br><span class="line">  * @return 订单列表</span><br><span class="line">  */</span><br><span class="line">public List&lt;Order&gt; getOrder(@Param(&quot;tableNum&quot;) int tableNum,@Param(&quot;userId&quot;) int userId);</span><br></pre></td></tr></table></figure>
+
+<p>xml配置映射文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id=&quot;getOrder&quot; resultMap=&quot;BaseResultMap&quot;&gt;</span><br><span class="line">    select * from order_$&#123;tableNum&#125;</span><br><span class="line">    where user_id = #&#123;userId&#125;</span><br><span class="line">  &lt;/select&gt;</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>${tableNum}</code> 含义是直接让参数加入到sql中，这是MyBatis支持的特性。</p>
+<p>注意：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">另外，在实际的开发中，我们的用户ID更多的可能是通过UUID生成的，这样的话，我们可以首先将UUID进行hash获取到整数值，然后在进行取模操作。</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、分库实现策略"><a href="#三、分库实现策略" class="headerlink" title="三、分库实现策略"></a>三、分库实现策略</h2><p>数据库分表能够解决单表数据量很大的时候数据查询的效率问题，但是无法给数据库的并发操作带来效率上的提高，因为分表的实质还是在一个数据库上进行的操作，很容易受数据库IO性能的限制。</p>
+<p>因此，如何将数据库IO性能的问题平均分配出来，很显然将数据进行分库操作可以很好地解决单台数据库的性能问题。</p>
+<p>分库策略与分表策略的实现很相似，最简单的都是可以通过取模的方式进行路由。</p>
+<p>还是上例，将用户ID进行取模操作，这样的话获取到具体的某一个数据库，同样关键字有：</p>
+<p>用户ID、库容量</p>
+<p>路由的示意图如下：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190824171415519-516549009.png" alt="这里写图片描述"></p>
+<p>上图中库容量为100。</p>
+<p>同样，如果用户ID为UUID请先hash然后在进行取模。</p>
+<h2 id="四、分库与分表实现策略"><a href="#四、分库与分表实现策略" class="headerlink" title="四、分库与分表实现策略"></a>四、分库与分表实现策略</h2><p>上述的配置中，数据库分表可以解决单表海量数据的查询性能问题，分库可以解决单台数据库的并发访问压力问题。</p>
+<p>有时候，我们需要同时考虑这两个问题，因此，我们既需要对单表进行分表操作，还需要进行分库操作，以便同时扩展系统的并发处理能力和提升单表的查询性能，就是我们使用到的分库分表。</p>
+<p>分库分表的策略相对于前边两种复杂一些，一种常见的路由策略如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">１、中间变量　＝ user_id%（库数量*每个库的表数量）;</span><br><span class="line">２、库序号　＝　取整（中间变量／每个库的表数量）;</span><br><span class="line">３、表序号　＝　中间变量％每个库的表数量;</span><br></pre></td></tr></table></figure>
+
+<p>例如：数据库有256 个，每一个库中有1024个数据表，用户的user_id＝262145，按照上述的路由策略，可得：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">１、中间变量　＝ 262145%（256*1024）= 1;</span><br><span class="line">２、库序号　＝　取整（1／1024）= 0;</span><br><span class="line">３、表序号　＝　1％1024 = 1;</span><br></pre></td></tr></table></figure>
+
+<p>这样的话，对于user_id＝262145，将被路由到第０个数据库的第１个表中。</p>
+<p>示意图如下：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190824171416563-1109228018.png" alt="这里写图片描述"></p>
+<h2 id="五、分库分表总结"><a href="#五、分库分表总结" class="headerlink" title="五、分库分表总结"></a>五、分库分表总结</h2><p>关于分库分表策略的选择有很多种，上文中根据用户ID应该是比较简单的一种。其他方式比如使用号段进行分区或者直接使用hash进行路由等。有兴趣的可以自行查找学习。</p>
+<p>关于上文中提到的，如果用户的ID是通过UUID的方式生成的话，我们需要单独的进行一次hash操作，然后在进行取模操作等，其实hash本身就是一种分库分表的策略，使用hash进行路由策略的时候，我们需要知道的是，也就是hash路由策略的优缺点，优点是：数据分布均匀；缺点是：数据迁移的时候麻烦，不能按照机器性能分摊数据。</p>
+<p>上述的分库和分表操作，查询性能和并发能力都得到了提高，但是还有一些需要注意的就是，例如：原本跨表的事物变成了分布式事物；由于记录被切分到不同的数据库和不同的数据表中，难以进行多表关联查询，并且不能不指定路由字段对数据进行查询。分库分表之后，如果我们需要对系统进行进一步的扩阵容（路由策略变更），将变得非常不方便，需要我们重新进行数据迁移。</p>
+<hr>
+<p>最后需要指出的是，分库分表目前有很多的中间件可供选择，最常见的是使用淘宝的中间件Cobar。</p>
+<p>GitHub地址：<a href="https://github.com/alibaba/cobara" target="_blank" rel="noopener">https://github.com/alibaba/cobara</a></p>
+<p>文档地址为：<a href="https://github.com/alibaba/cobar/wiki" target="_blank" rel="noopener">https://github.com/alibaba/cobar/wiki</a></p>
+<p>关于淘宝的中间件Cobar本篇内容不具体介绍，会在后边的学习中在做介绍。</p>
+<p>另外Spring也可以实现数据库的读写分离操作，后边的文章，会进一步学习。</p>
+<h2 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h2><p>上述中，我们学到了如何进行数据库的读写分离和分库分表，那么，是不是可以实现一个可扩展、高性能、高并发的网站那？很显然还不可以!一个大型的网站使用到的技术远不止这些，可以说，这些都是其中的最基础的一个环节，因为还有很多具体的细节我们没有掌握到，比如：数据库的集群控制，集群的负载均衡，灾难恢复，故障自动切换，事务管理等等技术。因此，还有很多需要去学习去研究的地方。</p>
+<p>总之：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">路漫漫其修远兮，吾将上下而求索。</span><br></pre></td></tr></table></figure>
+
+<p>前方道路美好而光明，2017年新征程，不泄步！</p>
+<h2 id="Mycat实现主从复制，读写分离，以及分库分表的实践"><a href="#Mycat实现主从复制，读写分离，以及分库分表的实践" class="headerlink" title="Mycat实现主从复制，读写分离，以及分库分表的实践"></a>Mycat实现主从复制，读写分离，以及分库分表的实践</h2><h3 id="Mycat是什么"><a href="#Mycat是什么" class="headerlink" title="Mycat是什么"></a>Mycat是什么</h3><p>一个彻底开源的，面向企业应用开发的大数据库集群</p>
+<p>支持事务、ACID、可以替代MySQL的加强版数据库</p>
+<p>一个可以视为MySQL集群的企业级数据库，用来替代昂贵的Oracle集群</p>
+<p>一个融合内存缓存技术、NoSQL技术、HDFS大数据的新型SQL Server</p>
+<p>结合传统数据库和新型分布式数据仓库的新一代企业级数据库产品</p>
+<p>一个新颖的数据库中间件产品</p>
+<p>以上内容来自<a href="http://www.mycat.io/" target="_blank" rel="noopener">Mycat官网</a>，简单来说，Mycat就是一个数据库中间件，对于我们开发来说，就像是一个代理，当我们需要使用到多个数据库和需要进行分库分表的时候，我们只需要在mycat里面配置好相关规则，程序无需做任何修改，只是需要将原本的数据源链接到mycat而已，当然如果以前有多个数据源，需要将数据源切换为单个数据源，这样有个好处就是当我们的数据量已经很大的时候，需要开始分库分表或者做读写分离的时候，不用修改代码（只需要改一下数据源的链接地址）</p>
+<p><strong>使用Mycat分表分库实践</strong></p>
+<p>haha,首先这不是一篇入门Mycat的博客但小编感觉又很入门的博客!这篇博客主要讲解Mycat中数据分片的相关知识，同时小编将会在本机数据库上进行测试验证，图文并茂展示出来。</p>
+<p>数据库分区分表，咋一听非常地高大上，总有一种高高在上，望尘莫及的感觉，但小编想说的是，其实，作为一个开发人员，该来的总是会来，该学的东西你还是得学，区别只是时间先后顺序的问题。</p>
+<h3 id="一、分区分表"><a href="#一、分区分表" class="headerlink" title="一、分区分表"></a>一、分区分表</h3><p>分区就是把一个数据表的文件和索引分散存储在不同的物理文件中。</p>
+<p>mysql支持的分区类型包括Range、List、Hash、Key，其中Range比较常用：</p>
+<p>RANGE分区：基于属于一个给定连续区间的列值，把多行分配给分区。</p>
+<p>LIST分区：类似于按RANGE分区，区别在于LIST分区是基于列值匹配一个离散值集合中的某个值来进行选择。</p>
+<p>HASH分区：基于用户定义的表达式的返回值来进行选择的分区，该表达式使用将要插入到表中的这些行的列值进行计算。这个函数可以包含MySQL 中有效的、产生非负整数值的任何表达式。</p>
+<p>KEY分区：类似于按HASH分区，区别在于KEY分区只支持计算一列或多列，且MySQL服务器提供其自身的哈希函数。必须有一列或多列包含整数值。</p>
+<p>分表是指在逻辑上将一个表拆分成多个逻辑表，在整体上看是一张表，分表有水平拆分和垂直拆分两种,举个例子，将一张大的存储商户信息的表按照商户号的范围进行分表，将不同范围的记录分布到不同的表中。</p>
+<h3 id="二、Mycat-数据分片的种类"><a href="#二、Mycat-数据分片的种类" class="headerlink" title="二、Mycat 数据分片的种类"></a>二、Mycat 数据分片的种类</h3><p>Mycat 的分片其实和分表差不多意思，就是当数据库过于庞大，尤其是写入过于频繁且很难由一台主机支撑是，这时数据库就会面临瓶颈。我们将存放在同一个数据库实例中的数据分散存放到多个数据库实例（主机）上，进行多台设备存取以提高性能，在切分数据的同时可以提高系统的整体性。</p>
+<p>数据分片是指将数据全局地划分为相关的逻辑片段，有水平切分、垂直切分、混合切分三种类型，下面主要讲下Mycat的水平和垂直切分。有一点很重要，那就是Mycat是分布式的，因此分出来的数据片分布到不同的物理机上是正常的，靠网络通信进行协作。</p>
+<p>水平切分</p>
+<p>就是按照某个字段的某种规则分散到多个节点库中，每个节点中包含一部分数据。可以将数据水平切分简单理解为按照数据行进行切分，就是将表中的某些行切分到一个节点，将另外某些行切分到其他节点，从分布式的整体来看它们是一个整体的表。</p>
+<p>垂直切分</p>
+<p>一个数据库由很多表构成，每个表对应不同的业务，垂直切分是指按照业务将表进行分类并分不到不同的节点上。垂直拆分简单明了，拆分规则明确，应用程序模块清晰、明确、容易整合，但是某个表的数据量达到一定程度后扩展起来比较困难。</p>
+<p>混合切分</p>
+<p>为水平切分和垂直切分的结合。</p>
+<h3 id="三、Mycat-垂直切分、水平切分实战"><a href="#三、Mycat-垂直切分、水平切分实战" class="headerlink" title="三、Mycat 垂直切分、水平切分实战"></a>三、Mycat 垂直切分、水平切分实战</h3><h4 id="1、垂直切分"><a href="#1、垂直切分" class="headerlink" title="1、垂直切分"></a>1、垂直切分</h4><p>上面说到，垂直切分主要是根据具体业务来进行拆分的，那么，我们可以想象这么一个场景，假设我们有一个非常大的电商系统，那么我们需要将订单表、流水表、用户表、用户评论表等分别分不到不同的数据库中来提高吞吐量，架构图大概如下：</p>
+<embed src="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190824171417040-1009330909.webp">
+
+<p>由于小编是在一台机器上测试，因此就只有host1这个节点，但不同的表还是依旧对应不同的数据库，只不过是所有数据库属于同一个数据库实例（主机）而已，后期不同主机只需增加<code>&lt;dataHost&gt;</code>节点即可。</p>
+<p>mycat配置文件如下：</p>
+<p><code>server.xml</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;user name=&quot;root&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;password&quot;&gt;root&lt;/property&gt;</span><br><span class="line">    // 对应四个逻辑库</span><br><span class="line">    &lt;property name=&quot;schemas&quot;&gt;order,trade,user,comment&lt;/property&gt;</span><br><span class="line">&lt;/user&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>schema.xml</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE mycat:schema SYSTEM &quot;schema.dtd&quot;&gt;</span><br><span class="line">&lt;mycat:schema xmlns:mycat=&quot;http://io.mycat/&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 4个逻辑库，对应4个不同的分片节点 --&gt;</span><br><span class="line">    &lt;schema name=&quot;order&quot; checkSQLschema=&quot;false&quot; sqlMaxLimit=&quot;100&quot; dataNode=&quot;database1&quot; /&gt;</span><br><span class="line">    &lt;schema name=&quot;trade&quot; checkSQLschema=&quot;false&quot; sqlMaxLimit=&quot;100&quot; dataNode=&quot;database2&quot; /&gt;</span><br><span class="line">    &lt;schema name=&quot;user&quot; checkSQLschema=&quot;false&quot; sqlMaxLimit=&quot;100&quot; dataNode=&quot;database3&quot; /&gt;</span><br><span class="line">    &lt;schema name=&quot;comment&quot; checkSQLschema=&quot;false&quot; sqlMaxLimit=&quot;100&quot; dataNode=&quot;database4&quot; /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 四个分片，对应四个不同的数据库 --&gt;</span><br><span class="line">    &lt;dataNode name=&quot;database1&quot; dataHost=&quot;localhost1&quot; database=&quot;database1&quot; /&gt;</span><br><span class="line">    &lt;dataNode name=&quot;database2&quot; dataHost=&quot;localhost1&quot; database=&quot;database2&quot; /&gt;</span><br><span class="line">    &lt;dataNode name=&quot;database3&quot; dataHost=&quot;localhost1&quot; database=&quot;database3&quot; /&gt;</span><br><span class="line">    &lt;dataNode name=&quot;database4&quot; dataHost=&quot;localhost1&quot; database=&quot;database4&quot; /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 实际物理主机，只有这一台 --&gt;</span><br><span class="line">    &lt;dataHost name=&quot;localhost1&quot; maxCon=&quot;1000&quot; minCon=&quot;10&quot; balance=&quot;0&quot;</span><br><span class="line">                writeType=&quot;0&quot; dbType=&quot;mysql&quot; dbDriver=&quot;native&quot; switchType=&quot;1&quot;  slaveThreshold=&quot;100&quot;&gt;</span><br><span class="line">        &lt;heartbeat&gt;select user()&lt;/heartbeat&gt;</span><br><span class="line">        &lt;writeHost host=&quot;hostM1&quot; url=&quot;localhost:3306&quot; user=&quot;root&quot;</span><br><span class="line">                password=&quot;root&quot;&gt;</span><br><span class="line">        &lt;/writeHost&gt;</span><br><span class="line">    &lt;/dataHost&gt;</span><br><span class="line">&lt;/mycat:schema&gt;</span><br></pre></td></tr></table></figure>
+
+<p>登陆本机mysql，创建<code>order,trade,user,comment</code>4个数据库:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">create database database1 character set utf8;</span><br><span class="line">create database database2 character set utf8;</span><br><span class="line">create database database3 character set utf8;</span><br><span class="line">create database database4 character set utf8;</span><br></pre></td></tr></table></figure>
+
+<p>执行<code>bin</code>目录下的<code>startup_nowrap.bat</code>文件，如果输出下面内容，则说明已经启动mycat成功，如果没有，请检查<code>order,trade,user,comment</code>4个数据库是否已经创建。</p>
+<embed src="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190824171417782-1932957742.webp">
+
+<p>采用下面语句登陆Mycat服务器：</p>
+<p><code>mysql -uroot -proot -P8066 -h127.0.0.1</code></p>
+<embed src="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190824171418203-391358451.webp">
+
+<p>在<code>comment</code>数据库中创建<code>Comment</code>表，并插入一条数据</p>
+<embed src="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190824171418351-1853467698.webp">
+
+<p>上图1处新建一个<code>Comment</code>表，2处插入一条记录，3处查看记录插入到哪个数据节点中，即<code>database4</code>。</p>
+<h4 id="2、水平切分"><a href="#2、水平切分" class="headerlink" title="2、水平切分"></a>2、水平切分</h4><p><code>server.xml</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;user name=&quot;root&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;password&quot;&gt;root&lt;/property&gt;</span><br><span class="line">    &lt;property name=&quot;schemas&quot;&gt;TESTDB&lt;/property&gt;</span><br><span class="line">&lt;/user&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>schema.xml</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE mycat:schema SYSTEM &quot;schema.dtd&quot;&gt;</span><br><span class="line">&lt;mycat:schema xmlns:mycat=&quot;http://io.mycat/&quot;&gt;</span><br><span class="line">    &lt;schema name=&quot;TESTDB&quot; checkSQLschema=&quot;false&quot; sqlMaxLimit=&quot;100&quot;&gt;</span><br><span class="line">        &lt;table name=&quot;travelrecord&quot; dataNode=&quot;dn1,dn2,dn3&quot; rule=&quot;auto-sharding-long&quot; /&gt;</span><br><span class="line">    &lt;/schema&gt;</span><br><span class="line"></span><br><span class="line">    &lt;dataNode name=&quot;dn1&quot; dataHost=&quot;localhost1&quot; database=&quot;db1&quot; /&gt;</span><br><span class="line">    &lt;dataNode name=&quot;dn2&quot; dataHost=&quot;localhost1&quot; database=&quot;db2&quot; /&gt;</span><br><span class="line">    &lt;dataNode name=&quot;dn3&quot; dataHost=&quot;localhost1&quot; database=&quot;db3&quot; /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;dataHost name=&quot;localhost1&quot; maxCon=&quot;1000&quot; minCon=&quot;10&quot; balance=&quot;0&quot;</span><br><span class="line">                writeType=&quot;0&quot; dbType=&quot;mysql&quot; dbDriver=&quot;native&quot; switchType=&quot;1&quot;  slaveThreshold=&quot;100&quot;&gt;</span><br><span class="line">    &lt;heartbeat&gt;select user()&lt;/heartbeat&gt;</span><br><span class="line">    &lt;!-- can have multi write hosts --&gt;</span><br><span class="line">    &lt;writeHost host=&quot;hostM1&quot; url=&quot;localhost:3306&quot; user=&quot;root&quot;</span><br><span class="line">       password=&quot;root&quot;&gt;</span><br><span class="line">    &lt;/writeHost&gt;</span><br><span class="line">    &lt;/dataHost&gt;</span><br><span class="line">&lt;/mycat:schema&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>rule.xml</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE mycat:rule SYSTEM &quot;rule.dtd&quot;&gt;</span><br><span class="line">&lt;mycat:rule xmlns:mycat=&quot;http://io.mycat/&quot;&gt;</span><br><span class="line">    &lt;tableRule name=&quot;auto-sharding-long&quot;&gt;</span><br><span class="line">        &lt;rule&gt;</span><br><span class="line">            &lt;columns&gt;id&lt;/columns&gt;</span><br><span class="line">            rang-long</span><br><span class="line">        &lt;/rule&gt;</span><br><span class="line">    &lt;/tableRule&gt;</span><br><span class="line"></span><br><span class="line">    &lt;function name=&quot;rang-long&quot;</span><br><span class="line">            class=&quot;io.mycat.route.function.AutoPartitionByLong&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;mapFile&quot;&gt;autopartition-long.txt&lt;/property&gt;</span><br><span class="line">    &lt;/function&gt;</span><br><span class="line">&lt;/mycat:rule&gt;</span><br></pre></td></tr></table></figure>
+
+<p><code>conf</code>目录下的<code>autopartition-long.txt</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># range start-end ,data node index</span><br><span class="line"># K=1000,M=10000.</span><br><span class="line">0-500M=0</span><br><span class="line">500M-1000M=1</span><br><span class="line">1000M-1500M=2</span><br></pre></td></tr></table></figure>
+
+<p>上面的配置创建了一个名为<code>TESTDB</code>的逻辑库，并指定了需要切分的表<code>&lt;table&gt;</code>标签，表名为<code>travelrecord</code>,分区的策略采用<code>rang-long</code>算法，即根据<code>id</code>数据列值的范围进行切分，具体的规则在<code>autopartition-long.txt</code>文件中定义，即<code>id</code>在<code>0-500*10000</code>范围内的记录存放在<code>db1</code>的<code>travelrecord</code>表中，<code>id</code>在<code>500*10000 - 1000*10000</code>范围内的记录存放在<code>db2</code>数据库的<code>travelrecord</code>表中，下面我们插入两条数据，验证是否和分片规则一致。</p>
+<p>创建<code>db1,db2,db3</code>数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">create database db1 character set utf8;</span><br><span class="line">create database db2 character set utf8;</span><br><span class="line">create database db3 character set utf8;</span><br></pre></td></tr></table></figure>
+
+<p>确实是这样的，到此我们就完成了mycat数据库的水平切分，这个例子只是演示按照id列值得范围进行切分，mycat还支持很多的分片算法，如取模、一致性哈希算法、按日期分片算法等等，大家可以看《分布式数据库架构及企业实战—-基于Mycat中间件》这本书深入学习。</p>
+<h4 id="为什么需要读写分离"><a href="#为什么需要读写分离" class="headerlink" title="为什么需要读写分离"></a>为什么需要读写分离</h4><p>至于为什么需要读写分离，在我之前的文章有介绍过了，相信看到这篇文章的人也知道为什么需要读写分离了，当然如果你也需要了解一下，那么欢迎查看我之前的文章<a href="http://raye.wang/2018/02/03/springboot-mybatis-du-xie-fen-chi-pei-zhi/" target="_blank" rel="noopener">SpringBoot Mybatis 读写分离配置</a>,顺便也可以了解一下怎么通过代码进行读写分离的</p>
+<h4 id="MySQL主从复制"><a href="#MySQL主从复制" class="headerlink" title="MySQL主从复制"></a>MySQL主从复制</h4><p>主从复制是读写分离的关键，不管通过什么方式进行读写分离，前提就是MySQL有主从复制，当前双机主从也行，但是关键的关键，是要能保证2个库的数据能一致（出掉刚写入主库从库还未能及时反应过来的情况），如果2个库的数据不一致，那么读写分离也有没有任何意义了，具体MySQL怎么做主从复制可以查看我之前的文章<a href="http://raye.wang/2017/04/14/mysqlzhu-cong-fu-zhi-da-jian-ji-yu-ri-zhi-binlog/" target="_blank" rel="noopener">MySQL主从复制搭建，基于日志（binlog）</a></p>
+<h4 id="Mycat读写分离设置"><a href="#Mycat读写分离设置" class="headerlink" title="Mycat读写分离设置"></a>Mycat读写分离设置</h4><h5 id="配置Mycat用户"><a href="#配置Mycat用户" class="headerlink" title="配置Mycat用户"></a>配置Mycat用户</h5><p>Mycat的用户就跟MySQL用户是同一个意思，主要配置链接到Mycat的用户名以及密码，以及能使用的逻辑库，用户信息主要在server.xml中配置的，具体如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;  </span><br><span class="line">&lt;!-- - - Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);  </span><br><span class="line">    - you may not use this file except in compliance with the License. - You </span><br><span class="line">    may obtain a copy of the License at - - http://www.apache.org/licenses/LICENSE-2.0 </span><br><span class="line">    - - Unless required by applicable law or agreed to in writing, software - </span><br><span class="line">    distributed under the License is distributed on an &quot;AS IS&quot; BASIS, - WITHOUT </span><br><span class="line">    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. - See the </span><br><span class="line">    License for the specific language governing permissions and - limitations </span><br><span class="line">    under the License. --&gt;</span><br><span class="line">&lt;!DOCTYPE mycat:server SYSTEM &quot;server.dtd&quot;&gt;  </span><br><span class="line">&lt;mycat:server xmlns:mycat=&quot;http://io.mycat/&quot;&gt;  </span><br><span class="line">    &lt;system&gt;</span><br><span class="line">    &lt;property name=&quot;defaultSqlParser&quot;&gt;druidparser&lt;/property&gt;</span><br><span class="line">      &lt;!--  &lt;property name=&quot;useCompression&quot;&gt;1&lt;/property&gt;--&gt; &lt;!--1为开启mysql压缩协议--&gt;</span><br><span class="line">    &lt;!-- &lt;property name=&quot;processorBufferChunk&quot;&gt;40960&lt;/property&gt; --&gt;</span><br><span class="line">    &lt;!-- </span><br><span class="line">    &lt;property name=&quot;processors&quot;&gt;1&lt;/property&gt; </span><br><span class="line">    &lt;property name=&quot;processorExecutor&quot;&gt;32&lt;/property&gt; </span><br><span class="line">     --&gt;</span><br><span class="line">        &lt;!--默认是65535 64K 用于sql解析时最大文本长度 --&gt;</span><br><span class="line">        &lt;!--&lt;property name=&quot;maxStringLiteralLength&quot;&gt;65535&lt;/property&gt;--&gt;</span><br><span class="line">        &lt;!--&lt;property name=&quot;sequnceHandlerType&quot;&gt;0&lt;/property&gt;--&gt;</span><br><span class="line">        &lt;!--&lt;property name=&quot;backSocketNoDelay&quot;&gt;1&lt;/property&gt;--&gt;</span><br><span class="line">        &lt;!--&lt;property name=&quot;frontSocketNoDelay&quot;&gt;1&lt;/property&gt;--&gt;</span><br><span class="line">        &lt;!--&lt;property name=&quot;processorExecutor&quot;&gt;16&lt;/property&gt;--&gt;</span><br><span class="line">        &lt;!-- </span><br><span class="line">            &lt;property name=&quot;mutiNodeLimitType&quot;&gt;1&lt;/property&gt; 0：开启小数量级（默认） ；1：开启亿级数据排序</span><br><span class="line">            &lt;property name=&quot;mutiNodePatchSize&quot;&gt;100&lt;/property&gt; 亿级数量排序批量</span><br><span class="line">            &lt;property name=&quot;processors&quot;&gt;32&lt;/property&gt; &lt;property name=&quot;processorExecutor&quot;&gt;32&lt;/property&gt; </span><br><span class="line">            &lt;property name=&quot;serverPort&quot;&gt;8066&lt;/property&gt; &lt;property name=&quot;managerPort&quot;&gt;9066&lt;/property&gt; </span><br><span class="line">            &lt;property name=&quot;idleTimeout&quot;&gt;300000&lt;/property&gt; &lt;property name=&quot;bindIp&quot;&gt;0.0.0.0&lt;/property&gt; </span><br><span class="line">            &lt;property name=&quot;frontWriteQueueSize&quot;&gt;4096&lt;/property&gt; &lt;property name=&quot;processors&quot;&gt;32&lt;/property&gt; --&gt;</span><br><span class="line">    &lt;/system&gt;</span><br><span class="line">    &lt;user name=&quot;raye&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;password&quot;&gt;rayewang&lt;/property&gt;</span><br><span class="line">        &lt;property name=&quot;schemas&quot;&gt;separate&lt;/property&gt;</span><br><span class="line">    &lt;/user&gt;</span><br><span class="line"></span><br><span class="line">        &lt;/host&gt; </span><br><span class="line">&lt;/mycat:server&gt;</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>&lt;user name=&quot;raye&quot;&gt;</code>定义了一个名为raye的用户，标签user中的<code>&lt;property name=&quot;password&quot;&gt;rayewang&lt;/property&gt;</code>定义了用户的密码，<code>&lt;property name=&quot;schemas&quot;&gt;separate&lt;/property&gt;</code>定义了用户可以使用的逻辑库</p>
+<h5 id="配置Mycat逻辑库"><a href="#配置Mycat逻辑库" class="headerlink" title="配置Mycat逻辑库"></a>配置Mycat逻辑库</h5><p>Mycat的配置有很多，不过因为我们只是使用Mycat的读写分类的功能，所以用到的配置并不多，只需要配置一些基本的，当然本文也只是会介绍到读写分离相关的配置，其他配置建议读者自己查看一下文档，或者通过其他方式了解，逻辑库是在<code>schema.xml</code>中配置的</p>
+<p>首先介绍Mycat逻辑库中的一些配置标签</p>
+<h6 id="schema"><a href="#schema" class="headerlink" title="schema"></a>schema</h6><p><code>schema</code> 标签是用来定义逻辑库的，<code>schema</code>有四个属性<code>dataNode</code>,<code>checkSQLschema</code>,<code>sqlMaxLimit</code>,<code>name</code></p>
+<p><code>dataNode</code> 标签属性用于绑定逻辑库到某个具体的 database 上，1.3 版本如果配置了 dataNode，则不可以配置分片表，1.4 可以配置默认分片，只需要配置需要分片的表即可</p>
+<p><code>name</code>是定义当前逻辑库的名字的，方便<code>server.xml</code>中定义用户时的引用</p>
+<p><code>checkSQLschema</code>当该值设置为 true 时，如果我们执行语句select * from separate.users;则 MyCat 会把语句修改 为select * from users;。即把表示 schema 的字符去掉，避免发送到后端数据库执行时报（ERROR 1146 (42S02): Table ‘separate.users’ doesn’t exist）。 不过，即使设置该值为 true ，如果语句所带的是并非是 schema 指定的名字，例如：select * from db1.users; 那么 MyCat 并不会删除 db1 这个字段，如果没有定义该库的话则会报错，所以在提供 SQL语句的最好是不带这个字段。</p>
+<p><code>sqlMaxLimit</code>当该值设置为某个数值时。每条执行的 SQL 语句，如果没有加上 limit 语句，MyCat 也会自动的加上所对应的值。例如设置值为 100，执行select * from users;的效果为和执行select * from users limit 100;相同。设置该值的话，MyCat 默认会把查询到的信息全部都展示出来，造成过多的输出。所以，在正常使用中，还是建议加上一个值，用于减少过多的数据返回。当然 SQL 语句中也显式的指定 limit 的大小，不受该属性的约束。需要注意的是，如果运行的 schema 为非拆分库的，那么该属性不会生效。需要手动添加 limit 语句。</p>
+<p><code>schema</code>标签中有标签<code>table</code>用于定义不同的表分片信息，不过我们只是做读写分离，并不会用到，所以这里就不多介绍了</p>
+<h6 id="dataNode"><a href="#dataNode" class="headerlink" title="dataNode"></a>dataNode</h6><p><code>dataNode</code>dataNode 标签定义了 MyCat 中的数据节点，也就是我们通常说所的数据分片。一个 dataNode 标签就是一个独立的数据分片,<code>dataNode</code>有3个属性:<code>name</code>,<code>dataHost</code>,<code>database</code>。</p>
+<p><code>name</code>定义数据节点的名字，这个名字需要是唯一的，此名字是用于<code>table</code>标签和<code>schema</code>标签中引用的</p>
+<p><code>dataHost</code>该属性用于定义该分片属于哪个数据库实例的，属性值是引用 dataHost 标签上定义的 name 属性</p>
+<p><code>database</code>该属性用于定义该分片属性哪个具体数据库实例上的具体库，因为这里使用两个纬度来定义分片，就是：实例+具体的库。因为每个库上建立的表和表结构是一样的。所以这样做就可以轻松的对表进行水平拆分</p>
+<h6 id="dataHost"><a href="#dataHost" class="headerlink" title="dataHost"></a>dataHost</h6><p><code>dataHost</code>是定义真实的数据库连接的标签，该标签在 mycat 逻辑库中也是作为最底层的标签存在，直接定义了具体的数据库实例、读写分离配置和心跳语句，<code>dataHost</code>有7个属性：<code>name</code>,<code>maxCon</code>,<code>minCon</code>,<code>balance</code>,<code>writeType</code>,<code>dbType</code>,<code>dbDriver</code>,有2个标签<code>heartbeat</code>,<code>writeHost</code>,其中<code>writeHost</code>标签中又包含一个<code>readHost</code>标签</p>
+<p><code>name</code>唯一标识 dataHost 标签，供<code>dataNode</code>标签使用</p>
+<p><code>maxCon</code>指定每个读写实例连接池的最大连接。也就是说，标签内嵌套的 writeHost、readHost 标签都会使用这个属性的值来实例化出连接池的最大连接数</p>
+<p><code>minCon</code>指定每个读写实例连接池的最小连接，初始化连接池的大小</p>
+<p><code>balance</code> 读取负载均衡类型</p>
+<ol>
+<li><p>balance=”0”, 不开启读写分离机制，所有读操作都发送到当前可用的 writeHost 上。</p>
+</li>
+<li><p>balance=”1”，全部的 readHost 与 stand by writeHost 参与 select 语句的负载均衡，简单的说，当双主双从模式(M1-&gt;S1，M2-&gt;S2，并且 M1 与 M2 互为主备)，正常情况下，M2,S1,S2 都参与 select 语句的负载均衡。</p>
+</li>
+<li><p>balance=”2”，所有读操作都随机的在 writeHost、readhost 上分发。</p>
+</li>
+<li><p>balance=”3”，所有读请求随机的分发到 wiriterHost 对应的 readhost 执行，writerHost 不负担读压力</p>
+</li>
+</ol>
+<p><code>writeType</code>写入负载均衡类型，目前的取值有 3 种：</p>
+<ol>
+<li><p>writeType=”0”, 所有写操作发送到配置的第一个 writeHost，第一个挂了切到还生存的第二个writeHost，重新启动后已切换后的为准，切换记录在配置文件中:dnindex.properties .</p>
+</li>
+<li><p>writeType=”1”，所有写操作都随机的发送到配置的 writeHost</p>
+</li>
+</ol>
+<p><code>dbType</code> 指定后端连接的数据库类型，目前支持二进制的 mysql 协议，还有其他使用 JDBC 连接的数据库。例如：mongodb、oracle、spark 等</p>
+<p><code>dbDriver</code>指定连接后端数据库使用的 Driver，目前可选的值有 native 和 JDBC。使用 native 的话，因为这个值执行的 是二进制的 mysql 协议，所以可以使用 mysql 和 maridb。其他类型的数据库则需要使用 JDBC 驱动来支持。从 1.6 版本开始支持 postgresql 的 native 原始协议。 如果使用 JDBC 的话需要将符合 JDBC 4 标准的驱动 JAR 包放到 MYCAT\lib 目录下，并检查驱动 JAR 包中包括如下目录结构的文件：META-INF\services\java.sql.Driver。在这个文件内写上具体的 Driver 类名，例如： com.mysql.jdbc.Driver。</p>
+<p><code>heartbeat</code>这个标签内指明用于和后端数据库进行心跳检查的语句。例如,MYSQL 可以使用 select user()，Oracle 可以使用 select 1 from dual 等。 这个标签还有一个 connectionInitSql 属性，主要是当使用 Oracla 数据库时，需要执行的初始化 SQL 语句就这个放到这里面来。例如：alter session set nlsdateformat=’yyyy-mm-dd hh24:mi:ss’</p>
+<p><code>writeHost</code>，<code>readHost</code>这两个标签都指定后端数据库的相关配置给 mycat，用于实例化后端连接池。唯一不同的是，writeHost 指定写实例、readHost 指定读实例，组着这些读写实例来满足系统的要求。 在一个 dataHost 内可以定义多个 writeHost 和 readHost。但是，如果 writeHost 指定的后端数据库宕机，那么这个 writeHost 绑定的所有 readHost 都将不可用。另一方面，由于这个 writeHost 宕机系统会自动的检测到，并切换到备用的 writeHost 上去,这2个标签属性都一致，拥有<code>host</code>,<code>url</code>,<code>password</code>,<code>user</code>,<code>weight</code>,<code>usingDecrypt</code>等属性</p>
+<p><code>host</code>用于标识不同实例，一般 writeHost 我们使用M1，readHost 我们用S1</p>
+<p><code>url</code>真实数据库的实例的链接地址，如果是使用 native 的 dbDriver，则一般为 address:port 这种形式。用 JDBC 或其他的dbDriver，则需要特殊指定。当使用 JDBC 时则可以这么写：jdbc:mysql://localhost:3306/</p>
+<p><code>user</code>真实数据库实例的链接用户名</p>
+<p><code>password</code>真实数据库实例的链接密码</p>
+<p><code>weight</code>权重 配置在 readhost 中作为读节点的权重,主要用于多台读取的数据库实例机器配置不同的情况，可以根据权重调整访问量</p>
+<p><code>usingDecrypt</code>是否对密码加密默认 0 否 如需要开启配置 1，同时使用加密程序对密码加密</p>
+<p>注意，readHost是在writeHost标签内的，不是单独的</p>
+<p>以下是我的读写分离配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;  </span><br><span class="line">&lt;!DOCTYPE mycat:schema SYSTEM &quot;schema.dtd&quot;&gt;  </span><br><span class="line">&lt;mycat:schema xmlns:mycat=&quot;http://io.mycat/&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;schema name=&quot;separate&quot; checkSQLschema=&quot;false&quot; sqlMaxLimit=&quot;100&quot; dataNode=&quot;dn1&quot;/&gt;</span><br><span class="line">    &lt;dataNode name=&quot;dn1&quot; dataHost=&quot;localhost1&quot; database=&quot;test&quot; /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;dataHost name=&quot;localhost1&quot; maxCon=&quot;1000&quot; minCon=&quot;10&quot; balance=&quot;3&quot;</span><br><span class="line">              writeType=&quot;0&quot; dbType=&quot;mysql&quot; dbDriver=&quot;native&quot; switchType=&quot;1&quot;  slaveThreshold=&quot;100&quot;&gt;</span><br><span class="line">        &lt;heartbeat&gt;select user()&lt;/heartbeat&gt;</span><br><span class="line">        &lt;!-- can have multi write hosts --&gt;</span><br><span class="line">        &lt;writeHost host=&quot;hostM1&quot; url=&quot;192.168.1.126:3307&quot; user=&quot;root&quot;</span><br><span class="line">                   password=&quot;123456&quot;&gt;</span><br><span class="line">            &lt;!-- can have multi read hosts --&gt;</span><br><span class="line">            &lt;readHost host=&quot;hostS2&quot; url=&quot;192.168.1.126:3308&quot; user=&quot;root&quot; password=&quot;123456&quot; /&gt;</span><br><span class="line">        &lt;/writeHost&gt;</span><br><span class="line"></span><br><span class="line">    &lt;/dataHost&gt;</span><br><span class="line"></span><br><span class="line">&lt;/mycat:schema&gt;</span><br></pre></td></tr></table></figure>
+
+<p>前面已经差不多都解释清楚了，因为我只是用的基本的主从复制，所以我的将<code>dataHost</code>的<code>balance</code>设置成了3</p>
+<p>启动mycat，然后用数据库连接工具连接到mycat，可以测试是否配置成功，最简单的就是通过修改从库的数据，这样方便查看到底是运行到哪个库上面了，另外由于我是基于docker启动的mycat，所以如果是直接在系统中运行的mycat的，可以去看官方文档，看看到底怎么启动mycat</p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据库/" rel="tag"># 数据库</a>
+          
+            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/08/面试总结/alldone/" rel="next" title="我的2018秋招总结">
+                <i class="fa fa-chevron-left"></i> 我的2018秋招总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/01/MySQL/重新学习Mysql数据库1：无废话MySQL入门/" rel="prev" title="重新学习Mysql数据库1：无废话MySQL入门">
+                重新学习Mysql数据库1：无废话MySQL入门 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#二、分表实现策略"><span class="nav-number">1.</span> <span class="nav-text">二、分表实现策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、分库实现策略"><span class="nav-number">2.</span> <span class="nav-text">三、分库实现策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、分库与分表实现策略"><span class="nav-number">3.</span> <span class="nav-text">四、分库与分表实现策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、分库分表总结"><span class="nav-number">4.</span> <span class="nav-text">五、分库分表总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、总结"><span class="nav-number">5.</span> <span class="nav-text">六、总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mycat实现主从复制，读写分离，以及分库分表的实践"><span class="nav-number">6.</span> <span class="nav-text">Mycat实现主从复制，读写分离，以及分库分表的实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Mycat是什么"><span class="nav-number">6.1.</span> <span class="nav-text">Mycat是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一、分区分表"><span class="nav-number">6.2.</span> <span class="nav-text">一、分区分表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、Mycat-数据分片的种类"><span class="nav-number">6.3.</span> <span class="nav-text">二、Mycat 数据分片的种类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、Mycat-垂直切分、水平切分实战"><span class="nav-number">6.4.</span> <span class="nav-text">三、Mycat 垂直切分、水平切分实战</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、垂直切分"><span class="nav-number">6.4.1.</span> <span class="nav-text">1、垂直切分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、水平切分"><span class="nav-number">6.4.2.</span> <span class="nav-text">2、水平切分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么需要读写分离"><span class="nav-number">6.4.3.</span> <span class="nav-text">为什么需要读写分离</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MySQL主从复制"><span class="nav-number">6.4.4.</span> <span class="nav-text">MySQL主从复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Mycat读写分离设置"><span class="nav-number">6.4.5.</span> <span class="nav-text">Mycat读写分离设置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#配置Mycat用户"><span class="nav-number">6.4.5.1.</span> <span class="nav-text">配置Mycat用户</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#配置Mycat逻辑库"><span class="nav-number">6.4.5.2.</span> <span class="nav-text">配置Mycat逻辑库</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#schema"><span class="nav-number">6.4.5.2.1.</span> <span class="nav-text">schema</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#dataNode"><span class="nav-number">6.4.5.2.2.</span> <span class="nav-text">dataNode</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#dataHost"><span class="nav-number">6.4.5.2.3.</span> <span class="nav-text">dataHost</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">7.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">7.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">7.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

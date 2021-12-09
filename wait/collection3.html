@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content=",">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="今天我们来探索一下LIterator，fail-fast机制与比较器的源码。 具体代码在我的GitHub中可以找到 https://github.com/h2pl/MyTech 喜欢的话麻烦star一下哈 文章首发于我的个人博客： https://h2pl.github.io/2018/05/9/collection3 更多关于Java后端学习的内容请到我的CSDN博客上查看：https://bl">
+<meta name="keywords" content="Java集合框架">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Java集合详解3：Iterator，fail-fast机制与比较器">
+<meta property="og:url" content="http://yoursite.com/wait/collection3.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="今天我们来探索一下LIterator，fail-fast机制与比较器的源码。 具体代码在我的GitHub中可以找到 https://github.com/h2pl/MyTech 喜欢的话麻烦star一下哈 文章首发于我的个人博客： https://h2pl.github.io/2018/05/9/collection3 更多关于Java后端学习的内容请到我的CSDN博客上查看：https://bl">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-11-24T08:03:24.060Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java集合详解3：Iterator，fail-fast机制与比较器">
+<meta name="twitter:description" content="今天我们来探索一下LIterator，fail-fast机制与比较器的源码。 具体代码在我的GitHub中可以找到 https://github.com/h2pl/MyTech 喜欢的话麻烦star一下哈 文章首发于我的个人博客： https://h2pl.github.io/2018/05/9/collection3 更多关于Java后端学习的内容请到我的CSDN博客上查看：https://bl">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/wait/collection3.html">
+
+
+
+
+
+  <title>Java集合详解3：Iterator，fail-fast机制与比较器 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline">Java集合详解3：Iterator，fail-fast机制与比较器</h1>
+
+
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <div id="vip-container"><p>今天我们来探索一下LIterator，fail-fast机制与比较器的源码。</p>
+<p>具体代码在我的GitHub中可以找到</p>
+<p><a href="https://github.com/h2pl/MyTech" target="_blank" rel="noopener">https://github.com/h2pl/MyTech</a></p>
+<p>喜欢的话麻烦star一下哈</p>
+<p>文章首发于我的个人博客：</p>
+<p><a href="https://h2pl.github.io/2018/05/9/collection3" target="_blank" rel="noopener">https://h2pl.github.io/2018/05/9/collection3</a></p>
+<p>更多关于Java后端学习的内容请到我的CSDN博客上查看：<a href="https://blog.csdn.net/a724888" target="_blank" rel="noopener">https://blog.csdn.net/a724888</a></p>
+<p>我的个人博客主要发原创文章，也欢迎浏览<br><a href="https://h2pl.github.io/" target="_blank" rel="noopener">https://h2pl.github.io/</a></p>
+<a id="more"></a>
+<h1 id="Iterator"><a href="#Iterator" class="headerlink" title="Iterator"></a>Iterator</h1><p>本文参考 <a href="http://cmsblogs.com/?p=1185" target="_blank" rel="noopener">http://cmsblogs.com/?p=1185</a></p>
+<p>迭代对于我们搞Java的来说绝对不陌生。我们常常使用JDK提供的迭代接口进行Java集合的迭代。</p>
+<pre><code>Iterator iterator = list.iterator();
+        while(iterator.hasNext()){
+            String string = iterator.next();
+            //do something
+        }</code></pre><p>迭代其实我们可以简单地理解为遍历，是一个标准化遍历各类容器里面的所有对象的方法类，它是一个很典型的设计模式。Iterator模式是用于遍历集合类的标准访问方法。</p>
+<p>它可以把访问逻辑从不同类型的集合类中抽象出来，从而避免向客户端暴露集合的内部结构。 在没有迭代器时我们都是这么进行处理的。如下：</p>
+<p>对于数组我们是使用下标来进行处理的:</p>
+<pre><code>int[] arrays = new int[10];
+   for(int i = 0 ; i &lt; arrays.length ; i++){
+       int a = arrays[i];
+       //do something
+   }</code></pre><p>对于ArrayList是这么处理的:</p>
+<pre><code>List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+   for(int i = 0 ; i &lt; list.size() ;  i++){
+      String string = list.get(i);
+      //do something
+   }</code></pre><p>对于这两种方式，我们总是都事先知道集合的内部结构，访问代码和集合本身是紧密耦合的，无法将访问逻辑从集合类和客户端代码中分离出来。同时每一种集合对应一种遍历方法，客户端代码无法复用。</p>
+<p>在实际应用中如何需要将上面将两个集合进行整合是相当麻烦的。所以为了解决以上问题，Iterator模式腾空出世，它总是用同一种逻辑来遍历集合。</p>
+<p>使得客户端自身不需要来维护集合的内部结构，所有的内部状态都由Iterator来维护。客户端从不直接和集合类打交道，它总是控制Iterator，向它发送”向前”，”向后”，”取当前元素”的命令，就可以间接遍历整个集合。</p>
+<p>上面只是对Iterator模式进行简单的说明，下面我们看看Java中Iterator接口，看他是如何来进行实现的。</p>
+<h2 id="java-util-Iterator"><a href="#java-util-Iterator" class="headerlink" title="java.util.Iterator"></a>java.util.Iterator</h2><p>在Java中Iterator为一个接口，它只提供了迭代了基本规则，在JDK中他是这样定义的：对 collection 进行迭代的迭代器。迭代器取代了 Java Collections Framework 中的 Enumeration。迭代器与枚举有两点不同：</p>
+<pre><code>1、迭代器允许调用者利用定义良好的语义在迭代期间从迭代器所指向的 collection 移除元素。
+
+2、方法名称得到了改进。</code></pre><p>其接口定义如下：</p>
+<pre><code>public interface Iterator {
+　　boolean hasNext();
+　　Object next();
+　　void remove();
+}</code></pre><p>其中：</p>
+<pre><code>Object next()：返回迭代器刚越过的元素的引用，返回值是Object，需要强制转换成自己需要的类型
+
+boolean hasNext()：判断容器内是否还有可供访问的元素
+
+void remove()：删除迭代器刚越过的元素</code></pre><p>对于我们而言，我们只一般只需使用next()、hasNext()两个方法即可完成迭代。如下：</p>
+<pre><code>for(Iterator it = c.iterator(); it.hasNext(); ) {
+　　Object o = it.next();
+　　 //do something
+}</code></pre><p>==前面阐述了Iterator有一个很大的优点,就是我们不必知道集合的内部结果,集合的内部结构、状态由Iterator来维持，通过统一的方法hasNext()、next()来判断、获取下一个元素，至于具体的内部实现我们就不用关心了。==</p>
+<p>但是作为一个合格的程序员我们非常有必要来弄清楚Iterator的实现。下面就ArrayList的源码进行分析分析。</p>
+<h2 id="各个集合的Iterator的实现"><a href="#各个集合的Iterator的实现" class="headerlink" title="各个集合的Iterator的实现"></a>各个集合的Iterator的实现</h2><p>下面就ArrayList的Iterator实现来分析，其实如果我们理解了ArrayList、Hashset、TreeSet的数据结构，内部实现，对于他们是如何实现Iterator也会胸有成竹的。因为ArrayList的内部实现采用数组，所以我们只需要记录相应位置的索引即可，其方法的实现比较简单。</p>
+<p>ArrayList的Iterator实现</p>
+<p>在ArrayList内部首先是定义一个内部类Itr，该内部类实现Iterator接口，如下：</p>
+<pre><code>private class Itr implements Iterator&lt;E&gt; {
+    //do something
+}
+而ArrayList的iterator()方法实现：
+
+public Iterator&lt;E&gt; iterator() {
+        return new Itr();
+    }</code></pre><p>所以通过使用ArrayList.iterator()方法返回的是Itr()内部类，所以现在我们需要关心的就是Itr()内部类的实现：</p>
+<p>在Itr内部定义了三个int型的变量：cursor、lastRet、expectedModCount。其中cursor表示下一个元素的索引位置，lastRet表示上一个元素的索引位置</p>
+<pre><code>int cursor;             
+int lastRet = -1;     
+int expectedModCount = modCount;</code></pre><p>从cursor、lastRet定义可以看出，lastRet一直比cursor少一所以hasNext()实现方法异常简单，只需要判断cursor和lastRet是否相等即可。</p>
+<pre><code>public boolean hasNext() {
+    return cursor != size;
+}</code></pre><p>对于next()实现其实也是比较简单的，只要返回cursor索引位置处的元素即可，然后修改cursor、lastRet即可。</p>
+<pre><code>public E next() {
+    checkForComodification();
+    int i = cursor;    //记录索引位置
+    if (i &gt;= size)    //如果获取元素大于集合元素个数，则抛出异常
+        throw new NoSuchElementException();
+    Object[] elementData = ArrayList.this.elementData;
+    if (i &gt;= elementData.length)
+        throw new ConcurrentModificationException();
+    cursor = i + 1;      //cursor + 1
+    return (E) elementData[lastRet = i];  //lastRet + 1 且返回cursor处元素
+}</code></pre><blockquote>
+<p>checkForComodification()主要用来判断集合的修改次数是否合法，即用来判断遍历过程中集合是否被修改过。</p>
+<p>。modCount用于记录ArrayList集合的修改次数，初始化为0，，每当集合被修改一次（结构上面的修改，内部update不算），如add、remove等方法，modCount + 1，所以如果modCount不变，则表示集合内容没有被修改。</p>
+<p>该机制主要是用于实现ArrayList集合的快速失败机制，在Java的集合中，较大一部分集合是存在快速失败机制的，这里就不多说，后面会讲到。</p>
+<p>所以要保证在遍历过程中不出错误，我们就应该保证在遍历过程中不会对集合产生结构上的修改（当然remove方法除外），出现了异常错误，我们就应该认真检查程序是否出错而不是catch后不做处理。</p>
+</blockquote>
+<pre><code>final void checkForComodification() {
+            if (modCount != expectedModCount)
+                throw new ConcurrentModificationException();
+        }
+对于remove()方法的是实现，它是调用ArrayList本身的remove()方法删除lastRet位置元素，然后修改modCount即可。
+
+public void remove() {
+    if (lastRet &lt; 0)
+        throw new IllegalStateException();
+    checkForComodification();
+
+    try {
+        ArrayList.this.remove(lastRet);
+        cursor = lastRet;
+        lastRet = -1;
+        expectedModCount = modCount;
+    } catch (IndexOutOfBoundsException ex) {
+        throw new ConcurrentModificationException();
+    }
+}</code></pre><p>这里就对ArrayList的Iterator实现讲解到这里，对于Hashset、TreeSet等集合的Iterator实现，各位如果感兴趣可以继续研究，个人认为在研究这些集合的源码之前，有必要对该集合的数据结构有清晰的认识，这样会达到事半功倍的效果！！！！</p>
+<h1 id="fail-fast机制"><a href="#fail-fast机制" class="headerlink" title="fail-fast机制"></a>fail-fast机制</h1><p>这部分参考<a href="http://cmsblogs.com/?p=1220" target="_blank" rel="noopener">http://cmsblogs.com/?p=1220</a></p>
+<p>在JDK的Collection中我们时常会看到类似于这样的话：</p>
+<p>例如，ArrayList:</p>
+<blockquote>
+<p>注意，迭代器的快速失败行为无法得到保证，因为一般来说，不可能对是否出现不同步并发修改做出任何硬性保证。快速失败迭代器会尽最大努力抛出ConcurrentModificationException。<br>因此，为提高这类迭代器的正确性而编写一个依赖于此异常的程序是错误的做法：迭代器的快速失败行为应该仅用于检测 bug。</p>
+</blockquote>
+<p>HashMap中：</p>
+<blockquote>
+<p>注意，迭代器的快速失败行为不能得到保证，一般来说，存在非同步的并发修改时，不可能作出任何坚决的保证。快速失败迭代器尽最大努力抛出 ConcurrentModificationException。因此，编写依赖于此异常的程序的做法是错误的，正确做法是：迭代器的快速失败行为应该仅用于检测程序错误。</p>
+</blockquote>
+<p>在这两段话中反复地提到”快速失败”。那么何为”快速失败”机制呢？</p>
+<blockquote>
+<p>“快速失败”也就是fail-fast，它是Java集合的一种错误检测机制。当多个线程对集合进行结构上的改变的操作时，有可能会产生fail-fast机制。</p>
+<p>记住是有可能，而不是一定。例如：假设存在两个线程（线程1、线程2），线程1通过Iterator在遍历集合A中的元素，在某个时候线程2修改了集合A的结构（是结构上面的修改，而不是简单的修改集合元素的内容），那么这个时候程序就会抛出 ConcurrentModificationException异常，从而产生fail-fast机制。</p>
+</blockquote>
+<h2 id="fail-fast示例"><a href="#fail-fast示例" class="headerlink" title="fail-fast示例"></a>fail-fast示例</h2><pre><code>public class FailFastTest {
+    private static List&lt;Integer&gt; list = new ArrayList&lt;&gt;();
+
+    /**
+     * @desc:线程one迭代list
+     * @Project:test
+     * @file:FailFastTest.java
+     * @Authro:chenssy
+     * @data:2014年7月26日
+     */
+    private static class threadOne extends Thread{
+        public void run() {
+            Iterator&lt;Integer&gt; iterator = list.iterator();
+            while(iterator.hasNext()){
+                int i = iterator.next();
+                System.out.println(&quot;ThreadOne 遍历:&quot; + i);
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * @desc:当i == 3时，修改list
+     * @Project:test
+     * @file:FailFastTest.java
+     * @Authro:chenssy
+     * @data:2014年7月26日
+     */
+    private static class threadTwo extends Thread{
+        public void run(){
+            int i = 0 ; 
+            while(i &lt; 6){
+                System.out.println(&quot;ThreadTwo run：&quot; + i);
+                if(i == 3){
+                    list.remove(i);
+                }
+                i++;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        for(int i = 0 ; i &lt; 10;i++){
+            list.add(i);
+        }
+        new threadOne().start();
+        new threadTwo().start();
+    }
+}</code></pre><p>运行结果：</p>
+<pre><code>ThreadOne 遍历:0
+ThreadTwo run：0
+ThreadTwo run：1
+ThreadTwo run：2
+ThreadTwo run：3
+ThreadTwo run：4
+ThreadTwo run：5
+Exception in thread &quot;Thread-0&quot; java.util.ConcurrentModificationException
+    at java.util.ArrayList$Itr.checkForComodification(Unknown Source)
+    at java.util.ArrayList$Itr.next(Unknown Source)
+    at test.ArrayListTest$threadOne.run(ArrayListTest.java:23)</code></pre><h2 id="fail-fast产生原因"><a href="#fail-fast产生原因" class="headerlink" title="fail-fast产生原因"></a>fail-fast产生原因</h2><p>通过上面的示例和讲解，我初步知道fail-fast产生的原因就在于程序在对 collection 进行迭代时，某个线程对该 collection 在结构上对其做了修改，这时迭代器就会抛出 ConcurrentModificationException 异常信息，从而产生 fail-fast。</p>
+<blockquote>
+<p>要了解fail-fast机制，我们首先要对ConcurrentModificationException 异常有所了解。当方法检测到对象的并发修改，但不允许这种修改时就抛出该异常。同时需要注意的是，该异常不会始终指出对象已经由不同线程并发修改，如果单线程违反了规则，同样也有可能会抛出改异常。</p>
+</blockquote>
+<p>诚然，迭代器的快速失败行为无法得到保证，它不能保证一定会出现该错误，但是快速失败操作会尽最大努力抛出ConcurrentModificationException异常，所以因此，为提高此类操作的正确性而编写一个依赖于此异常的程序是错误的做法，正确做法是：ConcurrentModificationException 应该仅用于检测 bug。下面我将以ArrayList为例进一步分析fail-fast产生的原因。</p>
+<blockquote>
+<p>从前面我们知道fail-fast是在操作迭代器时产生的。现在我们来看看ArrayList中迭代器的源代码：</p>
+</blockquote>
+<pre><code>private class Itr implements Iterator&lt;E&gt; {
+        int cursor;
+        int lastRet = -1;
+        int expectedModCount = ArrayList.this.modCount;
+
+        public boolean hasNext() {
+            return (this.cursor != ArrayList.this.size);
+        }
+
+        public E next() {
+            checkForComodification();
+            /** 省略此处代码 */
+        }
+
+        public void remove() {
+            if (this.lastRet &lt; 0)
+                throw new IllegalStateException();
+            checkForComodification();
+            /** 省略此处代码 */
+        }
+
+        final void checkForComodification() {
+            if (ArrayList.this.modCount == this.expectedModCount)
+                return;
+            throw new ConcurrentModificationException();
+        }
+    }</code></pre><p>从上面的源代码我们可以看出，迭代器在调用next()、remove()方法时都是调用checkForComodification()方法，该方法主要就是检测modCount == expectedModCount ? 若不等则抛出ConcurrentModificationException 异常，从而产生fail-fast机制。所以要弄清楚为什么会产生fail-fast机制我们就必须要用弄明白为什么modCount != expectedModCount ，他们的值在什么时候发生改变的。</p>
+<p>expectedModCount 是在Itr中定义的：int expectedModCount = ArrayList.this.modCount;所以他的值是不可能会修改的，所以会变的就是modCount。modCount是在 AbstractList 中定义的，为全局变量：</p>
+<p>protected transient int modCount = 0;<br>那么他什么时候因为什么原因而发生改变呢？请看ArrayList的源码：</p>
+<pre><code>public boolean add(E paramE) {
+    ensureCapacityInternal(this.size + 1);
+    /** 省略此处代码 */
+}
+
+private void ensureCapacityInternal(int paramInt) {
+    if (this.elementData == EMPTY_ELEMENTDATA)
+        paramInt = Math.max(10, paramInt);
+    ensureExplicitCapacity(paramInt);
+}
+
+private void ensureExplicitCapacity(int paramInt) {
+    this.modCount += 1;    //修改modCount
+    /** 省略此处代码 */
+}</code></pre><p>   public boolean remove(Object paramObject) {<br>        int i;<br>        if (paramObject == null)<br>            for (i = 0; i &lt; this.size; ++i) {<br>                if (this.elementData[i] != null)<br>                    continue;<br>                fastRemove(i);<br>                return true;<br>            }<br>        else<br>            for (i = 0; i &lt; this.size; ++i) {<br>                if (!(paramObject.equals(this.elementData[i])))<br>                    continue;<br>                fastRemove(i);<br>                return true;<br>            }<br>        return false;<br>    }</p>
+<pre><code>private void fastRemove(int paramInt) {
+    this.modCount += 1;   //修改modCount
+    /** 省略此处代码 */
+}
+
+public void clear() {
+    this.modCount += 1;    //修改modCount
+    /** 省略此处代码 */
+}</code></pre><blockquote>
+<p>从上面的源代码我们可以看出，ArrayList中无论add、remove、clear方法只要是涉及了改变ArrayList元素的个数的方法都会导致modCount的改变。</p>
+</blockquote>
+<p>所以我们这里可以初步判断由于expectedModCount 得值与modCount的改变不同步，导致两者之间不等从而产生fail-fast机制。知道产生fail-fast产生的根本原因了，我们可以有如下场景：</p>
+<p>有两个线程（线程A，线程B），其中线程A负责遍历list、线程B修改list。线程A在遍历list过程的某个时候（此时expectedModCount = modCount=N），线程启动，同时线程B增加一个元素，这是modCount的值发生改变（modCount + 1 = N + 1）。</p>
+<p>线程A继续遍历执行next方法时，通告checkForComodification方法发现expectedModCount  = N  ，而modCount = N + 1，两者不等，这时就抛出ConcurrentModificationException 异常，从而产生fail-fast机制。</p>
+<p>所以，直到这里我们已经完全了解了fail-fast产生的根本原因了。知道了原因就好找解决办法了。</p>
+<p>三、fail-fast解决办法</p>
+<p>通过前面的实例、源码分析，我想各位已经基本了解了fail-fast的机制，下面我就产生的原因提出解决方案。这里有两种解决方案：</p>
+<blockquote>
+<p>方案一：在遍历过程中所有涉及到改变modCount值得地方全部加上synchronized或者直接使用Collections.synchronizedList，这样就可以解决。但是不推荐，因为增删造成的同步锁可能会阻塞遍历操作。</p>
+<p>方案二：使用CopyOnWriteArrayList来替换ArrayList。推荐使用该方案。</p>
+</blockquote>
+<p>CopyOnWriteArrayList为何物？ArrayList 的一个线程安全的变体，其中所有可变操作（add、set 等等）都是通过对底层数组进行一次新的复制来实现的。 该类产生的开销比较大，但是在两种情况下，它非常适合使用。</p>
+<blockquote>
+<p>1：在不能或不想进行同步遍历，但又需要从并发线程中排除冲突时。</p>
+<p>2：当遍历操作的数量大大超过可变操作的数量时。遇到这两种情况使用CopyOnWriteArrayList来替代ArrayList再适合不过了。那么为什么CopyOnWriterArrayList可以替代ArrayList呢？</p>
+</blockquote>
+<p>第一、CopyOnWriterArrayList的无论是从数据结构、定义都和ArrayList一样。它和ArrayList一样，同样是实现List接口，底层使用数组实现。在方法上也包含add、remove、clear、iterator等方法。</p>
+<p>第二、CopyOnWriterArrayList根本就不会产生ConcurrentModificationException异常，也就是它使用迭代器完全不会产生fail-fast机制。请看：</p>
+<p>private static class COWIterator<e> implements ListIterator<e> {<br>        /** 省略此处代码 */<br>        public E next() {<br>            if (!(hasNext()))<br>                throw new NoSuchElementException();<br>            return this.snapshot[(this.cursor++)];<br>        }</e></e></p>
+<pre><code>    /** 省略此处代码 */
+}</code></pre><p>CopyOnWriterArrayList的方法根本就没有像ArrayList中使用checkForComodification方法来判断expectedModCount 与 modCount 是否相等。它为什么会这么做，凭什么可以这么做呢？我们以add方法为例：</p>
+<pre><code>public boolean add(E paramE) {
+        ReentrantLock localReentrantLock = this.lock;
+        localReentrantLock.lock();
+        try {
+            Object[] arrayOfObject1 = getArray();
+            int i = arrayOfObject1.length;
+            Object[] arrayOfObject2 = Arrays.copyOf(arrayOfObject1, i + 1);
+            arrayOfObject2[i] = paramE;
+            setArray(arrayOfObject2);
+            int j = 1;
+            return j;
+        } finally {
+            localReentrantLock.unlock();
+        }
+    }
+
+
+    final void setArray(Object[] paramArrayOfObject) {
+        this.array = paramArrayOfObject;
+    }</code></pre><p>CopyOnWriterArrayList的add方法与ArrayList的add方法有一个最大的不同点就在于，下面三句代码：</p>
+<pre><code>Object[] arrayOfObject2 = Arrays.copyOf(arrayOfObject1, i + 1);
+arrayOfObject2[i] = paramE;
+setArray(arrayOfObject2);</code></pre><p>就是这三句代码使得CopyOnWriterArrayList不会抛ConcurrentModificationException异常。他们所展现的魅力就在于copy原来的array，再在copy数组上进行add操作，这样做就完全不会影响COWIterator中的array了。</p>
+<blockquote>
+<p>所以CopyOnWriterArrayList所代表的核心概念就是：任何对array在结构上有所改变的操作（add、remove、clear等），CopyOnWriterArrayList都会copy现有的数据，再在copy的数据上修改，这样就不会影响COWIterator中的数据了，修改完成之后改变原有数据的引用即可。同时这样造成的代价就是产生大量的对象，同时数组的copy也是相当有损耗的。</p>
+</blockquote>
+<h1 id="Comparable-和-Comparator"><a href="#Comparable-和-Comparator" class="headerlink" title="Comparable 和 Comparator"></a>Comparable 和 Comparator</h1><p>Java 中为我们提供了两种比较机制：Comparable 和 Comparator，他们之间有什么区别呢？今天来了解一下。</p>
+<h2 id="Comparable"><a href="#Comparable" class="headerlink" title="Comparable"></a>Comparable</h2><p>Comparable 在 java.lang包下，是一个接口，内部只有一个方法 compareTo()：</p>
+<pre><code>public interface Comparable&lt;T&gt; {
+    public int compareTo(T o);
+}</code></pre><p>Comparable 可以让实现它的类的对象进行比较，具体的比较规则是按照 compareTo 方法中的规则进行。这种顺序称为 自然顺序。</p>
+<p>compareTo 方法的返回值有三种情况：</p>
+<pre><code>e1.compareTo(e2) &gt; 0 即 e1 &gt; e2
+e1.compareTo(e2) = 0 即 e1 = e2
+e1.compareTo(e2) &lt; 0 即 e1 &lt; e2</code></pre><p>注意：</p>
+<blockquote>
+<p>1.由于 null 不是一个类，也不是一个对象，因此在重写 compareTo 方法时应该注意 e.compareTo(null) 的情况，即使 e.equals(null) 返回 false，compareTo 方法也应该主动抛出一个空指针异常 NullPointerException。</p>
+<p>2.Comparable 实现类重写 compareTo 方法时一般要求 e1.compareTo(e2) == 0 的结果要和 e1.equals(e2) 一致。这样将来使用 SortedSet 等根据类的自然排序进行排序的集合容器时可以保证保存的数据的顺序和想象中一致。<br>有人可能好奇上面的第二点如果违反了会怎样呢？</p>
+</blockquote>
+<p>举个例子，如果你往一个 SortedSet 中先后添加两个对象 a 和 b，a b 满足 (!a.equals(b) &amp;&amp; a.compareTo(b) == 0)，同时也没有另外指定个 Comparator，那当你添加完 a 再添加 b 时会添加失败返回 false, SortedSet 的 size 也不会增加，因为在 SortedSet 看来它们是相同的，而 SortedSet 中是不允许重复的。</p>
+<blockquote>
+<p>实际上所有实现了 Comparable 接口的 Java 核心类的结果都和 equlas 方法保持一致。<br>实现了 Comparable 接口的 List 或则数组可以使用 Collections.sort() 或者 Arrays.sort() 方法进行排序。</p>
+</blockquote>
+<blockquote>
+<p>实现了 Comparable 接口的对象才能够直接被用作 SortedMap (SortedSet) 的 key，要不然得在外边指定 Comparator 排序规则。</p>
+</blockquote>
+<p>因此自己定义的类如果想要使用有序的集合类，需要实现 Comparable 接口，比如：</p>
+<p>**</p>
+<ul>
+<li>description: 测试用的实体类 书, 实现了 Comparable 接口，自然排序</li>
+<li><br></li>
+<li>author: shixinzhang</li>
+<li><br></li>
+<li>data: 10/5/2016</li>
+<li>/<br>public class BookBean implements Serializable, Comparable {<br>  private String name;<br>  private int count;</li>
+</ul>
+<pre><code>public BookBean(String name, int count) {
+    this.name = name;
+    this.count = count;
+}
+
+public String getName() {
+    return name;
+}
+
+public void setName(String name) {
+    this.name = name;
+}
+
+public int getCount() {
+    return count;
+}
+
+public void setCount(int count) {
+    this.count = count;
+}
+
+/**
+ * 重写 equals
+ * @param o
+ * @return
+ */
+@Override
+public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof BookBean)) return false;
+
+    BookBean bean = (BookBean) o;
+
+    if (getCount() != bean.getCount()) return false;
+    return getName().equals(bean.getName());
+
+}
+
+/**
+ * 重写 hashCode 的计算方法
+ * 根据所有属性进行 迭代计算，避免重复
+ * 计算 hashCode 时 计算因子 31 见得很多，是一个质数，不能再被除
+ * @return
+ */
+@Override
+public int hashCode() {
+    //调用 String 的 hashCode(), 唯一表示一个字符串内容
+    int result = getName().hashCode();
+    //乘以 31, 再加上 count
+    result = 31 * result + getCount();
+    return result;
+}
+
+@Override
+public String toString() {
+    return &quot;BookBean{&quot; +
+            &quot;name=&apos;&quot; + name + &apos;\&apos;&apos; +
+            &quot;, count=&quot; + count +
+            &apos;}&apos;;
+}
+
+/**
+ * 当向 TreeSet 中添加 BookBean 时，会调用这个方法进行排序
+ * @param another
+ * @return
+ */
+@Override
+public int compareTo(Object another) {
+    if (another instanceof BookBean){
+        BookBean anotherBook = (BookBean) another;
+        int result;
+
+        //比如这里按照书价排序
+        result = getCount() - anotherBook.getCount();     
+
+      //或者按照 String 的比较顺序
+      //result = getName().compareTo(anotherBook.getName());
+
+        if (result == 0){   //当书价一致时，再对比书名。 保证所有属性比较一遍
+            result = getName().compareTo(anotherBook.getName());
+        }
+        return result;
+    }
+    // 一样就返回 0
+    return 0;
+}</code></pre><p>上述代码还重写了 equlas(), hashCode() 方法，自定义的类将来可能会进行比较时，建议重写这些方法。</p>
+<blockquote>
+<p>这里我想表达的是在有些场景下 equals 和 compareTo 结果要保持一致，这时候不重写 equals，使用 Object.equals 方法得到的结果会有问题，比如说 HashMap.put() 方法，会先调用 key 的 equals 方法进行比较，然后才调用 compareTo。</p>
+<p>后面重写 compareTo 时，要判断某个相同时对比下一个属性，把所有属性都比较一次。</p>
+</blockquote>
+<h2 id="Comparable-1"><a href="#Comparable-1" class="headerlink" title="Comparable"></a>Comparable</h2><p>Comparable 接口属于 Java 集合框架的一部分。</p>
+<p>Comparator 定制排序</p>
+<p>Comparator 在 java.util 包下，也是一个接口，JDK 1.8 以前只有两个方法：</p>
+<pre><code>public interface Comparator&lt;T&gt; {
+
+    public int compare(T lhs, T rhs);
+
+    public boolean equals(Object object);
+}</code></pre><p>JDK 1.8 以后又新增了很多方法：</p>
+<p>基本上都是跟 Function 相关的，这里暂不介绍 1.8 新增的。</p>
+<blockquote>
+<p>从上面内容可知使用自然排序需要类实现 Comparable，并且在内部重写 comparaTo 方法。</p>
+<p>而 Comparator 则是在外部制定排序规则，然后作为排序策略参数传递给某些类，比如 Collections.sort(), Arrays.sort(), 或者一些内部有序的集合（比如 SortedSet，SortedMap 等）。</p>
+</blockquote>
+<p>Comparator的使用方法<br>使用方式主要分三步：</p>
+<p>创建一个 Comparator 接口的实现类，并赋值给一个对象<br>在 compare 方法中针对自定义类写排序规则<br>将 Comparator 对象作为参数传递给 排序类的某个方法<br>向排序类中添加 compare 方法中使用的自定义类<br>举个例子：</p>
+<pre><code>// 1.创建一个实现 Comparator 接口的对象
+Comparator comparator = new Comparator() {
+    @Override
+    public int compare(Object object1, Object object2) {
+        if (object1 instanceof NewBookBean &amp;&amp; object2 instanceof NewBookBean){
+            NewBookBean newBookBean = (NewBookBean) object1;
+            NewBookBean newBookBean1 = (NewBookBean) object2;
+            //具体比较方法参照 自然排序的 compareTo 方法，这里只举个栗子
+            return newBookBean.getCount() - newBookBean1.getCount();
+        }
+        return 0;
+    }
+};
+
+//2.将此对象作为形参传递给 TreeSet 的构造器中
+TreeSet treeSet = new TreeSet(comparator);
+
+//3.向 TreeSet 中添加 步骤 1 中 compare 方法中设计的类的对象
+treeSet.add(new NewBookBean(&quot;A&quot;,34));
+treeSet.add(new NewBookBean(&quot;S&quot;,1));
+treeSet.add( new NewBookBean(&quot;V&quot;,46));
+treeSet.add( new NewBookBean(&quot;Q&quot;,26));</code></pre><p>其实可以看到，Comparator 的使用是一种策略模式。<br>排序类中持有一个 Comparator 接口的引用：</p>
+<pre><code>Comparator&lt;? super K&gt; comparator;</code></pre><p>而我们可以传入各种自定义排序规则的 Comparator 实现类，对同样的类制定不同的排序策略。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Java 中的两种排序方式：</p>
+<pre><code>Comparable 自然排序。（实体类实现）
+Comparator 是定制排序。（无法修改实体类时，直接在调用方创建）
+同时存在时采用 Comparator（定制排序）的规则进行比较。</code></pre><p>对于一些普通的数据类型（比如 String, Integer, Double…），它们默认实现了Comparable 接口，实现了 compareTo 方法，我们可以直接使用。</p>
+<p>而对于一些自定义类，它们可能在不同情况下需要实现不同的比较策略，我们可以新创建 Comparator 接口，然后使用特定的 Comparator 实现进行比较。</p>
+<p>这就是 Comparable 和 Comparator 的区别。</p>
+</div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+        
+      </div>
+      
+      
+      
+    </div>
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Iterator"><span class="nav-number">1.</span> <span class="nav-text">Iterator</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#java-util-Iterator"><span class="nav-number">1.1.</span> <span class="nav-text">java.util.Iterator</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#各个集合的Iterator的实现"><span class="nav-number">1.2.</span> <span class="nav-text">各个集合的Iterator的实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#fail-fast机制"><span class="nav-number">2.</span> <span class="nav-text">fail-fast机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#fail-fast示例"><span class="nav-number">2.1.</span> <span class="nav-text">fail-fast示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fail-fast产生原因"><span class="nav-number">2.2.</span> <span class="nav-text">fail-fast产生原因</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Comparable-和-Comparator"><span class="nav-number">3.</span> <span class="nav-text">Comparable 和 Comparator</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Comparable"><span class="nav-number">3.1.</span> <span class="nav-text">Comparable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Comparable-1"><span class="nav-number">3.2.</span> <span class="nav-text">Comparable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

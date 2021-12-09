@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="大后端,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="阮一峰：全文搜索引擎 Elasticsearch 入门教程阅读 1093 收藏 76 2017-08-23 原文链接：www.ruanyifeng.com 9月7日-8日 北京，与 Google Twitch 等团队技术大咖面对面www.bagevent.com 全文搜索属于最常见的需求，开源的 Elasticsearch （以下简称 Elastic）是目前全文搜索引擎的首选。 它可以快速地储存、">
+<meta name="keywords" content="大后端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="后端技术杂谈4：Elasticsearch与solr入门实践">
+<meta property="og:url" content="http://yoursite.com/2019/10/13/后端技术杂谈/后端技术杂谈4：Elasticsearch与solr入门实践/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="阮一峰：全文搜索引擎 Elasticsearch 入门教程阅读 1093 收藏 76 2017-08-23 原文链接：www.ruanyifeng.com 9月7日-8日 北京，与 Google Twitch 等团队技术大咖面对面www.bagevent.com 全文搜索属于最常见的需求，开源的 Elasticsearch （以下简称 Elastic）是目前全文搜索引擎的首选。 它可以快速地储存、">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/8/23/1744dd6de08a90846583b11bd4638e8f?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-3a3865f474573947.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-ddbb880dd1a7bcb0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-049501dade838caf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-19bdf6ec1077db99.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-9911b7416917ca06.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-81af0fb0b5d89edd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-cbc2ba3d84087319.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-2657cfb3507d1bae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-3a3e436e33fa9311.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-5609a84930ed96f0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-a46bba01779c0701.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-ab4dec5179c0f5c3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-e3dc609b92f395a1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-7a145baf9aa36599.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-edc3bb352c36e8c2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-a4462a20df0716a2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-f437d561069eedd2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-73d93e996f0a132c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-9f003409af70ae7a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-09494ec9437338cd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-3f2587b4bb0dcee3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-b12a6ec2234beaef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-f57a54656abc2f62.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-bc4dfa9a4801846f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-ac9e935a3b98661c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/19687-34e025db9e4db451.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:23.974Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="后端技术杂谈4：Elasticsearch与solr入门实践">
+<meta name="twitter:description" content="阮一峰：全文搜索引擎 Elasticsearch 入门教程阅读 1093 收藏 76 2017-08-23 原文链接：www.ruanyifeng.com 9月7日-8日 北京，与 Google Twitch 等团队技术大咖面对面www.bagevent.com 全文搜索属于最常见的需求，开源的 Elasticsearch （以下简称 Elastic）是目前全文搜索引擎的首选。 它可以快速地储存、">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2017/8/23/1744dd6de08a90846583b11bd4638e8f?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/13/后端技术杂谈/后端技术杂谈4：Elasticsearch与solr入门实践/">
+
+
+
+
+
+  <title>后端技术杂谈4：Elasticsearch与solr入门实践 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/13/后端技术杂谈/后端技术杂谈4：Elasticsearch与solr入门实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">后端技术杂谈4：Elasticsearch与solr入门实践</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-13T15:04:26+08:00">
+                2019-10-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/后端技术/" itemprop="url" rel="index">
+                    <span itemprop="name">后端技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/13/后端技术杂谈/后端技术杂谈4：Elasticsearch与solr入门实践/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/13/后端技术杂谈/后端技术杂谈4：Elasticsearch与solr入门实践/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><h1 id="阮一峰：全文搜索引擎-Elasticsearch-入门教程"><a href="#阮一峰：全文搜索引擎-Elasticsearch-入门教程" class="headerlink" title="阮一峰：全文搜索引擎 Elasticsearch 入门教程"></a>阮一峰：全文搜索引擎 Elasticsearch 入门教程</h1><p>阅读 1093</p>
+<p>收藏 76</p>
+<p>2017-08-23</p>
+<p>原文链接：<a href="https://link.juejin.im/?target=http%3A%2F%2Fwww.ruanyifeng.com%2Fblog%2F2017%2F08%2Felasticsearch.html" target="_blank" rel="noopener">www.ruanyifeng.com</a></p>
+<p><a href="https://www.bagevent.com/event/1291755?bag_track=juejin" target="_blank" rel="noopener">9月7日-8日 北京，与 Google Twitch 等团队技术大咖面对面www.bagevent.com</a></p>
+<p><a href="https://link.juejin.im/?target=https%3A%2F%2Fbaike.baidu.com%2Fitem%2F%25E5%2585%25A8%25E6%2596%2587%25E6%2590%259C%25E7%25B4%25A2%25E5%25BC%2595%25E6%2593%258E" target="_blank" rel="noopener">全文搜索</a>属于最常见的需求，开源的 <a href="https://link.juejin.im/?target=https%3A%2F%2Fwww.elastic.co%2F" target="_blank" rel="noopener">Elasticsearch</a> （以下简称 Elastic）是目前全文搜索引擎的首选。</p>
+<p>它可以快速地储存、搜索和分析海量数据。维基百科、Stack Overflow、Github 都采用它。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/8/23/1744dd6de08a90846583b11bd4638e8f?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt></p>
+<p>Elastic 的底层是开源库 <a href="https://link.juejin.im/?target=https%3A%2F%2Flucene.apache.org%2F" target="_blank" rel="noopener">Lucene</a>。但是，你没法直接用 Lucene，必须自己写代码去调用它的接口。Elastic 是 Lucene 的封装，提供了 REST API 的操作接口，开箱即用。</p>
+<p>本文从零开始，讲解如何使用 Elastic 搭建自己的全文搜索引擎。每一步都有详细的说明，大家跟着做就能学会。</p>
+<h2 id="一、安装"><a href="#一、安装" class="headerlink" title="一、安装"></a>一、安装</h2><p>Elastic 需要 Java 8 环境。如果你的机器还没安装 Java，可以参考<a href="https://link.juejin.im/?target=https%3A%2F%2Fwww.digitalocean.com%2Fcommunity%2Ftutorials%2Fhow-to-install-java-with-apt-get-on-debian-8" target="_blank" rel="noopener">这篇文章</a>，注意要保证环境变量<code>JAVA_HOME</code>正确设置。</p>
+<p>安装完 Java，就可以跟着<a href="https://link.juejin.im/?target=https%3A%2F%2Fwww.elastic.co%2Fguide%2Fen%2Felasticsearch%2Freference%2Fcurrent%2Fzip-targz.html" target="_blank" rel="noopener">官方文档</a>安装 Elastic。直接下载压缩包比较简单。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.5.1.zip$ unzip elasticsearch-5.5.1.zip$ cd elasticsearch-5.5.1/ </span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>接着，进入解压后的目录，运行下面的命令，启动 Elastic。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ ./bin/elasticsearch</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>如果这时<a href="https://link.juejin.im/?target=https%3A%2F%2Fgithub.com%2Fspujadas%2Felk-docker%2Fissues%2F92" target="_blank" rel="noopener">报错</a>“max virtual memory areas vm.max_map_count [65530] is too low”，要运行下面的命令。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ sudo sysctl -w vm.max_map_count=262144</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>如果一切正常，Elastic 就会在默认的9200端口运行。这时，打开另一个命令行窗口，请求该端口，会得到说明信息。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ curl localhost:9200 &#123;  &quot;name&quot; : &quot;atntrTf&quot;,  &quot;cluster_name&quot; : &quot;elasticsearch&quot;,  &quot;cluster_uuid&quot; : &quot;tf9250XhQ6ee4h7YI11anA&quot;,  &quot;version&quot; : &#123;    &quot;number&quot; : &quot;5.5.1&quot;,    &quot;build_hash&quot; : &quot;19c13d0&quot;,    &quot;build_date&quot; : &quot;2017-07-18T20:44:24.823Z&quot;,    &quot;build_snapshot&quot; : false,    &quot;lucene_version&quot; : &quot;6.6.0&quot;  &#125;,  &quot;tagline&quot; : &quot;You Know, for Search&quot;&#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>上面代码中，请求9200端口，Elastic 返回一个 JSON 对象，包含当前节点、集群、版本等信息。</p>
+<p>按下 Ctrl + C，Elastic 就会停止运行。</p>
+<p>默认情况下，Elastic 只允许本机访问，如果需要远程访问，可以修改 Elastic 安装目录的<code>config/elasticsearch.yml</code>文件，去掉<code>network.host</code>的注释，将它的值改成<code>0.0.0.0</code>，然后重新启动 Elastic。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  network.host: 0.0.0.0</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>上面代码中，设成<code>0.0.0.0</code>让任何人都可以访问。线上服务不要这样设置，要设成具体的 IP。</p>
+<h2 id="二、基本概念"><a href="#二、基本概念" class="headerlink" title="二、基本概念"></a>二、基本概念</h2><h3 id="2-1-Node-与-Cluster"><a href="#2-1-Node-与-Cluster" class="headerlink" title="2.1 Node 与 Cluster"></a>2.1 Node 与 Cluster</h3><p>Elastic 本质上是一个分布式数据库，允许多台服务器协同工作，每台服务器可以运行多个 Elastic 实例。</p>
+<p>单个 Elastic 实例称为一个节点（node）。一组节点构成一个集群（cluster）。</p>
+<h3 id="2-2-Index"><a href="#2-2-Index" class="headerlink" title="2.2 Index"></a>2.2 Index</h3><p>Elastic 会索引所有字段，经过处理后写入一个反向索引（Inverted Index）。查找数据的时候，直接查找该索引。</p>
+<p>所以，Elastic 数据管理的顶层单位就叫做 Index（索引）。它是单个数据库的同义词。每个 Index （即数据库）的名字必须是小写。</p>
+<p>下面的命令可以查看当前节点的所有 Index。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ curl -X GET &apos;http://localhost:9200/_cat/indices?v&apos;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="2-3-Document"><a href="#2-3-Document" class="headerlink" title="2.3 Document"></a>2.3 Document</h3><p>Index 里面单条的记录称为 Document（文档）。许多条 Document 构成了一个 Index。</p>
+<p>Document 使用 JSON 格式表示，下面是一个例子。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  &#123;  &quot;user&quot;: &quot;张三&quot;,  &quot;title&quot;: &quot;工程师&quot;,  &quot;desc&quot;: &quot;数据库管理&quot;&#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>同一个 Index 里面的 Document，不要求有相同的结构（scheme），但是最好保持相同，这样有利于提高搜索效率。</p>
+<h3 id="2-4-Type"><a href="#2-4-Type" class="headerlink" title="2.4 Type"></a>2.4 Type</h3><p>Document 可以分组，比如<code>weather</code>这个 Index 里面，可以按城市分组（北京和上海），也可以按气候分组（晴天和雨天）。这种分组就叫做 Type，它是虚拟的逻辑分组，用来过滤 Document。</p>
+<p>不同的 Type 应该有相似的结构（schema），举例来说，<code>id</code>字段不能在这个组是字符串，在另一个组是数值。这是与关系型数据库的表的<a href="https://link.juejin.im/?target=https%3A%2F%2Fwww.elastic.co%2Fguide%2Fen%2Felasticsearch%2Fguide%2Fcurrent%2Fmapping.html" target="_blank" rel="noopener">一个区别</a>。性质完全不同的数据（比如<code>products</code>和<code>logs</code>）应该存成两个 Index，而不是一个 Index 里面的两个 Type（虽然可以做到）。</p>
+<p>下面的命令可以列出每个 Index 所包含的 Type。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ curl &apos;localhost:9200/_mapping?pretty=true&apos;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>根据<a href="https://link.juejin.im/?target=https%3A%2F%2Fwww.elastic.co%2Fblog%2Findex-type-parent-child-join-now-future-in-elasticsearch" target="_blank" rel="noopener">规划</a>，Elastic 6.x 版只允许每个 Index 包含一个 Type，7.x 版将会彻底移除 Type。</p>
+<h2 id="三、新建和删除-Index"><a href="#三、新建和删除-Index" class="headerlink" title="三、新建和删除 Index"></a>三、新建和删除 Index</h2><p>新建 Index，可以直接向 Elastic 服务器发出 PUT 请求。下面的例子是新建一个名叫<code>weather</code>的 Index。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ curl -X PUT &apos;localhost:9200/weather&apos;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>服务器返回一个 JSON 对象，里面的<code>acknowledged</code>字段表示操作成功。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  &#123;  &quot;acknowledged&quot;:true,  &quot;shards_acknowledged&quot;:true&#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>然后，我们发出 DELETE 请求，删除这个 Index。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ curl -X DELETE &apos;localhost:9200/weather&apos;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h2 id="四、中文分词设置"><a href="#四、中文分词设置" class="headerlink" title="四、中文分词设置"></a>四、中文分词设置</h2><p>首先，安装中文分词插件。这里使用的是 <a href="https://link.juejin.im/?target=https%3A%2F%2Fgithub.com%2Fmedcl%2Felasticsearch-analysis-ik%2F" target="_blank" rel="noopener">ik</a>，也可以考虑其他插件（比如 <a href="https://link.juejin.im/?target=https%3A%2F%2Fwww.elastic.co%2Fguide%2Fen%2Felasticsearch%2Fplugins%2Fcurrent%2Fanalysis-smartcn.html" target="_blank" rel="noopener">smartcn</a>）。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ ./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v5.5.1/elasticsearch-analysis-ik-5.5.1.zip</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>上面代码安装的是5.5.1版的插件，与 Elastic 5.5.1 配合使用。</p>
+<p>接着，重新启动 Elastic，就会自动加载这个新安装的插件。</p>
+<p>然后，新建一个 Index，指定需要分词的字段。这一步根据数据结构而异，下面的命令只针对本文。基本上，凡是需要搜索的中文字段，都要单独设置一下。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ curl -X PUT &apos;localhost:9200/accounts&apos; -d &apos;&#123;  &quot;mappings&quot;: &#123;    &quot;person&quot;: &#123;      &quot;properties&quot;: &#123;        &quot;user&quot;: &#123;          &quot;type&quot;: &quot;text&quot;,          &quot;analyzer&quot;: &quot;ik_max_word&quot;,          &quot;search_analyzer&quot;: &quot;ik_max_word&quot;        &#125;,        &quot;title&quot;: &#123;          &quot;type&quot;: &quot;text&quot;,          &quot;analyzer&quot;: &quot;ik_max_word&quot;,          &quot;search_analyzer&quot;: &quot;ik_max_word&quot;        &#125;,        &quot;desc&quot;: &#123;          &quot;type&quot;: &quot;text&quot;,          &quot;analyzer&quot;: &quot;ik_max_word&quot;,          &quot;search_analyzer&quot;: &quot;ik_max_word&quot;        &#125;      &#125;    &#125;  &#125;&#125;&apos;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>上面代码中，首先新建一个名称为<code>accounts</code>的 Index，里面有一个名称为<code>person</code>的 Type。<code>person</code>有三个字段。</p>
+<blockquote>
+<ul>
+<li>user</li>
+<li>title</li>
+<li>desc</li>
+</ul>
+</blockquote>
+<p>这三个字段都是中文，而且类型都是文本（text），所以需要指定中文分词器，不能使用默认的英文分词器。</p>
+<p>Elastic 的分词器称为 <a href="https://link.juejin.im/?target=https%3A%2F%2Fwww.elastic.co%2Fguide%2Fen%2Felasticsearch%2Freference%2Fcurrent%2Fanalysis.html" target="_blank" rel="noopener">analyzer</a>。我们对每个字段指定分词器。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  &quot;user&quot;: &#123;  &quot;type&quot;: &quot;text&quot;,  &quot;analyzer&quot;: &quot;ik_max_word&quot;,  &quot;search_analyzer&quot;: &quot;ik_max_word&quot;&#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>上面代码中，<code>analyzer</code>是字段文本的分词器，<code>search_analyzer</code>是搜索词的分词器。<code>ik_max_word</code>分词器是插件<code>ik</code>提供的，可以对文本进行最大数量的分词。</p>
+<h2 id="五、数据操作"><a href="#五、数据操作" class="headerlink" title="五、数据操作"></a>五、数据操作</h2><h3 id="5-1-新增记录"><a href="#5-1-新增记录" class="headerlink" title="5.1 新增记录"></a>5.1 新增记录</h3><p>向指定的 /Index/Type 发送 PUT 请求，就可以在 Index 里面新增一条记录。比如，向<code>/accounts/person</code>发送请求，就可以新增一条人员记录。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ curl -X PUT &apos;localhost:9200/accounts/person/1&apos; -d &apos;&#123;  &quot;user&quot;: &quot;张三&quot;,  &quot;title&quot;: &quot;工程师&quot;,  &quot;desc&quot;: &quot;数据库管理&quot;&#125;&apos; </span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>服务器返回的 JSON 对象，会给出 Index、Type、Id、Version 等信息。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  &#123;  &quot;_index&quot;:&quot;accounts&quot;,  &quot;_type&quot;:&quot;person&quot;,  &quot;_id&quot;:&quot;1&quot;,  &quot;_version&quot;:1,  &quot;result&quot;:&quot;created&quot;,  &quot;_shards&quot;:&#123;&quot;total&quot;:2,&quot;successful&quot;:1,&quot;failed&quot;:0&#125;,  &quot;created&quot;:true&#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>如果你仔细看，会发现请求路径是<code>/accounts/person/1</code>，最后的<code>1</code>是该条记录的 Id。它不一定是数字，任意字符串（比如<code>abc</code>）都可以。</p>
+<p>新增记录的时候，也可以不指定 Id，这时要改成 POST 请求。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ curl -X POST &apos;localhost:9200/accounts/person&apos; -d &apos;&#123;  &quot;user&quot;: &quot;李四&quot;,  &quot;title&quot;: &quot;工程师&quot;,  &quot;desc&quot;: &quot;系统管理&quot;&#125;&apos;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>上面代码中，向<code>/accounts/person</code>发出一个 POST 请求，添加一个记录。这时，服务器返回的 JSON 对象里面，<code>_id</code>字段就是一个随机字符串。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  &#123;  &quot;_index&quot;:&quot;accounts&quot;,  &quot;_type&quot;:&quot;person&quot;,  &quot;_id&quot;:&quot;AV3qGfrC6jMbsbXb6k1p&quot;,  &quot;_version&quot;:1,  &quot;result&quot;:&quot;created&quot;,  &quot;_shards&quot;:&#123;&quot;total&quot;:2,&quot;successful&quot;:1,&quot;failed&quot;:0&#125;,  &quot;created&quot;:true&#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>注意，如果没有先创建 Index（这个例子是<code>accounts</code>），直接执行上面的命令，Elastic 也不会报错，而是直接生成指定的 Index。所以，打字的时候要小心，不要写错 Index 的名称。</p>
+<h3 id="5-2-查看记录"><a href="#5-2-查看记录" class="headerlink" title="5.2 查看记录"></a>5.2 查看记录</h3><p>向<code>/Index/Type/Id</code>发出 GET 请求，就可以查看这条记录。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ curl &apos;localhost:9200/accounts/person/1?pretty=true&apos;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>上面代码请求查看<code>/accounts/person/1</code>这条记录，URL 的参数<code>pretty=true</code>表示以易读的格式返回。</p>
+<p>返回的数据中，<code>found</code>字段表示查询成功，<code>_source</code>字段返回原始记录。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  &#123;  &quot;_index&quot; : &quot;accounts&quot;,  &quot;_type&quot; : &quot;person&quot;,  &quot;_id&quot; : &quot;1&quot;,  &quot;_version&quot; : 1,  &quot;found&quot; : true,  &quot;_source&quot; : &#123;    &quot;user&quot; : &quot;张三&quot;,    &quot;title&quot; : &quot;工程师&quot;,    &quot;desc&quot; : &quot;数据库管理&quot;  &#125;&#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>如果 Id 不正确，就查不到数据，<code>found</code>字段就是<code>false</code>。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ curl &apos;localhost:9200/weather/beijing/abc?pretty=true&apos; &#123;  &quot;_index&quot; : &quot;accounts&quot;,  &quot;_type&quot; : &quot;person&quot;,  &quot;_id&quot; : &quot;abc&quot;,  &quot;found&quot; : false&#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="5-3-删除记录"><a href="#5-3-删除记录" class="headerlink" title="5.3 删除记录"></a>5.3 删除记录</h3><p>删除记录就是发出 DELETE 请求。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ curl -X DELETE &apos;localhost:9200/accounts/person/1&apos;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>这里先不要删除这条记录，后面还要用到。</p>
+<h3 id="5-4-更新记录"><a href="#5-4-更新记录" class="headerlink" title="5.4 更新记录"></a>5.4 更新记录</h3><p>更新记录就是使用 PUT 请求，重新发送一次数据。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ curl -X PUT &apos;localhost:9200/accounts/person/1&apos; -d &apos;&#123;    &quot;user&quot; : &quot;张三&quot;,    &quot;title&quot; : &quot;工程师&quot;,    &quot;desc&quot; : &quot;数据库管理，软件开发&quot;&#125;&apos;  &#123;  &quot;_index&quot;:&quot;accounts&quot;,  &quot;_type&quot;:&quot;person&quot;,  &quot;_id&quot;:&quot;1&quot;,  &quot;_version&quot;:2,  &quot;result&quot;:&quot;updated&quot;,  &quot;_shards&quot;:&#123;&quot;total&quot;:2,&quot;successful&quot;:1,&quot;failed&quot;:0&#125;,  &quot;created&quot;:false&#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>上面代码中，我们将原始数据从”数据库管理”改成”数据库管理，软件开发”。 返回结果里面，有几个字段发生了变化。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  &quot;_version&quot; : 2,&quot;result&quot; : &quot;updated&quot;,&quot;created&quot; : false</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>可以看到，记录的 Id 没变，但是版本（version）从<code>1</code>变成<code>2</code>，操作类型（result）从<code>created</code>变成<code>updated</code>，<code>created</code>字段变成<code>false</code>，因为这次不是新建记录。</p>
+<h2 id="六、数据查询"><a href="#六、数据查询" class="headerlink" title="六、数据查询"></a>六、数据查询</h2><h3 id="6-1-返回所有记录"><a href="#6-1-返回所有记录" class="headerlink" title="6.1 返回所有记录"></a>6.1 返回所有记录</h3><p>使用 GET 方法，直接请求<code>/Index/Type/_search</code>，就会返回所有记录。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ curl &apos;localhost:9200/accounts/person/_search&apos; &#123;  &quot;took&quot;:2,  &quot;timed_out&quot;:false,  &quot;_shards&quot;:&#123;&quot;total&quot;:5,&quot;successful&quot;:5,&quot;failed&quot;:0&#125;,  &quot;hits&quot;:&#123;    &quot;total&quot;:2,    &quot;max_score&quot;:1.0,    &quot;hits&quot;:[      &#123;        &quot;_index&quot;:&quot;accounts&quot;,        &quot;_type&quot;:&quot;person&quot;,        &quot;_id&quot;:&quot;AV3qGfrC6jMbsbXb6k1p&quot;,        &quot;_score&quot;:1.0,        &quot;_source&quot;: &#123;          &quot;user&quot;: &quot;李四&quot;,          &quot;title&quot;: &quot;工程师&quot;,          &quot;desc&quot;: &quot;系统管理&quot;        &#125;      &#125;,      &#123;        &quot;_index&quot;:&quot;accounts&quot;,        &quot;_type&quot;:&quot;person&quot;,        &quot;_id&quot;:&quot;1&quot;,        &quot;_score&quot;:1.0,        &quot;_source&quot;: &#123;          &quot;user&quot; : &quot;张三&quot;,          &quot;title&quot; : &quot;工程师&quot;,          &quot;desc&quot; : &quot;数据库管理，软件开发&quot;        &#125;      &#125;    ]  &#125;&#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>上面代码中，返回结果的 <code>took</code>字段表示该操作的耗时（单位为毫秒），<code>timed_out</code>字段表示是否超时，<code>hits</code>字段表示命中的记录，里面子字段的含义如下。</p>
+<blockquote>
+<ul>
+<li><code>total</code>：返回记录数，本例是2条。</li>
+<li><code>max_score</code>：最高的匹配程度，本例是<code>1.0</code>。</li>
+<li><code>hits</code>：返回的记录组成的数组。</li>
+</ul>
+</blockquote>
+<p>返回的记录中，每条记录都有一个<code>_score</code>字段，表示匹配的程序，默认是按照这个字段降序排列。</p>
+<h3 id="6-2-全文搜索"><a href="#6-2-全文搜索" class="headerlink" title="6.2 全文搜索"></a>6.2 全文搜索</h3><p>Elastic 的查询非常特别，使用自己的<a href="https://link.juejin.im/?target=https%3A%2F%2Fwww.elastic.co%2Fguide%2Fen%2Felasticsearch%2Freference%2F5.5%2Fquery-dsl.html" target="_blank" rel="noopener">查询语法</a>，要求 GET 请求带有数据体。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ curl &apos;localhost:9200/accounts/person/_search&apos;  -d &apos;&#123;  &quot;query&quot; : &#123; &quot;match&quot; : &#123; &quot;desc&quot; : &quot;软件&quot; &#125;&#125;&#125;&apos;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>上面代码使用 <a href="https://link.juejin.im/?target=https%3A%2F%2Fwww.elastic.co%2Fguide%2Fen%2Felasticsearch%2Freference%2F5.5%2Fquery-dsl-match-query.html" target="_blank" rel="noopener">Match 查询</a>，指定的匹配条件是<code>desc</code>字段里面包含”软件”这个词。返回结果如下。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  &#123;  &quot;took&quot;:3,  &quot;timed_out&quot;:false,  &quot;_shards&quot;:&#123;&quot;total&quot;:5,&quot;successful&quot;:5,&quot;failed&quot;:0&#125;,  &quot;hits&quot;:&#123;    &quot;total&quot;:1,    &quot;max_score&quot;:0.28582606,    &quot;hits&quot;:[      &#123;        &quot;_index&quot;:&quot;accounts&quot;,        &quot;_type&quot;:&quot;person&quot;,        &quot;_id&quot;:&quot;1&quot;,        &quot;_score&quot;:0.28582606,        &quot;_source&quot;: &#123;          &quot;user&quot; : &quot;张三&quot;,          &quot;title&quot; : &quot;工程师&quot;,          &quot;desc&quot; : &quot;数据库管理，软件开发&quot;        &#125;      &#125;    ]  &#125;&#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>Elastic 默认一次返回10条结果，可以通过<code>size</code>字段改变这个设置。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ curl &apos;localhost:9200/accounts/person/_search&apos;  -d &apos;&#123;  &quot;query&quot; : &#123; &quot;match&quot; : &#123; &quot;desc&quot; : &quot;管理&quot; &#125;&#125;,  &quot;size&quot;: 1&#125;&apos;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>上面代码指定，每次只返回一条结果。</p>
+<p>还可以通过<code>from</code>字段，指定位移。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ curl &apos;localhost:9200/accounts/person/_search&apos;  -d &apos;&#123;  &quot;query&quot; : &#123; &quot;match&quot; : &#123; &quot;desc&quot; : &quot;管理&quot; &#125;&#125;,  &quot;from&quot;: 1,  &quot;size&quot;: 1&#125;&apos;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>上面代码指定，从位置1开始（默认是从位置0开始），只返回一条结果。</p>
+<h3 id="6-3-逻辑运算"><a href="#6-3-逻辑运算" class="headerlink" title="6.3 逻辑运算"></a>6.3 逻辑运算</h3><p>如果有多个搜索关键字， Elastic 认为它们是<code>or</code>关系。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ curl &apos;localhost:9200/accounts/person/_search&apos;  -d &apos;&#123;  &quot;query&quot; : &#123; &quot;match&quot; : &#123; &quot;desc&quot; : &quot;软件 系统&quot; &#125;&#125;&#125;&apos;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>上面代码搜索的是<code>软件 or 系统</code>。</p>
+<p>如果要执行多个关键词的<code>and</code>搜索，必须使用<a href="https://link.juejin.im/?target=https%3A%2F%2Fwww.elastic.co%2Fguide%2Fen%2Felasticsearch%2Freference%2F5.5%2Fquery-dsl-bool-query.html" target="_blank" rel="noopener">布尔查询</a>。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  $ curl &apos;localhost:9200/accounts/person/_search&apos;  -d &apos;&#123;  &quot;query&quot;: &#123;    &quot;bool&quot;: &#123;      &quot;must&quot;: [        &#123; &quot;match&quot;: &#123; &quot;desc&quot;: &quot;软件&quot; &#125; &#125;,        &#123; &quot;match&quot;: &#123; &quot;desc&quot;: &quot;系统&quot; &#125; &#125;      ]    &#125;  &#125;&#125;&apos;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h2 id="七、参考链接"><a href="#七、参考链接" class="headerlink" title="七、参考链接"></a>七、参考链接</h2><ul>
+<li><a href="https://link.juejin.im/?target=https%3A%2F%2Fwww.elastic.co%2Fguide%2Fen%2Felasticsearch%2Freference%2Fcurrent%2Fgetting-started.html" target="_blank" rel="noopener">ElasticSearch 官方手册</a></li>
+<li><a href="https://link.juejin.im/?target=https%3A%2F%2Fwww.elastic.co%2Fblog%2Fa-practical-introduction-to-elasticsearch" target="_blank" rel="noopener">A Practical Introduction to Elasticsearch</a></li>
+</ul>
+<p>（完）</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-3a3865f474573947.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<h4 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h4><p>在开发网站/App项目的时候，通常需要搭建搜索服务。比如，新闻类应用需要检索标题/内容，社区类应用需要检索用户/帖子。</p>
+<p>对于简单的需求，可以使用数据库的 LIKE 模糊搜索，示例：</p>
+<blockquote>
+<p>SELECT * FROM news WHERE title LIKE ‘%法拉利跑车%’</p>
+</blockquote>
+<p>可以查询到所有标题含有 “法拉利跑车” 关键词的新闻，但是这种方式有明显的弊端：</p>
+<blockquote>
+<p>1、模糊查询性能极低，当数据量庞大的时候，往往会使数据库服务中断；</p>
+<p>2、无法查询相关的数据，只能严格在标题中匹配关键词。</p>
+</blockquote>
+<p>因此，需要搭建专门提供搜索功能的服务，具备分词、全文检索等高级功能。 Solr 就是这样一款搜索引擎，可以让你快速搭建适用于自己业务的搜索服务。</p>
+<h4 id="二、安装"><a href="#二、安装" class="headerlink" title="二、安装"></a>二、安装</h4><p>到官网 <a href="https://link.jianshu.com/?t=http://lucene.apache.org/solr/" target="_blank" rel="noopener">http://lucene.apache.org/solr/</a> 下载安装包，解压并进入 Solr 目录：</p>
+<blockquote>
+<p>wget ‘<a href="http://apache.website-solution.net/lucene/solr/6.2.0/solr-6.2.0.tgz&#39;" target="_blank" rel="noopener">http://apache.website-solution.net/lucene/solr/6.2.0/solr-6.2.0.tgz&#39;</a></p>
+<p>tar xvf solr-6.2.0.tgz</p>
+<p>cd solr-6.2.0</p>
+</blockquote>
+<p>目录结构如下：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-ddbb880dd1a7bcb0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>Solr 6.2 目录结构</p>
+<p>启动 Solr 服务之前，确认已经安装 Java 1.8 ：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-049501dade838caf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>查看 Java 版本</p>
+<p>启动 Solr 服务：</p>
+<blockquote>
+<p>./bin/solr start -m 1g</p>
+</blockquote>
+<p>Solr 将默认监听 8983 端口，其中 -m 1g 指定分配给 JVM 的内存为 1 G。</p>
+<p>在浏览器中访问 Solr 管理后台：</p>
+<blockquote>
+<p><a href="http://127.0.0.1:8983/solr/#/" target="_blank" rel="noopener">http://127.0.0.1:8983/solr/#/</a></p>
+</blockquote>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-19bdf6ec1077db99.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>Solr 管理后台</p>
+<p>创建 Solr 应用：</p>
+<blockquote>
+<p>./bin/solr create -c my_news</p>
+</blockquote>
+<p>可以在 solr-6.2.0/server/solr 目录下生成 my_news 文件夹，结构如下：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-9911b7416917ca06.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>my_news 目录结构</p>
+<p>同时，可以在管理后台看到 my_news：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-81af0fb0b5d89edd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>管理后台</p>
+<h4 id="三、创建索引"><a href="#三、创建索引" class="headerlink" title="三、创建索引"></a>三、创建索引</h4><p>我们将从 MySQL 数据库中导入数据到 Solr 并建立索引。</p>
+<p>首先，需要了解 Solr 中的两个概念： 字段(field) 和 字段类型(fieldType)，配置示例如下：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-cbc2ba3d84087319.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>schema.xml 示例</p>
+<p>field 指定一个字段的名称、是否索引/存储和字段类型。</p>
+<p>fieldType 指定一个字段类型的名称以及在查询/索引的时候可能用到的分词插件。</p>
+<p>将 solr-6.2.0\server\solr\my_news\conf 目录下默认的配置文件 managed-schema 重命名为 schema.xml 并加入新的 fieldType：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-2657cfb3507d1bae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>分词类型</p>
+<p>在 my_news 目录下创建 lib 目录，将用到的分词插件 ik-analyzer-solr5-5.x.jar 加到 lib 目录，结构如下：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-3a3e436e33fa9311.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>my_news 目录结构</p>
+<p>在 Solr 安装目录下重启服务：</p>
+<blockquote>
+<p>./bin/solr restart</p>
+</blockquote>
+<p>可以在管理后台看到新加的类型：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-5609a84930ed96f0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>text_ik 类型</p>
+<p>接下来创建和我们数据库字段对应的 field：title 和 content，类型选为 text_ik：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-a46bba01779c0701.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>新建字段 title</p>
+<p>将要导入数据的 MySQL 数据库表结构：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-ab4dec5179c0f5c3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>编辑 conf/solrconfig.xml 文件，加入类库和数据库配置：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-e3dc609b92f395a1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>类库</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-7a145baf9aa36599.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>dataimport config</p>
+<p>同时新建数据库连接配置文件 conf/db-mysql-config.xml ，内容如下：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-edc3bb352c36e8c2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>数据库配置文件</p>
+<p>将数据库连接组件 mysql-connector-java-5.1.39-bin.jar 放到 lib 目录下，重启 Solr，访问管理后台，执行全量导入数据： </p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-a4462a20df0716a2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>全量导入数据</p>
+<p>创建定时更新脚本：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-f437d561069eedd2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>定时更新脚本</p>
+<p>加入到定时任务，每5分钟增量更新一次索引：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-73d93e996f0a132c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>定时任务</p>
+<p>在 Solr 管理后台测试搜索结果：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-9f003409af70ae7a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>分词搜索结果</p>
+<p>至此，基本的搜索引擎搭建完毕，外部应用只需通过 http 协议提供查询参数，就可以获取搜索结果。</p>
+<h4 id="四、搜索干预"><a href="#四、搜索干预" class="headerlink" title="四、搜索干预"></a>四、搜索干预</h4><p>通常需要对搜索结果进行人工干预，比如编辑推荐、竞价排名或者屏蔽搜索结果。Solr 已经内置了 QueryElevationComponent 插件，可以从配置文件中获取搜索关键词对应的干预列表，并将干预结果排在搜索结果的前面。</p>
+<p>在 solrconfig.xml 文件中，可以看到：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-09494ec9437338cd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>干预其请求配置</p>
+<p>定义了搜索组件 elevator，应用在 /elevate 的搜索请求中，干预结果的配置文件在 solrconfig.xml 同目录下的 elevate.xml 中，干预配置示例：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-3f2587b4bb0dcee3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>重启 Solr ，当搜索 “关键词” 的时候，id 为 1和 4 的文档将出现在前面，同时 id = 3 的文档被排除在结果之外，可以看到，没有干预的时候，搜索结果为：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-b12a6ec2234beaef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>无干预结果</p>
+<p>当有搜索干预的时候：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-f57a54656abc2f62.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>干预结果</p>
+<p>通过配置文件干预搜索结果，虽然简单，但是每次更新都要重启 Solr 才能生效，稍显麻烦，我们可以仿照 QueryElevationComponent 类，开发自己的干预组件，例如:从 Redis 中读取干预配置。</p>
+<h4 id="五、中文分词"><a href="#五、中文分词" class="headerlink" title="五、中文分词"></a>五、中文分词</h4><p>中文的搜索质量，和分词的效果息息相关，可以在 Solr 管理后台测试分词：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-bc4dfa9a4801846f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>分词结果测试</p>
+<p>上例可以看到，使用 <a href="https://blog.csdn.net/a724888/article/details/80993677" target="_blank" rel="noopener">IKAnalyzer</a> 分词插件，对 “北京科技大学” 分词的测试结果。当用户搜索 “北京”、“科技大学”、“科技大”、“科技”、“大学” 这些关键词的时候，都会搜索到文本内容含 “北京科技大学” 的文档。</p>
+<p>常用的中文分词插件有 IKAnalyzer、mmseg4j和 Solr 自带的 smartcn 等，分词效果各有优劣，具体选择哪个，可以根据自己的业务场景，分别测试效果再选择。</p>
+<p>分词插件一般都有自己的默认词库和扩展词库，默认词库包含了绝大多数常用的中文词语。如果默认词库无法满足你的需求，比如某些专业领域的词汇，可以在扩展词库中手动添加，这样分词插件就能识别新词语了。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-ac9e935a3b98661c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>分词插件扩展词库配置示例</p>
+<p>分词插件还可以指定停止词库，将某些无意义的词汇剔出分词结果，比如：“的”、“哼” 等，例如：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/19687-34e025db9e4db451.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt></p>
+<p>去除无意义的词</p>
+<h4 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h4><p>以上介绍了 Solr 最常用的一些功能，Solr 本身还有很多其他丰富的功能，比如分布式部署。</p>
+<p>希望对你有所帮助。</p>
+<h4 id="七、附录"><a href="#七、附录" class="headerlink" title="七、附录"></a>七、附录</h4><p>1、参考资料：</p>
+<p><a href="https://link.jianshu.com/?t=https://wiki.apache.org/solr/" target="_blank" rel="noopener">https://wiki.apache.org/solr/</a></p>
+<p><a href="https://link.jianshu.com/?t=http://lucene.apache.org/solr/quickstart.html" target="_blank" rel="noopener">http://lucene.apache.org/solr/quickstart.html</a></p>
+<p><a href="https://link.jianshu.com/?t=https://cwiki.apache.org/confluence/display/solr/Apache+Solr+Reference+Guide" target="_blank" rel="noopener">https://cwiki.apache.org/confluence/display/solr/Apache+Solr+Reference+Guide</a></p>
+<p>2、上述 Demo 中用到的所有配置文件、Jar 包：</p>
+<p><a href="https://link.jianshu.com/?t=https://github.com/Ceelog/OpenSchool/blob/master/my_news.zip" target="_blank" rel="noopener">https://github.com/Ceelog/OpenSchool/blob/master/my_news.zip</a></p>
+<p>3、还有疑问？联系作者微博/微信 <a href="https://link.jianshu.com/?t=http://weibo.com/ceelog/" target="_blank" rel="noopener">@Ceelog</a></p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/大后端/" rel="tag"># 大后端</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/13/后端技术杂谈/后端技术杂谈3：Lucene基础原理与实践/" rel="next" title="后端技术杂谈3：Lucene基础原理与实践">
+                <i class="fa fa-chevron-left"></i> 后端技术杂谈3：Lucene基础原理与实践
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/13/后端技术杂谈/后端技术杂谈5：云计算的前世今生/" rel="prev" title="后端技术杂谈5：云计算的前世今生">
+                后端技术杂谈5：云计算的前世今生 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#阮一峰：全文搜索引擎-Elasticsearch-入门教程"><span class="nav-number">1.</span> <span class="nav-text">阮一峰：全文搜索引擎 Elasticsearch 入门教程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、安装"><span class="nav-number">1.1.</span> <span class="nav-text">一、安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、基本概念"><span class="nav-number">1.2.</span> <span class="nav-text">二、基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Node-与-Cluster"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 Node 与 Cluster</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Index"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 Index</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Document"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 Document</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-Type"><span class="nav-number">1.2.4.</span> <span class="nav-text">2.4 Type</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、新建和删除-Index"><span class="nav-number">1.3.</span> <span class="nav-text">三、新建和删除 Index</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、中文分词设置"><span class="nav-number">1.4.</span> <span class="nav-text">四、中文分词设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、数据操作"><span class="nav-number">1.5.</span> <span class="nav-text">五、数据操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-新增记录"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 新增记录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-查看记录"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 查看记录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-删除记录"><span class="nav-number">1.5.3.</span> <span class="nav-text">5.3 删除记录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-更新记录"><span class="nav-number">1.5.4.</span> <span class="nav-text">5.4 更新记录</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、数据查询"><span class="nav-number">1.6.</span> <span class="nav-text">六、数据查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-返回所有记录"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1 返回所有记录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-全文搜索"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2 全文搜索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-逻辑运算"><span class="nav-number">1.6.3.</span> <span class="nav-text">6.3 逻辑运算</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七、参考链接"><span class="nav-number">1.7.</span> <span class="nav-text">七、参考链接</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、前言"><span class="nav-number">1.7.0.1.</span> <span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、安装"><span class="nav-number">1.7.0.2.</span> <span class="nav-text">二、安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、创建索引"><span class="nav-number">1.7.0.3.</span> <span class="nav-text">三、创建索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、搜索干预"><span class="nav-number">1.7.0.4.</span> <span class="nav-text">四、搜索干预</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、中文分词"><span class="nav-number">1.7.0.5.</span> <span class="nav-text">五、中文分词</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#六、总结"><span class="nav-number">1.7.0.6.</span> <span class="nav-text">六、总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#七、附录"><span class="nav-number">1.7.0.7.</span> <span class="nav-text">七、附录</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">1.8.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">1.8.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">1.8.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

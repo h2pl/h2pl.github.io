@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="多线程,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透">
+<meta name="keywords" content="多线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="夯实Java基础系列17：一文搞懂Java多线程使用方式、实现原理以及常见面试题">
+<meta property="og:url" content="http://yoursite.com/2019/09/17/17、多线程/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://www.runoob.com/wp-content/uploads/2014/01/java-thread.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:23.917Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="夯实Java基础系列17：一文搞懂Java多线程使用方式、实现原理以及常见面试题">
+<meta name="twitter:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透">
+<meta name="twitter:image" content="https://www.runoob.com/wp-content/uploads/2014/01/java-thread.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/09/17/17、多线程/">
+
+
+
+
+
+  <title>夯实Java基础系列17：一文搞懂Java多线程使用方式、实现原理以及常见面试题 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/17/17、多线程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">夯实Java基础系列17：一文搞懂Java多线程使用方式、实现原理以及常见面试题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-17T15:56:26+08:00">
+                2019-09-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/" itemprop="url" rel="index">
+                    <span itemprop="name">Java技术江湖</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/Java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/09/17/17、多线程/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/09/17/17、多线程/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章首发于我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透彻，也整合了很多我认为不错的技术博客内容，引用其中了一些比较好的博客文章，如有侵权，请联系作者。<br>该系列博文会告诉你如何从入门到进阶，一步步地学习Java基础知识，并上手进行实战，接着了解每个Java知识点背后的实现原理，更完整地了解整个Java技术体系，形成自己的知识框架。为了更好地总结和检验你的学习成果，本系列文章也会提供每个知识点对应的面试题以及参考答案。</p>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+<a id="more"></a>
+
+
+
+<h2 id="Java中的线程"><a href="#Java中的线程" class="headerlink" title="Java中的线程"></a>Java中的线程</h2><p>Java之父对线程的定义是：</p>
+<blockquote>
+<p>线程是一个独立执行的调用序列，同一个进程的线程在同一时刻共享一些系统资源（比如文件句柄等）也能访问同一个进程所创建的对象资源（内存资源）。java.lang.Thread对象负责统计和控制这种行为。</p>
+</blockquote>
+<blockquote>
+<p>每个程序都至少拥有一个线程-即作为Java虚拟机(JVM)启动参数运行在主类main方法的线程。在Java虚拟机初始化过程中也可能启动其他的后台线程。这种线程的数目和种类因JVM的实现而异。然而所有用户级线程都是显式被构造并在主线程或者是其他用户线程中被启动。</p>
+</blockquote>
+<pre><code>  本文主要讲了java中多线程的使用方法、线程同步、线程数据传递、线程状态及相应的一些线程函数用法、概述等。在这之前，首先让我们来了解下在操作系统中进程和线程的区别：
+
+　　进程：每个进程都有独立的代码和数据空间（进程上下文），进程间的切换会有较大的开销，一个进程包含1--n个线程。（进程是资源分配的最小单位）
+
+　　线程：同一类线程共享代码和数据空间，每个线程有独立的运行栈和程序计数器(PC)，线程切换开销小。（线程是cpu调度的最小单位）
+
+　　线程和进程一样分为五个阶段：创建、就绪、运行、阻塞、终止。
+
+　　多进程是指操作系统能同时运行多个任务（程序）。
+
+　　多线程是指在同一程序中有多个顺序流在执行。
+
+在java中要想实现多线程，有两种手段，一种是继续Thread类，另外一种是实现Runable接口.(其实准确来讲，应该有三种，还有一种是实现Callable接口，并与Future、线程池结合使用</code></pre><h2 id="Java线程状态机"><a href="#Java线程状态机" class="headerlink" title="Java线程状态机"></a>Java线程状态机</h2><p>Java 给多线程编程提供了内置的支持。 一条线程指的是进程中一个单一顺序的控制流，一个进程中可以并发多个线程，每条线程并行执行不同的任务。</p>
+<p>多线程是多任务的一种特别的形式，但多线程使用了更小的资源开销。</p>
+<p>这里定义和线程相关的另一个术语 - 进程：一个进程包括由操作系统分配的内存空间，包含一个或多个线程。一个线程不能独立的存在，它必须是进程的一部分。一个进程一直运行，直到所有的非守护线程都结束运行后才能结束。</p>
+<p>多线程能满足程序员编写高效率的程序来达到充分利用 CPU 的目的。</p>
+<hr>
+<h3 id="一个线程的生命周期"><a href="#一个线程的生命周期" class="headerlink" title="一个线程的生命周期"></a>一个线程的生命周期</h3><p>线程是一个动态执行的过程，它也有一个从产生到死亡的过程。</p>
+<p>下图显示了一个线程完整的生命周期。</p>
+<p><img src="https://www.runoob.com/wp-content/uploads/2014/01/java-thread.jpg" alt></p>
+<ul>
+<li><p><strong>新建状态:</strong></p>
+<p>使用 <strong>new</strong> 关键字和 <strong>Thread</strong> 类或其子类建立一个线程对象后，该线程对象就处于新建状态。它保持这个状态直到程序 <strong>start()</strong> 这个线程。</p>
+</li>
+<li><p><strong>就绪状态:</strong></p>
+<p>当线程对象调用了start()方法之后，该线程就进入就绪状态。就绪状态的线程处于就绪队列中，要等待JVM里线程调度器的调度。</p>
+</li>
+<li><p><strong>运行状态:</strong></p>
+<p>如果就绪状态的线程获取 CPU 资源，就可以执行 <strong>run()</strong>，此时线程便处于运行状态。处于运行状态的线程最为复杂，它可以变为阻塞状态、就绪状态和死亡状态。</p>
+</li>
+<li><p><strong>阻塞状态:</strong></p>
+<p>如果一个线程执行了sleep（睡眠）、suspend（挂起）等方法，失去所占用资源之后，该线程就从运行状态进入阻塞状态。在睡眠时间已到或获得设备资源后可以重新进入就绪状态。可以分为三种：</p>
+<ul>
+<li><p>等待阻塞：运行状态中的线程执行 wait() 方法，使线程进入到等待阻塞状态。</p>
+</li>
+<li><p>同步阻塞：线程在获取 synchronized 同步锁失败(因为同步锁被其他线程占用)。</p>
+</li>
+<li><p>其他阻塞：通过调用线程的 sleep() 或 join() 发出了 I/O 请求时，线程就会进入到阻塞状态。当sleep() 状态超时，join() 等待线程终止或超时，或者 I/O 处理完毕，线程重新转入就绪状态。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>死亡状态:</strong></p>
+<p>一个运行状态的线程完成任务或者其他终止条件发生时，该线程就切换到终止状态。</p>
+<h2 id="Java多线程实战"><a href="#Java多线程实战" class="headerlink" title="Java多线程实战"></a>Java多线程实战</h2><h2 id="多线程的实现"><a href="#多线程的实现" class="headerlink" title="多线程的实现"></a>多线程的实现</h2><p>public class 多线程实例 {</p>
+<pre><code>//继承thread
+@Test
+public void test1() {
+    class A extends Thread {
+        @Override
+        public void run() {
+            System.out.println(&quot;A run&quot;);
+        }
+    }
+    A a = new A();
+    a.start();
+}
+
+//实现Runnable
+@Test
+public void test2() {
+    class B implements Runnable {
+
+        @Override
+        public void run() {
+            System.out.println(&quot;B run&quot;);
+        }
+    }
+    B b = new B();
+    //Runable实现类需要由Thread类包装后才能执行
+    new Thread(b).start();
+}
+
+//有返回值的线程
+@Test
+public void test3() {
+    Callable callable = new Callable() {
+        int sum = 0;
+        @Override
+        public Object call() throws Exception {
+            for (int i = 0;i &lt; 5;i ++) {
+                sum += i;
+            }
+            return sum;
+        }
+    };
+    //这里要用FutureTask，否则不能加入Thread构造方法
+    FutureTask futureTask = new FutureTask(callable);
+    new Thread(futureTask).start();
+    try {
+        System.out.println(futureTask.get());
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    } catch (ExecutionException e) {
+        e.printStackTrace();
+    }
+}
+
+//线程池实现
+@Test
+public void test4() {
+    ExecutorService executorService = Executors.newFixedThreadPool(5);
+    //execute直接执行线程
+    executorService.execute(new Thread());
+    executorService.execute(new Runnable() {
+        @Override
+        public void run() {
+            System.out.println(&quot;runnable&quot;);
+        }
+    });
+    //submit提交有返回结果的任务，运行完后返回结果。
+    Future future = executorService.submit(new Callable&lt;String&gt;() {
+        @Override
+        public String call() throws Exception {
+            return &quot;a&quot;;
+        }
+    });
+    try {
+        System.out.println(future.get());
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    } catch (ExecutionException e) {
+        e.printStackTrace();
+    }
+
+    ArrayList&lt;String&gt; list = new ArrayList&lt;&gt;();
+    //有返回值的线程组将返回值存进集合
+    for (int i = 0;i &lt; 5;i ++ ) {
+        int finalI = i;
+        Future future1 = executorService.submit(new Callable&lt;String&gt;() {
+            @Override
+            public String call() throws Exception {
+                return &quot;res&quot; + finalI;
+            }
+        });
+        try {
+            list.add((String) future1.get());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+    for (String s : list) {
+        System.out.println(s);
+    }
+}</code></pre><p>}</p>
+</li>
+</ul>
+<h2 id="线程状态转换"><a href="#线程状态转换" class="headerlink" title="线程状态转换"></a>线程状态转换</h2><pre><code>public class 线程的状态转换 {
+//一开始线程是init状态，结束时是terminated状态
+class t implements Runnable {
+    private String name;
+    public t(String name) {
+        this.name = name;
+    }
+    @Override
+    public void run() {
+        System.out.println(name + &quot;run&quot;);
+    }
+}
+
+//测试join，父线程在子线程运行时进入waiting状态
+@Test
+public void test1() throws InterruptedException {
+    Thread dad = new Thread(new Runnable() {
+        Thread son = new Thread(new t(&quot;son&quot;));
+        @Override
+        public void run() {
+            System.out.println(&quot;dad init&quot;);
+            son.start();
+            try {
+                //保证子线程运行完再运行父线程
+                son.join();
+                System.out.println(&quot;dad run&quot;);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    });
+    //调用start，线程进入runnable状态，等待系统调度
+    dad.start();
+    //在父线程中对子线程实例使用join，保证子线程在父线程之前执行完
+
+}
+
+//测试sleep
+@Test
+public void test2(){
+    Thread t1 = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            System.out.println(&quot;t1 run&quot;);
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    });
+
+    //主线程休眠。进入time waiting状态
+    try {
+        Thread.sleep(3000);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+    t1.start();
+
+}
+
+//线程2进入blocked状态。
+public static void main(String[] args) {
+    test4();
+    Thread.yield();//进入runnable状态
+}
+
+//测试blocked状态
+public static void test4() {
+    class A {
+        //线程1获得实例锁以后线程2无法获得实例锁，所以进入blocked状态
+        synchronized void run() {
+            while (true) {
+                System.out.println(&quot;run&quot;);
+            }
+        }
+    }
+    A a = new A();
+    new Thread(new Runnable() {
+        @Override
+        public void run() {
+            System.out.println(&quot;t1 get lock&quot;);
+            a.run();
+        }
+    }).start();
+    new Thread(new Runnable() {
+        @Override
+        public void run() {
+            System.out.println(&quot;t2 get lock&quot;);
+            a.run();
+        }
+    }).start();
+
+}
+
+//volatile保证线程可见性
+volatile static int flag = 1;
+//object作为锁对象，用于线程使用wait和notify方法
+volatile static Object o = new Object();
+//测试wait和notify
+//wait后进入waiting状态，被notify进入blocked（阻塞等待锁释放）或者runnable状态（获取到锁）
+public void test5() {
+    new Thread(new Runnable() {
+        @Override
+        public void run() {
+            //wait和notify只能在同步代码块内使用
+            synchronized (o) {
+                while (true) {
+                    if (flag == 0) {
+                        try {
+                            Thread.sleep(2000);
+                            System.out.println(&quot;thread1 wait&quot;);
+                            //释放锁，线程挂起进入object的等待队列，后续代码运行
+                            o.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    System.out.println(&quot;thread1 run&quot;);
+                    System.out.println(&quot;notify t2&quot;);
+                    flag = 0;
+                    //通知等待队列的一个线程获取锁
+                    o.notify();
+                }
+            }
+        }
+    }).start();
+    //解释同上
+    new Thread(new Runnable() {
+        @Override
+        public void run() {
+            while (true) {
+                synchronized (o) {
+                    if (flag == 1) {
+                        try {
+                            Thread.sleep(2000);
+                            System.out.println(&quot;thread2 wait&quot;);
+                            o.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    System.out.println(&quot;thread2 run&quot;);
+                    System.out.println(&quot;notify t1&quot;);
+                    flag = 1;
+                    o.notify();
+                }
+            }
+        }
+    }).start();
+}
+
+//输出结果是
+//    thread1 run
+//    notify t2
+//    thread1 wait
+//    thread2 run
+//    notify t1
+//    thread2 wait
+//    thread1 run
+//    notify t2
+//不断循环
+
+}</code></pre><h2 id="Java-Thread常用方法"><a href="#Java-Thread常用方法" class="headerlink" title="Java Thread常用方法"></a>Java Thread常用方法</h2><h3 id="Thread-yield-："><a href="#Thread-yield-：" class="headerlink" title="Thread#yield()："></a>Thread#yield()：</h3><p>执行此方法会向系统线程调度器（Schelduler）发出一个暗示，告诉其当前JAVA线程打算放弃对CPU的使用，但该暗示，有可能被调度器忽略。使用该方法，可以防止线程对CPU的过度使用，提高系统性能。</p>
+<p>Thread#sleep(time)或Thread.sleep(time, nanos)：</p>
+<p>使当前线程进入休眠阶段，状态变为：TIME_WAITING</p>
+<h3 id="Thread-interrupt-："><a href="#Thread-interrupt-：" class="headerlink" title="Thread.interrupt()："></a>Thread.interrupt()：</h3><p>中断当前线程的执行，允许当前线程对自身进行中断，否则将会校验调用方线程是否有对该线程的权限。</p>
+<p>如果当前线程因被调用Object#wait(),Object#wait(long, int), 或者线程本身的join(), join(long),sleep()处于阻塞状态中，此时调用interrupt方法会使抛出InterruptedException，而且线程的阻塞状态将会被清除。</p>
+<h3 id="Thread-interrupted-，返回true或者false："><a href="#Thread-interrupted-，返回true或者false：" class="headerlink" title="Thread#interrupted()，返回true或者false："></a>Thread#interrupted()，返回true或者false：</h3><p>查看当前线程是否处于中断状态，这个方法比较特殊之处在于，如果调用成功，会将当前线程的interrupt status清除。所以如果连续2次调用该方法，第二次将返回false。</p>
+<h3 id="Thread-isInterrupted-，返回true或者false："><a href="#Thread-isInterrupted-，返回true或者false：" class="headerlink" title="Thread.isInterrupted()，返回true或者false："></a>Thread.isInterrupted()，返回true或者false：</h3><p>与上面方法相同的地方在于，该方法返回当前线程的中断状态。不同的地方在于，它不会清除当前线程的interrupt status状态。</p>
+<h3 id="Thread-join-，Thread-join-time-："><a href="#Thread-join-，Thread-join-time-：" class="headerlink" title="Thread#join()，Thread#join(time)："></a>Thread#join()，Thread#join(time)：</h3><p>A线程调用B线程的join()方法，将会使A等待B执行，直到B线程终止。如果传入time参数，将会使A等待B执行time的时间，如果time时间到达，将会切换进A线程，继续执行A线程。</p>
+<h2 id="构造方法和守护线程"><a href="#构造方法和守护线程" class="headerlink" title="构造方法和守护线程"></a>构造方法和守护线程</h2><pre><code>构造方法
+Thread类中不同的构造方法接受如下参数的不同组合：
+
+一个Runnable对象，这种情况下，Thread.start方法将会调用对应Runnable对象的run方法。如果没有提供Runnable对象，那么就会立即得到一个Thread.run的默认实现。
+
+一个作为线程标识名的String字符串，该标识在跟踪和调试过程中会非常有用，除此别无它用。
+
+线程组（ThreadGroup），用来放置新创建的线程，如果提供的ThreadGroup不允许被访问，那么就会抛出一个SecurityException 。
+
+
+
+Thread对象拥有一个守护(daemon)标识属性，这个属性无法在构造方法中被赋值，但是可以在线程启动之前设置该属性(通过setDaemon方法)。
+
+当程序中所有的非守护线程都已经终止，调用setDaemon方法可能会导致虚拟机粗暴的终止线程并退出。
+
+isDaemon方法能够返回该属性的值。守护状态的作用非常有限，即使是后台线程在程序退出的时候也经常需要做一些清理工作。
+
+（daemon的发音为”day-mon”,这是系统编程传统的遗留，系统守护进程是一个持续运行的进程，比如打印机队列管理，它总是在系统中运行。）</code></pre><h2 id="启动线程的方式和isAlive方法"><a href="#启动线程的方式和isAlive方法" class="headerlink" title="启动线程的方式和isAlive方法"></a>启动线程的方式和isAlive方法</h2><p>启动线程<br>调用start方法会触发Thread实例以一个新的线程启动其run方法。新线程不会持有调用线程的任何同步锁。</p>
+<p>当一个线程正常地运行结束或者抛出某种未检测的异常（比如，运行时异常(RuntimeException)，错误(ERROR) 或者其子类）线程就会终止。</p>
+<p><strong>当线程终止之后，是不能被重新启动的。在同一个Thread上调用多次start方法会抛出InvalidThreadStateException异常。</strong></p>
+<p>如果线程已经启动但是还没有终止，那么调用isAlive方法就会返回true.即使线程由于某些原因处于阻塞(Blocked)状态该方法依然返回true。</p>
+<p>如果线程已经被取消(cancelled),那么调用其isAlive在什么时候返回false就因各Java虚拟机的实现而异了。没有方法可以得知一个处于非活动状态的线程是否已经被启动过了。</p>
+<h2 id="Java多线程优先级"><a href="#Java多线程优先级" class="headerlink" title="Java多线程优先级"></a>Java多线程优先级</h2><p><strong>Java的线程实现基本上都是内核级线程的实现，所以Java线程的具体执行还取决于操作系统的特性。</strong></p>
+<p>Java虚拟机为了实现跨平台(不同的硬件平台和各种操作系统)的特性，Java语言在线程调度与调度公平性上未作出任何的承诺，甚至都不会严格保证线程会被执行。但是Java线程却支持优先级的方法，这些方法会影响线程的调度：</p>
+<p>每个线程都有一个优先级，分布在Thread.MIN_PRIORITY和Thread.MAX_PRIORITY之间（分别为1和10）<br>默认情况下，新创建的线程都拥有和创建它的线程相同的优先级。main方法所关联的初始化线程拥有一个默认的优先级，这个优先级是Thread.NORM_PRIORITY (5).</p>
+<p>线程的当前优先级可以通过getPriority方法获得。<br>线程的优先级可以通过setPriority方法来动态的修改，一个线程的最高优先级由其所在的线程组限定。</p>
+<h2 id="Java多线程面试题"><a href="#Java多线程面试题" class="headerlink" title="Java多线程面试题"></a>Java多线程面试题</h2><p>这篇文章主要是对多线程的问题进行总结的，因此罗列了40个多线程的问题。</p>
+<p>这些多线程的问题，有些来源于各大网站、有些来源于自己的思考。可能有些问题网上有、可能有些问题对应的答案也有、也可能有些各位网友也都看过，但是本文写作的重心就是所有的问题都会按照自己的理解回答一遍，不会去看网上的答案，因此可能有些问题讲的不对，能指正的希望大家不吝指教。</p>
+<blockquote>
+<p><strong>1、多线程有什么用？</strong></p>
+</blockquote>
+<p>一个可能在很多人看来很扯淡的一个问题：我会用多线程就好了，还管它有什么用？在我看来，这个回答更扯淡。所谓”知其然知其所以然”，”会用”只是”知其然”，”为什么用”才是”知其所以然”，只有达到”知其然知其所以然”的程度才可以说是把一个知识点运用自如。OK，下面说说我对这个问题的看法：</p>
+<p><strong>1）发挥多核CPU的优势</strong></p>
+<p>随着工业的进步，现在的笔记本、台式机乃至商用的应用服务器至少也都是双核的，4核、8核甚至16核的也都不少见，如果是单线程的程序，那么在双核CPU上就浪费了50%，在4核CPU上就浪费了75%。<strong>单核CPU上所谓的”多线程”那是假的多线程，同一时间处理器只会处理一段逻辑，只不过线程之间切换得比较快，看着像多个线程”同时”运行罢了</strong>。多核CPU上的多线程才是真正的多线程，它能让你的多段逻辑同时工作，多线程，可以真正发挥出多核CPU的优势来，达到充分利用CPU的目的。</p>
+<p><strong>2）防止阻塞</strong></p>
+<p>从程序运行效率的角度来看，单核CPU不但不会发挥出多线程的优势，反而会因为在单核CPU上运行多线程导致线程上下文的切换，而降低程序整体的效率。但是单核CPU我们还是要应用多线程，就是为了防止阻塞。试想，如果单核CPU使用单线程，那么只要这个线程阻塞了，比方说远程读取某个数据吧，对端迟迟未返回又没有设置超时时间，那么你的整个程序在数据返回回来之前就停止运行了。多线程可以防止这个问题，多条线程同时运行，哪怕一条线程的代码执行读取数据阻塞，也不会影响其它任务的执行。</p>
+<p><strong>3）便于建模</strong></p>
+<p>这是另外一个没有这么明显的优点了。假设有一个大的任务A，单线程编程，那么就要考虑很多，建立整个程序模型比较麻烦。但是如果把这个大的任务A分解成几个小任务，任务B、任务C、任务D，分别建立程序模型，并通过多线程分别运行这几个任务，那就简单很多了。</p>
+<blockquote>
+<p><strong>2、创建线程的方式</strong></p>
+</blockquote>
+<p>比较常见的一个问题了，一般就是两种：</p>
+<p>1）继承Thread类</p>
+<p>2）实现Runnable接口</p>
+<p>至于哪个好，不用说肯定是后者好，因为实现接口的方式比继承类的方式更灵活，也能减少程序之间的耦合度，<strong>面向接口编程</strong>也是设计模式6大原则的核心。</p>
+<blockquote>
+<p><strong>3、start()方法和run()方法的区别</strong></p>
+</blockquote>
+<p>只有调用了start()方法，才会表现出多线程的特性，不同线程的run()方法里面的代码交替执行。如果只是调用run()方法，那么代码还是同步执行的，必须等待一个线程的run()方法里面的代码全部执行完毕之后，另外一个线程才可以执行其run()方法里面的代码。</p>
+<blockquote>
+<p><strong>4、Runnable接口和Callable接口的区别</strong></p>
+</blockquote>
+<p>有点深的问题了，也看出一个Java程序员学习知识的广度。</p>
+<p>Runnable接口中的run()方法的返回值是void，它做的事情只是纯粹地去执行run()方法中的代码而已；Callable接口中的call()方法是有返回值的，是一个泛型，和Future、FutureTask配合可以用来获取异步执行的结果。</p>
+<p>这其实是很有用的一个特性，因为<strong>多线程相比单线程更难、更复杂的一个重要原因就是因为多线程充满着未知性</strong>，某条线程是否执行了？某条线程执行了多久？某条线程执行的时候我们期望的数据是否已经赋值完毕？无法得知，我们能做的只是等待这条多线程的任务执行完毕而已。而Callable+Future/FutureTask却可以获取多线程运行的结果，可以在等待时间太长没获取到需要的数据的情况下取消该线程的任务，真的是非常有用。</p>
+<blockquote>
+<p><strong>5、CyclicBarrier和CountDownLatch的区别</strong></p>
+</blockquote>
+<p>两个看上去有点像的类，都在java.util.concurrent下，都可以用来表示代码运行到某个点上，二者的区别在于：</p>
+<p>1）CyclicBarrier的某个线程运行到某个点上之后，该线程即停止运行，直到所有的线程都到达了这个点，所有线程才重新运行；CountDownLatch则不是，某线程运行到某个点上之后，只是给某个数值-1而已，该线程继续运行。</p>
+<p>2）CyclicBarrier只能唤起一个任务，CountDownLatch可以唤起多个任务。</p>
+<p>3) CyclicBarrier可重用，CountDownLatch不可重用，计数值为0该CountDownLatch就不可再用了。</p>
+<blockquote>
+<p><strong>6、volatile关键字的作用</strong></p>
+</blockquote>
+<p>一个非常重要的问题，是每个学习、应用多线程的Java程序员都必须掌握的。理解volatile关键字的作用的前提是要理解Java内存模型，这里就不讲Java内存模型了，可以参见第31点，volatile关键字的作用主要有两个：</p>
+<p>1）多线程主要围绕可见性和原子性两个特性而展开，使用volatile关键字修饰的变量，保证了其在多线程之间的可见性，即每次读取到volatile变量，一定是最新的数据。</p>
+<p>2）代码底层执行不像我们看到的高级语言—-Java程序这么简单，它的执行是<strong>Java代码–&gt;字节码–&gt;根据字节码执行对应的C/C++代码–&gt;C/C++代码被编译成汇编语言–&gt;和硬件电路交互</strong>，现实中，为了获取更好的性能JVM可能会对指令进行重排序，多线程下可能会出现一些意想不到的问题。使用volatile则会对禁止语义重排序，当然这也一定程度上降低了代码执行效率。</p>
+<p>从实践角度而言，volatile的一个重要作用就是和CAS结合，保证了原子性，详细的可以参见java.util.concurrent.atomic包下的类，比如AtomicInteger，更多详情请点击<a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247483916&idx=1&sn=89daf388da0d6fe40dc54e9a4018baeb&chksm=eb53873adc240e2cf55400f3261228d08fc943c4f196566e995681549c47630b70ac01b75031&scene=21#wechat_redirect" target="_blank" rel="noopener">这里</a>进行学习。</p>
+<blockquote>
+<p><strong>7、什么是线程安全</strong></p>
+</blockquote>
+<p>又是一个理论的问题，各式各样的答案有很多，我给出一个个人认为解释地最好的：<strong>如果你的代码在多线程下执行和在单线程下执行永远都能获得一样的结果，那么你的代码就是线程安全的</strong>。</p>
+<p>这个问题有值得一提的地方，就是线程安全也是有几个级别的：</p>
+<p><strong>1）不可变</strong></p>
+<p>像String、Integer、Long这些，都是final类型的类，任何一个线程都改变不了它们的值，要改变除非新创建一个，因此这些不可变对象不需要任何同步手段就可以直接在多线程环境下使用</p>
+<p><strong>2）绝对线程安全</strong></p>
+<p>不管运行时环境如何，调用者都不需要额外的同步措施。要做到这一点通常需要付出许多额外的代价，Java中标注自己是线程安全的类，实际上绝大多数都不是线程安全的，不过绝对线程安全的类，Java中也有，比方说CopyOnWriteArrayList、CopyOnWriteArraySet</p>
+<p><strong>3）相对线程安全</strong></p>
+<p>相对线程安全也就是我们通常意义上所说的线程安全，像Vector这种，add、remove方法都是原子操作，不会被打断，但也仅限于此，如果有个线程在遍历某个Vector、有个线程同时在add这个Vector，99%的情况下都会出现ConcurrentModificationException，也就是<strong>fail-fast机制</strong>。</p>
+<p><strong>4）线程非安全</strong></p>
+<p>这个就没什么好说的了，ArrayList、LinkedList、HashMap等都是线程非安全的类，点击<a href="http://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247486446&idx=2&sn=cb4f3aff0427c5ac3ffe5b61e150f506&chksm=eb538ed8dc2407ceb91fffe3c3bd559d9b15537446f84eb3bfb1a80e67f5efee176ca468a07b&scene=21#wechat_redirect" target="_blank" rel="noopener">这里</a>了解为什么不安全。</p>
+<blockquote>
+<p><strong>8、Java中如何获取到线程dump文件</strong></p>
+</blockquote>
+<p>死循环、死锁、阻塞、页面打开慢等问题，打线程dump是最好的解决问题的途径。所谓线程dump也就是线程堆栈，获取到线程堆栈有两步：</p>
+<p>1）获取到线程的pid，可以通过使用jps命令，在Linux环境下还可以使用ps -ef | grep java</p>
+<p>2）打印线程堆栈，可以通过使用jstack pid命令，在Linux环境下还可以使用kill -3 pid</p>
+<p>另外提一点，Thread类提供了一个getStackTrace()方法也可以用于获取线程堆栈。这是一个实例方法，因此此方法是和具体线程实例绑定的，每次获取获取到的是具体某个线程当前运行的堆栈。</p>
+<blockquote>
+<p><strong>9、一个线程如果出现了运行时异常会怎么样</strong></p>
+</blockquote>
+<p>如果这个异常没有被捕获的话，这个线程就停止执行了。另外重要的一点是：<strong>如果这个线程持有某个某个对象的监视器，那么这个对象监视器会被立即释放</strong></p>
+<blockquote>
+<p><strong>10、如何在两个线程之间共享数据</strong></p>
+</blockquote>
+<p>通过在线程之间共享对象就可以了，然后通过wait/notify/notifyAll、await/signal/signalAll进行唤起和等待，比方说阻塞队列BlockingQueue就是为线程之间共享数据而设计的</p>
+<blockquote>
+<p><strong>11、sleep方法和wait方法有什么区别</strong></p>
+</blockquote>
+<p>这个问题常问，sleep方法和wait方法都可以用来放弃CPU一定的时间，不同点在于如果线程持有某个对象的监视器，sleep方法不会放弃这个对象的监视器，wait方法会放弃这个对象的监视器</p>
+<blockquote>
+<p><strong>12、生产者消费者模型的作用是什么</strong></p>
+</blockquote>
+<p>这个问题很理论，但是很重要：</p>
+<p>1）<strong>通过平衡生产者的生产能力和消费者的消费能力来提升整个系统的运行效率</strong>，这是生产者消费者模型最重要的作用</p>
+<p>2）解耦，这是生产者消费者模型附带的作用，解耦意味着生产者和消费者之间的联系少，联系越少越可以独自发展而不需要收到相互的制约</p>
+<blockquote>
+<p><strong>13、ThreadLocal有什么用</strong></p>
+</blockquote>
+<p>简单说ThreadLocal就是一种以<strong>空间换时间</strong>的做法，在每个Thread里面维护了一个以开地址法实现的ThreadLocal.ThreadLocalMap，把数据进行隔离，数据不共享，自然就没有线程安全方面的问题了</p>
+<blockquote>
+<p><strong>14、为什么wait()方法和notify()/notifyAll()方法要在同步块中被调用</strong></p>
+</blockquote>
+<p>这是JDK强制的，wait()方法和notify()/notifyAll()方法在调用前都必须先获得对象的锁</p>
+<blockquote>
+<p><strong>15、wait()方法和notify()/notifyAll()方法在放弃对象监视器时有什么区别</strong></p>
+</blockquote>
+<p>wait()方法和notify()/notifyAll()方法在放弃对象监视器的时候的区别在于：<strong>wait()方法立即释放对象监视器，notify()/notifyAll()方法则会等待线程剩余代码执行完毕才会放弃对象监视器</strong>。</p>
+<blockquote>
+<p><strong>16、为什么要使用线程池</strong></p>
+</blockquote>
+<p>避免频繁地创建和销毁线程，达到线程对象的重用。另外，使用线程池还可以根据项目灵活地控制并发的数目。点击<a href="https://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&mid=2247483824&idx=1&sn=7e34a3944a93d649d78d618cf04e0619&scene=21#wechat_redirect" target="_blank" rel="noopener">这里</a>学习线程池详解。</p>
+<blockquote>
+<p><strong>17、怎么唤醒一个阻塞的线程</strong></p>
+</blockquote>
+<p>如果线程是因为调用了wait()、sleep()或者join()方法而导致的阻塞，可以中断线程，并且通过抛出InterruptedException来唤醒它；如果线程遇到了IO阻塞，无能为力，因为IO是操作系统实现的，Java代码并没有办法直接接触到操作系统。</p>
+<blockquote>
+<p><strong>18、不可变对象对多线程有什么帮助</strong></p>
+</blockquote>
+<p>前面有提到过的一个问题，不可变对象保证了对象的内存可见性，对不可变对象的读取不需要进行额外的同步手段，提升了代码执行效率。</p>
+<blockquote>
+<p><strong>19、什么是多线程的上下文切换</strong></p>
+</blockquote>
+<p>多线程的上下文切换是指CPU控制权由一个已经正在运行的线程切换到另外一个就绪并等待获取CPU执行权的线程的过程。</p>
+<blockquote>
+<p><strong>20、线程类的构造方法、静态块是被哪个线程调用的</strong></p>
+</blockquote>
+<p>这是一个非常刁钻和狡猾的问题。请记住：线程类的构造方法、静态块是被new这个线程类所在的线程所调用的，而run方法里面的代码才是被线程自身所调用的。</p>
+<p>如果说上面的说法让你感到困惑，那么我举个例子，假设Thread2中new了Thread1，main函数中new了Thread2，那么：</p>
+<p>1）Thread2的构造方法、静态块是main线程调用的，Thread2的run()方法是Thread2自己调用的</p>
+<p>2）Thread1的构造方法、静态块是Thread2调用的，Thread1的run()方法是Thread1自己调用的</p>
+<blockquote>
+<p><strong>21、高并发、任务执行时间短的业务怎样使用线程池？并发不高、任务执行时间长的业务怎样使用线程池？并发高、业务执行时间长的业务怎样使用线程池？</strong></p>
+</blockquote>
+<p>这是我在并发编程网上看到的一个问题，把这个问题放在最后一个，希望每个人都能看到并且思考一下，因为这个问题非常好、非常实际、非常专业。关于这个问题，个人看法是：</p>
+<p>1）高并发、任务执行时间短的业务，线程池线程数可以设置为CPU核数+1，减少线程上下文的切换</p>
+<p>2）并发不高、任务执行时间长的业务要区分开看：</p>
+<p>a）假如是业务时间长集中在IO操作上，也就是IO密集型的任务，因为IO操作并不占用CPU，所以不要让所有的CPU闲下来，可以加大线程池中的线程数目，让CPU处理更多的业务</p>
+<p>b）假如是业务时间长集中在计算操作上，也就是计算密集型任务，这个就没办法了，和（1）一样吧，线程池中的线程数设置得少一些，减少线程上下文的切换</p>
+<p>c）并发高、业务执行时间长，解决这种类型任务的关键不在于线程池而在于整体架构的设计，看看这些业务里面某些数据是否能做缓存是第一步，增加服务器是第二步，至于线程池的设置，设置参考其他有关线程池的文章。最后，业务执行时间长的问题，也可能需要分析一下，看看能不能使用中间件对任务进行拆分和解耦。</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://blog.csdn.net/zl1zl2zl3/article/details/81868173" target="_blank" rel="noopener">https://blog.csdn.net/zl1zl2zl3/article/details/81868173</a><br><a href="https://www.runoob.com/java/java-multithreading.html" target="_blank" rel="noopener">https://www.runoob.com/java/java-multithreading.html</a><br><a href="https://blog.csdn.net/qq_38038480/article/details/80584715" target="_blank" rel="noopener">https://blog.csdn.net/qq_38038480/article/details/80584715</a><br><a href="https://blog.csdn.net/tongxuexie/article/details/80145663" target="_blank" rel="noopener">https://blog.csdn.net/tongxuexie/article/details/80145663</a><br><a href="https://www.cnblogs.com/snow-flower/p/6114765.html" target="_blank" rel="noopener">https://www.cnblogs.com/snow-flower/p/6114765.html</a></p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/多线程/" rel="tag"># 多线程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/16/16、JavaIO流/" rel="next" title="夯实Java基础系列16：一文读懂Java IO流和常见面试题">
+                <i class="fa fa-chevron-left"></i> 夯实Java基础系列16：一文读懂Java IO流和常见面试题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/18/18深入理解内部类/" rel="prev" title="夯实Java基础系列18：深入理解Java内部类及其实现原理">
+                夯实Java基础系列18：深入理解Java内部类及其实现原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java中的线程"><span class="nav-number">1.</span> <span class="nav-text">Java中的线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java线程状态机"><span class="nav-number">2.</span> <span class="nav-text">Java线程状态机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一个线程的生命周期"><span class="nav-number">2.1.</span> <span class="nav-text">一个线程的生命周期</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java多线程实战"><span class="nav-number">3.</span> <span class="nav-text">Java多线程实战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多线程的实现"><span class="nav-number">4.</span> <span class="nav-text">多线程的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程状态转换"><span class="nav-number">5.</span> <span class="nav-text">线程状态转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-Thread常用方法"><span class="nav-number">6.</span> <span class="nav-text">Java Thread常用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Thread-yield-："><span class="nav-number">6.1.</span> <span class="nav-text">Thread#yield()：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Thread-interrupt-："><span class="nav-number">6.2.</span> <span class="nav-text">Thread.interrupt()：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Thread-interrupted-，返回true或者false："><span class="nav-number">6.3.</span> <span class="nav-text">Thread#interrupted()，返回true或者false：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Thread-isInterrupted-，返回true或者false："><span class="nav-number">6.4.</span> <span class="nav-text">Thread.isInterrupted()，返回true或者false：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Thread-join-，Thread-join-time-："><span class="nav-number">6.5.</span> <span class="nav-text">Thread#join()，Thread#join(time)：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造方法和守护线程"><span class="nav-number">7.</span> <span class="nav-text">构造方法和守护线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动线程的方式和isAlive方法"><span class="nav-number">8.</span> <span class="nav-text">启动线程的方式和isAlive方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java多线程优先级"><span class="nav-number">9.</span> <span class="nav-text">Java多线程优先级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java多线程面试题"><span class="nav-number">10.</span> <span class="nav-text">Java多线程面试题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">11.</span> <span class="nav-text">参考文章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">12.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">12.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">12.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

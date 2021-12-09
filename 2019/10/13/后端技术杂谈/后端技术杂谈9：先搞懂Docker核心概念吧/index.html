@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="大后端,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="可能是把Docker的概念讲的最清楚的一篇文章本文只是对Docker的概念做了较为详细的介绍，并不涉及一些像Docker环境的安装以及Docker的一些常见操作和命令。 阅读本文大概需要15分钟，通过阅读本文你将知道一下概念：  容器 什么是Docker？ Docker思想、特点 Docker容器主要解决什么问题 容器 VS 虚拟机 Docker基本概念： 镜像（Image），容器（Contain">
+<meta name="keywords" content="大后端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="后端技术杂谈9：先搞懂Docker核心概念吧">
+<meta property="og:url" content="http://yoursite.com/2019/10/13/后端技术杂谈/后端技术杂谈9：先搞懂Docker核心概念吧/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="可能是把Docker的概念讲的最清楚的一篇文章本文只是对Docker的概念做了较为详细的介绍，并不涉及一些像Docker环境的安装以及Docker的一些常见操作和命令。 阅读本文大概需要15分钟，通过阅读本文你将知道一下概念：  容器 什么是Docker？ Docker思想、特点 Docker容器主要解决什么问题 容器 VS 虚拟机 Docker基本概念： 镜像（Image），容器（Contain">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/17/1640cae21c18e404?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/18/1641129f0ecdf8ff?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/18/164112a72a917f4a?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/18/164112ac76e6f693?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/18/16410734eb1ed373?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/18/16411c3946dda762?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/17/1640cb4abec9e902?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/18/16410aa3b89ae481?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/17/1640cca26fc38f9e?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/18/164109e4900357a9?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/18/16411c521e79bd82?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:23.978Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="后端技术杂谈9：先搞懂Docker核心概念吧">
+<meta name="twitter:description" content="可能是把Docker的概念讲的最清楚的一篇文章本文只是对Docker的概念做了较为详细的介绍，并不涉及一些像Docker环境的安装以及Docker的一些常见操作和命令。 阅读本文大概需要15分钟，通过阅读本文你将知道一下概念：  容器 什么是Docker？ Docker思想、特点 Docker容器主要解决什么问题 容器 VS 虚拟机 Docker基本概念： 镜像（Image），容器（Contain">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2018/6/17/1640cae21c18e404?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/13/后端技术杂谈/后端技术杂谈9：先搞懂Docker核心概念吧/">
+
+
+
+
+
+  <title>后端技术杂谈9：先搞懂Docker核心概念吧 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/13/后端技术杂谈/后端技术杂谈9：先搞懂Docker核心概念吧/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">后端技术杂谈9：先搞懂Docker核心概念吧</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-13T15:09:26+08:00">
+                2019-10-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/后端技术/" itemprop="url" rel="index">
+                    <span itemprop="name">后端技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/13/后端技术杂谈/后端技术杂谈9：先搞懂Docker核心概念吧/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/13/后端技术杂谈/后端技术杂谈9：先搞懂Docker核心概念吧/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><h1 id="可能是把Docker的概念讲的最清楚的一篇文章"><a href="#可能是把Docker的概念讲的最清楚的一篇文章" class="headerlink" title="可能是把Docker的概念讲的最清楚的一篇文章"></a>可能是把Docker的概念讲的最清楚的一篇文章</h1><p>本文只是对Docker的概念做了较为详细的介绍，并不涉及一些像Docker环境的安装以及Docker的一些常见操作和命令。</p>
+<p>阅读本文大概需要15分钟，通过阅读本文你将知道一下概念：</p>
+<ul>
+<li>容器</li>
+<li>什么是Docker？</li>
+<li>Docker思想、特点</li>
+<li>Docker容器主要解决什么问题</li>
+<li>容器 VS 虚拟机</li>
+<li>Docker基本概念： 镜像（Image），容器（Container），仓库（Repository）</li>
+</ul>
+<hr>
+<blockquote>
+<p>Docker 是世界领先的软件容器平台，所以想要搞懂Docker的概念我们必须先从容器开始说起。</p>
+</blockquote>
+<h2 id="一-先从认识容器开始"><a href="#一-先从认识容器开始" class="headerlink" title="一 先从认识容器开始"></a>一 先从认识容器开始</h2><h3 id="1-1-什么是容器？"><a href="#1-1-什么是容器？" class="headerlink" title="1.1 什么是容器？"></a>1.1 什么是容器？</h3><h4 id="先来看看容器较为官方的解释"><a href="#先来看看容器较为官方的解释" class="headerlink" title="先来看看容器较为官方的解释"></a>先来看看容器较为官方的解释</h4><p>一句话概括容器：容器就是将软件打包成标准化单元，以用于开发、交付和部署。</p>
+<ul>
+<li>容器镜像是轻量的、可执行的独立软件包 ，包含软件运行所需的所有内容：代码、运行时环境、系统工具、系统库和设置。</li>
+<li>容器化软件适用于基于Linux和Windows的应用，在任何环境中都能够始终如一地运行。</li>
+<li>容器赋予了软件独立性 ，使其免受外在环境差异（例如，开发和预演环境的差异）的影响，从而有助于减少团队间在相同基础设施上运行不同软件时的冲突。</li>
+</ul>
+<h4 id="再来看看容器较为通俗的解释"><a href="#再来看看容器较为通俗的解释" class="headerlink" title="再来看看容器较为通俗的解释"></a>再来看看容器较为通俗的解释</h4><p>如果需要通俗的描述容器的话，我觉得容器就是一个存放东西的地方，就像书包可以装各种文具、衣柜可以放各种衣服、鞋架可以放各种鞋子一样。我们现在所说的容器存放的东西可能更偏向于应用比如网站、程序甚至是系统环境。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/17/1640cae21c18e404?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="认识容器"></p>
+<h3 id="1-2-图解物理机、虚拟机与容器"><a href="#1-2-图解物理机、虚拟机与容器" class="headerlink" title="1.2 图解物理机、虚拟机与容器"></a>1.2 图解物理机、虚拟机与容器</h3><p>关于虚拟机与容器的对比在后面会详细介绍到，这里只是通过网上的图片加深大家对于物理机、虚拟机与容器这三者的理解。</p>
+<p>物理机</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/18/1641129f0ecdf8ff?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="物理机"></p>
+<p>虚拟机：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/18/164112a72a917f4a?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="虚拟机"></p>
+<p>容器：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/18/164112ac76e6f693?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="容器"></p>
+<p>通过上面这三张抽象图，我们可以大概可以通过类比概括出： 容器虚拟化的是操作系统而不是硬件，容器之间是共享同一套操作系统资源的。虚拟机技术是虚拟出一套硬件后，在其上运行一个完整操作系统。因此容器的隔离级别会稍低一些。</p>
+<hr>
+<blockquote>
+<p>相信通过上面的解释大家对于容器这个既陌生又熟悉的概念有了一个初步的认识，下面我们就来谈谈Docker的一些概念。</p>
+</blockquote>
+<h2 id="二-再来谈谈Docker的一些概念"><a href="#二-再来谈谈Docker的一些概念" class="headerlink" title="二 再来谈谈Docker的一些概念"></a>二 再来谈谈Docker的一些概念</h2><p><img src="https://user-gold-cdn.xitu.io/2018/6/18/16410734eb1ed373?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="Docker的一些概念"></p>
+<h3 id="2-1-什么是Docker？"><a href="#2-1-什么是Docker？" class="headerlink" title="2.1 什么是Docker？"></a>2.1 什么是Docker？</h3><p>说实话关于Docker是什么并太好说，下面我通过四点向你说明Docker到底是个什么东西。</p>
+<ul>
+<li>Docker 是世界领先的软件容器平台。</li>
+<li>Docker 使用 Google 公司推出的 Go 语言 进行开发实现，基于 Linux 内核 的cgroup，namespace，以及AUFS类的UnionFS等技术，对进程进行封装隔离，属于操作系统层面的虚拟化技术。 由于隔离的进程独立于宿主和其它的隔离的进 程，因此也称其为容器。Docke最初实现是基于 LXC.</li>
+<li>Docker 能够自动执行重复性任务，例如搭建和配置开发环境，从而解放了开发人员以便他们专注在真正重要的事情上：构建杰出的软件。</li>
+<li>用户可以方便地创建和使用容器，把自己的应用放入容器。容器还可以进行版本管理、复制、分享、修改，就像管理普通的代码一样。</li>
+</ul>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/18/16411c3946dda762?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="什么是Docker"></p>
+<h3 id="2-2-Docker思想"><a href="#2-2-Docker思想" class="headerlink" title="2.2 Docker思想"></a>2.2 Docker思想</h3><ul>
+<li>集装箱</li>
+<li>标准化： ①运输方式 ② 存储方式 ③ API接口</li>
+<li>隔离</li>
+</ul>
+<h3 id="2-3-Docker容器的特点"><a href="#2-3-Docker容器的特点" class="headerlink" title="2.3 Docker容器的特点"></a>2.3 Docker容器的特点</h3><ul>
+<li><h4 id="轻量"><a href="#轻量" class="headerlink" title="轻量"></a>轻量</h4><p>在一台机器上运行的多个 Docker 容器可以共享这台机器的操作系统内核；它们能够迅速启动，只需占用很少的计算和内存资源。镜像是通过文件系统层进行构造的，并共享一些公共文件。这样就能尽量降低磁盘用量，并能更快地下载镜像。</p>
+</li>
+<li><h4 id="标准"><a href="#标准" class="headerlink" title="标准"></a>标准</h4><p>Docker 容器基于开放式标准，能够在所有主流 Linux 版本、Microsoft Windows 以及包括 VM、裸机服务器和云在内的任何基础设施上运行。</p>
+</li>
+<li><h4 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h4><p>Docker 赋予应用的隔离性不仅限于彼此隔离，还独立于底层的基础设施。Docker 默认提供最强的隔离，因此应用出现问题，也只是单个容器的问题，而不会波及到整台机器。</p>
+</li>
+</ul>
+<h3 id="2-4-为什么要用Docker"><a href="#2-4-为什么要用Docker" class="headerlink" title="2.4 为什么要用Docker"></a>2.4 为什么要用Docker</h3><ul>
+<li>Docker 的镜像提供了除内核外完整的运行时环境，确保了应用运行环境一致性，从而不会再出现 “这段代码在我机器上没问题啊” 这类问题；——一致的运行环境</li>
+<li>可以做到秒级、甚至毫秒级的启动时间。大大的节约了开发、测试、部署的时间。——更快速的启动时间</li>
+<li>避免公用的服务器，资源会容易受到其他用户的影响。——隔离性</li>
+<li>善于处理集中爆发的服务器使用压力；——弹性伸缩，快速扩展</li>
+<li>可以很轻易的将在一个平台上运行的应用，迁移到另一个平台上，而不用担心运行环境的变化导致应用无法正常运行的情况。——迁移方便</li>
+<li>使用 Docker 可以通过定制应用镜像来实现持续集成、持续交付、部署。——持续交付和部署</li>
+</ul>
+<hr>
+<blockquote>
+<p>每当说起容器，我们不得不将其与虚拟机做一个比较。就我而言，对于两者无所谓谁会取代谁，而是两者可以和谐共存。</p>
+</blockquote>
+<h2 id="三-容器-VS-虚拟机"><a href="#三-容器-VS-虚拟机" class="headerlink" title="三 容器 VS 虚拟机"></a>三 容器 VS 虚拟机</h2><p>  简单来说： 容器和虚拟机具有相似的资源隔离和分配优势，但功能有所不同，因为容器虚拟化的是操作系统，而不是硬件，因此容器更容易移植，效率也更高。</p>
+<h3 id="3-1-两者对比图"><a href="#3-1-两者对比图" class="headerlink" title="3.1 两者对比图"></a>3.1 两者对比图</h3><p>  传统虚拟机技术是虚拟出一套硬件后，在其上运行一个完整操作系统，在该系统上再运行所需应用进程；而容器内的应用进程直接运行于宿主的内核，容器内没有自己的内核，而且也没有进行硬件虚拟。因此容器要比传统虚拟机更为轻便.</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/17/1640cb4abec9e902?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="容器 VS 虚拟机"></p>
+<h3 id="3-2-容器与虚拟机-VM-总结"><a href="#3-2-容器与虚拟机-VM-总结" class="headerlink" title="3.2 容器与虚拟机 (VM) 总结"></a>3.2 容器与虚拟机 (VM) 总结</h3><p><img src="https://user-gold-cdn.xitu.io/2018/6/18/16410aa3b89ae481?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="容器与虚拟机 (VM) 总结"></p>
+<ul>
+<li><p>容器是一个应用层抽象，用于将代码和依赖资源打包在一起。 多个容器可以在同一台机器上运行，共享操作系统内核，但各自作为独立的进程在用户空间中运行 。与虚拟机相比， 容器占用的空间较少（容器镜像大小通常只有几十兆），瞬间就能完成启动 。</p>
+</li>
+<li><p>虚拟机 (VM) 是一个物理硬件层抽象，用于将一台服务器变成多台服务器。 管理程序允许多个 VM 在一台机器上运行。每个VM都包含一整套操作系统、一个或多个应用、必要的二进制文件和库资源，因此 占用大量空间 。而且 VM 启动也十分缓慢 。</p>
+</li>
+</ul>
+<p>  通过Docker官网，我们知道了这么多Docker的优势，但是大家也没有必要完全否定虚拟机技术，因为两者有不同的使用场景。虚拟机更擅长于彻底隔离整个运行环境。例如，云服务提供商通常采用虚拟机技术隔离不同的用户。而 Docker通常用于隔离不同的应用 ，例如前端，后端以及数据库。</p>
+<h3 id="3-3-容器与虚拟机-VM-两者是可以共存的"><a href="#3-3-容器与虚拟机-VM-两者是可以共存的" class="headerlink" title="3.3 容器与虚拟机 (VM)两者是可以共存的"></a>3.3 容器与虚拟机 (VM)两者是可以共存的</h3><p>就我而言，对于两者无所谓谁会取代谁，而是两者可以和谐共存。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/17/1640cca26fc38f9e?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="两者是可以共存的"></p>
+<hr>
+<blockquote>
+<p>Docker中非常重要的三个基本概念，理解了这三个概念，就理解了 Docker 的整个生命周期。</p>
+</blockquote>
+<h2 id="四-Docker基本概念"><a href="#四-Docker基本概念" class="headerlink" title="四 Docker基本概念"></a>四 Docker基本概念</h2><p>Docker 包括三个基本概念</p>
+<ul>
+<li>镜像（Image）</li>
+<li>容器（Container）</li>
+<li>仓库（Repository）</li>
+</ul>
+<p>理解了这三个概念，就理解了 Docker 的整个生命周期</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/18/164109e4900357a9?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="Docker 包括三个基本概念"></p>
+<h3 id="4-1-镜像（Image）——一个特殊的文件系统"><a href="#4-1-镜像（Image）——一个特殊的文件系统" class="headerlink" title="4.1 镜像（Image）——一个特殊的文件系统"></a>4.1 镜像（Image）——一个特殊的文件系统</h3><p>  操作系统分为内核和用户空间。对于 Linux 而言，内核启动后，会挂载 root 文件系统为其提供用户空间支持。而Docker 镜像（Image），就相当于是一个 root 文件系统。</p>
+<p>  Docker 镜像是一个特殊的文件系统，除了提供容器运行时所需的程序、库、资源、配置等文件外，还包含了一些为运行时准备的一些配置参数（如匿名卷、环境变量、用户等）。 镜像不包含任何动态数据，其内容在构建之后也不会被改变。</p>
+<p>  Docker 设计时，就充分利用 Union FS的技术，将其设计为 分层存储的架构 。 镜像实际是由多层文件系统联合组成。</p>
+<p>  镜像构建时，会一层层构建，前一层是后一层的基础。每一层构建完就不会再发生改变，后一层上的任何改变只发生在自己这一层。 比如，删除前一层文件的操作，实际不是真的删除前一层的文件，而是仅在当前层标记为该文件已删除。在最终容器运行的时候，虽然不会看到这个文件，但是实际上该文件会一直跟随镜像。因此，在构建镜像的时候，需要额外小心，每一层尽量只包含该层需要添加的东西，任何额外的东西应该在该层构建结束前清理掉。</p>
+<p>  分层存储的特征还使得镜像的复用、定制变的更为容易。甚至可以用之前构建好的镜像作为基础层，然后进一步添加新的层，以定制自己所需的内容，构建新的镜像。</p>
+<h3 id="4-2-容器（Container-——镜像运行时的实体"><a href="#4-2-容器（Container-——镜像运行时的实体" class="headerlink" title="4.2 容器（Container)——镜像运行时的实体"></a>4.2 容器（Container)——镜像运行时的实体</h3><p>  镜像（Image）和容器（Container）的关系，就像是面向对象程序设计中的 类 和 实例 一样，镜像是静态的定义，容器是镜像运行时的实体。容器可以被创建、启动、停止、删除、暂停等。</p>
+<p>  容器的实质是进程，但与直接在宿主执行的进程不同，容器进程运行于属于自己的独立的 命名空间。前面讲过镜像使用的是分层存储，容器也是如此。</p>
+<p>  容器存储层的生存周期和容器一样，容器消亡时，容器存储层也随之消亡。因此，任何保存于容器存储层的信息都会随容器删除而丢失。</p>
+<p>  按照 Docker 最佳实践的要求，容器不应该向其存储层内写入任何数据 ，容器存储层要保持无状态化。所有的文件写入操作，都应该使用数据卷（Volume）、或者绑定宿主目录，在这些位置的读写会跳过容器存储层，直接对宿主(或网络存储)发生读写，其性能和稳定性更高。数据卷的生存周期独立于容器，容器消亡，数据卷不会消亡。因此， 使用数据卷后，容器可以随意删除、重新 run ，数据却不会丢失。</p>
+<h3 id="4-3-仓库（Repository）——集中存放镜像文件的地方"><a href="#4-3-仓库（Repository）——集中存放镜像文件的地方" class="headerlink" title="4.3 仓库（Repository）——集中存放镜像文件的地方"></a>4.3 仓库（Repository）——集中存放镜像文件的地方</h3><p>  镜像构建完成后，可以很容易的在当前宿主上运行，但是， 如果需要在其它服务器上使用这个镜像，我们就需要一个集中的存储、分发镜像的服务，Docker Registry就是这样的服务。</p>
+<p>  一个 Docker Registry中可以包含多个仓库（Repository）；每个仓库可以包含多个标签（Tag）；每个标签对应一个镜像。所以说：镜像仓库是Docker用来集中存放镜像文件的地方类似于我们之前常用的代码仓库。</p>
+<p>  通常，一个仓库会包含同一个软件不同版本的镜像，而标签就常用于对应该软件的各个版本 。我们可以通过<code>&lt;仓库名&gt;:&lt;标签&gt;</code>的格式来指定具体是这个软件哪个版本的镜像。如果不给出标签，将以 latest 作为默认标签.。</p>
+<p>这里补充一下Docker Registry 公开服务和私有 Docker Registry的概念：</p>
+<p>  Docker Registry 公开服务 是开放给用户使用、允许用户管理镜像的 Registry 服务。一般这类公开服务允许用户免费上传、下载公开的镜像，并可能提供收费服务供用户管理私有镜像。</p>
+<p>  最常使用的 Registry 公开服务是官方的 Docker Hub ，这也是默认的 Registry，并拥有大量的高质量的官方镜像，网址为：<a href="https://link.juejin.im/?target=https%3A%2F%2Fhub.docker.com%2F" target="_blank" rel="noopener">hub.docker.com/</a> 。在国内访问Docker Hub 可能会比较慢国内也有一些云服务商提供类似于 Docker Hub 的公开服务。比如 <a href="https://link.juejin.im/?target=https%3A%2F%2Fhub.tenxcloud.com%2F" target="_blank" rel="noopener">时速云镜像库</a>、<a href="https://link.juejin.im/?target=https%3A%2F%2Fwww.163yun.com%2Fproduct%2Frepo" target="_blank" rel="noopener">网易云镜像服务</a>、<a href="https://link.juejin.im/?target=https%3A%2F%2Fwww.daocloud.io%2F" target="_blank" rel="noopener">DaoCloud 镜像市场</a>、<a href="https://link.juejin.im/?target=https%3A%2F%2Fwww.aliyun.com%2Fproduct%2Fcontainerservice%3Futm_content%3Dse_1292836" target="_blank" rel="noopener">阿里云镜像库</a>等。</p>
+<p>  除了使用公开服务外，用户还可以在 本地搭建私有 Docker Registry 。Docker 官方提供了 Docker Registry 镜像，可以直接使用做为私有 Registry 服务。开源的 Docker Registry 镜像只提供了 Docker Registry API 的服务端实现，足以支持 docker 命令，不影响使用。但不包含图形界面，以及镜像维护、用户管理、访问控制等高级功能。</p>
+<hr>
+<blockquote>
+<p>Docker的概念基本上已经讲完，最后我们谈谈：Build, Ship, and Run。</p>
+</blockquote>
+<h2 id="五-最后谈谈：Build-Ship-and-Run"><a href="#五-最后谈谈：Build-Ship-and-Run" class="headerlink" title="五 最后谈谈：Build, Ship, and Run"></a>五 最后谈谈：Build, Ship, and Run</h2><p>如果你搜索Docker官网，会发现如下的字样：“Docker - Build, Ship, and Run Any App, Anywhere”。那么Build, Ship, and Run到底是在干什么呢？</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/18/16411c521e79bd82?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="build ship run"></p>
+<ul>
+<li>Build（构建镜像） ： 镜像就像是集装箱包括文件以及运行环境等等资源。</li>
+<li>Ship（运输镜像） ：主机和仓库间运输，这里的仓库就像是超级码头一样。</li>
+<li>Run （运行镜像） ：运行的镜像就是一个容器，容器就是运行程序的地方。</li>
+</ul>
+<p>Docker 运行过程也就是去仓库把镜像拉到本地，然后用一条命令把镜像运行起来变成容器。所以，我们也常常将Docker称为码头工人或码头装卸工，这和Docker的中文翻译搬运工人如出一辙。</p>
+<h2 id="六-总结"><a href="#六-总结" class="headerlink" title="六 总结"></a>六 总结</h2><p>本文主要把Docker中的一些常见概念做了详细的阐述，但是并不涉及Docker的安装、镜像的使用、容器的操作等内容。这部分东西，希望读者自己可以通过阅读书籍与官方文档的形式掌握。如果觉得官方文档阅读起来很费力的话，这里推荐一本书籍《Docker技术入门与实战第二版》。</p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/大后端/" rel="tag"># 大后端</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/13/后端技术杂谈/后端技术杂谈8：OpenStack架构设计/" rel="next" title="后端技术杂谈8：OpenStack架构设计">
+                <i class="fa fa-chevron-left"></i> 后端技术杂谈8：OpenStack架构设计
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/13/后端技术杂谈/后端技术杂谈10：Docker 核心技术与实现原理/" rel="prev" title="后端技术杂谈10：Docker 核心技术与实现原理">
+                后端技术杂谈10：Docker 核心技术与实现原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#可能是把Docker的概念讲的最清楚的一篇文章"><span class="nav-number">1.</span> <span class="nav-text">可能是把Docker的概念讲的最清楚的一篇文章</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-先从认识容器开始"><span class="nav-number">1.1.</span> <span class="nav-text">一 先从认识容器开始</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-什么是容器？"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 什么是容器？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#先来看看容器较为官方的解释"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">先来看看容器较为官方的解释</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#再来看看容器较为通俗的解释"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">再来看看容器较为通俗的解释</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-图解物理机、虚拟机与容器"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 图解物理机、虚拟机与容器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-再来谈谈Docker的一些概念"><span class="nav-number">1.2.</span> <span class="nav-text">二 再来谈谈Docker的一些概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-什么是Docker？"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 什么是Docker？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Docker思想"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 Docker思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Docker容器的特点"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 Docker容器的特点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#轻量"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">轻量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标准"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">标准</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安全"><span class="nav-number">1.2.3.3.</span> <span class="nav-text">安全</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-为什么要用Docker"><span class="nav-number">1.2.4.</span> <span class="nav-text">2.4 为什么要用Docker</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-容器-VS-虚拟机"><span class="nav-number">1.3.</span> <span class="nav-text">三 容器 VS 虚拟机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-两者对比图"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 两者对比图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-容器与虚拟机-VM-总结"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 容器与虚拟机 (VM) 总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-容器与虚拟机-VM-两者是可以共存的"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3 容器与虚拟机 (VM)两者是可以共存的</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-Docker基本概念"><span class="nav-number">1.4.</span> <span class="nav-text">四 Docker基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-镜像（Image）——一个特殊的文件系统"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 镜像（Image）——一个特殊的文件系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-容器（Container-——镜像运行时的实体"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 容器（Container)——镜像运行时的实体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-仓库（Repository）——集中存放镜像文件的地方"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3 仓库（Repository）——集中存放镜像文件的地方</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五-最后谈谈：Build-Ship-and-Run"><span class="nav-number">1.5.</span> <span class="nav-text">五 最后谈谈：Build, Ship, and Run</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六-总结"><span class="nav-number">1.6.</span> <span class="nav-text">六 总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">1.7.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">1.7.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">1.7.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

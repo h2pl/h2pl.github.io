@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content=",">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本文介绍了枚举类的基本概念，使用方法，以及底层实现原理。帮助你更好地使用枚举类并且理解枚举类的内部实现细节。 具体代码在我的GitHub中可以找到  https://github.com/h2pl/MyTech  喜欢的话麻烦点一下星哈谢谢。 文章首发于我的个人博客：  https://h2pl.github.io/2018/05/02/javase15  更多关于Java后端学习的内容请到我的C">
+<meta name="keywords" content="Java枚举类">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Java基础15：深入剖析Java枚举类">
+<meta property="og:url" content="http://yoursite.com/wait/javase15.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本文介绍了枚举类的基本概念，使用方法，以及底层实现原理。帮助你更好地使用枚举类并且理解枚举类的内部实现细节。 具体代码在我的GitHub中可以找到  https://github.com/h2pl/MyTech  喜欢的话麻烦点一下星哈谢谢。 文章首发于我的个人博客：  https://h2pl.github.io/2018/05/02/javase15  更多关于Java后端学习的内容请到我的C">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img-blog.csdn.net/20170112172420090">
+<meta property="og:updated_time" content="2021-11-24T08:03:24.081Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java基础15：深入剖析Java枚举类">
+<meta name="twitter:description" content="本文介绍了枚举类的基本概念，使用方法，以及底层实现原理。帮助你更好地使用枚举类并且理解枚举类的内部实现细节。 具体代码在我的GitHub中可以找到  https://github.com/h2pl/MyTech  喜欢的话麻烦点一下星哈谢谢。 文章首发于我的个人博客：  https://h2pl.github.io/2018/05/02/javase15  更多关于Java后端学习的内容请到我的C">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20170112172420090">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/wait/javase15.html">
+
+
+
+
+
+  <title>Java基础15：深入剖析Java枚举类 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline">Java基础15：深入剖析Java枚举类</h1>
+
+
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <div id="vip-container"><p>本文介绍了枚举类的基本概念，使用方法，以及底层实现原理。帮助你更好地使用枚举类并且理解枚举类的内部实现细节。</p>
+<p>具体代码在我的GitHub中可以找到</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/MyTech" target="_blank" rel="noopener">https://github.com/h2pl/MyTech</a></p>
+</blockquote>
+<p>喜欢的话麻烦点一下星哈谢谢。</p>
+<p>文章首发于我的个人博客：</p>
+<blockquote>
+<p><a href="https://h2pl.github.io/2018/05/02/javase15" target="_blank" rel="noopener">https://h2pl.github.io/2018/05/02/javase15</a></p>
+</blockquote>
+<p>更多关于Java后端学习的内容请到我的CSDN博客上查看：</p>
+<blockquote>
+<p><a href="https://blog.csdn.net/a724888" target="_blank" rel="noopener">https://blog.csdn.net/a724888</a></p>
+</blockquote>
+<a id="more"></a>
+
+<p>枚举（enum）类型是Java 5新增的特性，它是一种新的类型，允许用常量来表示特定的数据片断，而且全部都以类型安全的形式来表示。</p>
+<h2 id="初探枚举类"><a href="#初探枚举类" class="headerlink" title="初探枚举类"></a>初探枚举类</h2><blockquote>
+<p> 在程序设计中，有时会用到由若干个有限数据元素组成的集合，如一周内的星期一到星期日七个数据元素组成的集合，由三种颜色红、黄、绿组成的集合，一个工作班组内十个职工组成的集合等等，程序中某个变量取值仅限于集合中的元素。此时，可将这些数据集合定义为枚举类型。</p>
+</blockquote>
+<blockquote>
+<p>因此，枚举类型是某类数据可能取值的集合，如一周内星期可能取值的集合为：<br>　　{ Sun,Mon,Tue,Wed,Thu,Fri,Sat}<br>　　该集合可定义为描述星期的枚举类型，该枚举类型共有七个元素，因而用枚举类型定义的枚举变量只能取集合中的某一元素值。由于枚举类型是导出数据类型，因此，必须先定义枚举类型，然后再用枚举类型定义枚举型变量。
+　</p>
+</blockquote>
+<pre><code>enum &lt;枚举类型名&gt; 
+　　{ &lt;枚举元素表&gt; };
+　　
+　　其中：关键词enum表示定义的是枚举类型，枚举类型名由标识符组成，而枚举元素表由枚举元素或枚举常量组成。例如： 
+　　
+enum weekdays 
+　　{ Sun,Mon,Tue,Wed,Thu,Fri,Sat };
+　　定义了一个名为 weekdays的枚举类型，它包含七个元素：Sun、Mon、Tue、Wed、Thu、Fri、Sat。
+　　</code></pre><blockquote>
+<p>在编译器编译程序时，给枚举类型中的每一个元素指定一个整型常量值(也称为序号值)。若枚举类型定义中没有指定元素的整型常量值，则整型常量值从0开始依次递增，因此，weekdays枚举类型的七个元素Sun、Mon、Tue、Wed、Thu、Fri、Sat对应的整型常量值分别为0、1、2、3、4、5、6。<br>　　注意：在定义枚举类型时，也可指定元素对应的整型常量值。</p>
+</blockquote>
+<pre><code>例如，描述逻辑值集合{TRUE、FALSE}的枚举类型boolean可定义如下：
+enum boolean 
+　　{ TRUE=1 ,FALSE=0 };
+该定义规定：TRUE的值为1，而FALSE的值为0。
+　　
+而描述颜色集合{red,blue,green,black,white,yellow}的枚举类型colors可定义如下：
+enum colors 
+　　{red=5,blue=1,green,black,white,yellow};
+　　该定义规定red为5 ，blue为1，其后元素值从2 开始递增加1。green、black、white、yellow的值依次为2、3、4、5。
+　　</code></pre><p>　　此时，整数5将用于表示二种颜色red与yellow。通常两个不同元素取相同的整数值是没有意义的。枚举类型的定义只是定义了一个新的数据类型，只有用枚举类型定义枚举变量才能使用这种数据类型。 </p>
+<h2 id="枚举类-语法"><a href="#枚举类-语法" class="headerlink" title="枚举类-语法"></a>枚举类-语法</h2><blockquote>
+<p>enum 与 class、interface 具有相同地位；<br>可以继承多个接口；<br>可以拥有构造器、成员方法、成员变量；<br>1.2 枚举类与普通类不同之处</p>
+<p>默认继承 java.lang.Enum 类，所以不能继承其他父类；其中 java.lang.Enum 类实现了 java.lang.Serializable 和 java.lang.Comparable 接口；</p>
+</blockquote>
+<blockquote>
+<p>使用 enum 定义，默认使用 final 修饰，因此不能派生子类；</p>
+</blockquote>
+<blockquote>
+<p>构造器默认使用 private 修饰，且只能使用 private 修饰；</p>
+</blockquote>
+<blockquote>
+<p>枚举类所有实例必须在第一行给出，默认添加 public static final 修饰，否则无法产生实例；</p>
+</blockquote>
+<h2 id="枚举类的具体使用"><a href="#枚举类的具体使用" class="headerlink" title="枚举类的具体使用"></a>枚举类的具体使用</h2><p>这部分内容参考<a href="https://blog.csdn.net/qq_27093465/article/details/52180865" target="_blank" rel="noopener">https://blog.csdn.net/qq_27093465/article/details/52180865</a></p>
+<h3 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h3><pre><code>public class 常量 {
+}
+enum Color {
+    Red, Green, Blue, Yellow
+}</code></pre><h3 id="switch"><a href="#switch" class="headerlink" title="switch"></a>switch</h3><p>JDK1.6之前的switch语句只支持int,char,enum类型，使用枚举，能让我们的代码可读性更强。</p>
+<pre><code>public static void showColor(Color color) {
+        switch (color) {
+            case Red:
+                System.out.println(color);
+                break;
+            case Blue:
+                System.out.println(color);
+                break;
+            case Yellow:
+                System.out.println(color);
+                break;
+            case Green:
+                System.out.println(color);
+                break;
+        }
+    }</code></pre><h3 id="向枚举中添加新方法"><a href="#向枚举中添加新方法" class="headerlink" title="向枚举中添加新方法"></a>向枚举中添加新方法</h3><p>如果打算自定义自己的方法，那么必须在enum实例序列的最后添加一个分号。而且 Java 要求必须先定义 enum 实例。</p>
+<pre><code>enum Color {
+    //每个颜色都是枚举类的一个实例，并且构造方法要和枚举类的格式相符合。
+    //如果实例后面有其他内容，实例序列结束时要加分号。
+    Red(&quot;红色&quot;, 1), Green(&quot;绿色&quot;, 2), Blue(&quot;蓝色&quot;, 3), Yellow(&quot;黄色&quot;, 4);
+    String name;
+    int index;
+    Color(String name, int index) {
+        this.name = name;
+        this.index = index;
+    }
+    public void showAllColors() {
+        //values是Color实例的数组，在通过index和name可以获取对应的值。
+        for (Color color : Color.values()) {
+            System.out.println(color.index + &quot;:&quot; + color.name);
+        }
+    }
+}</code></pre><h3 id="覆盖枚举的方法"><a href="#覆盖枚举的方法" class="headerlink" title="覆盖枚举的方法"></a>覆盖枚举的方法</h3><p>所有枚举类都继承自Enum类，所以可以重写该类的方法<br>下面给出一个toString()方法覆盖的例子。 </p>
+<pre><code>@Override
+public String toString() {
+    return this.index + &quot;:&quot; + this.name;
+}</code></pre><h3 id="实现接口"><a href="#实现接口" class="headerlink" title="实现接口"></a>实现接口</h3><p>所有的枚举都继承自java.lang.Enum类。由于Java 不支持多继承，所以枚举对象不能再继承其他类。</p>
+<pre><code>enum Color implements Print{
+    @Override
+    public void print() {
+        System.out.println(this.name);
+    }
+}</code></pre><h3 id="使用接口组织枚举"><a href="#使用接口组织枚举" class="headerlink" title="使用接口组织枚举"></a>使用接口组织枚举</h3><p> 搞个实现接口，来组织枚举，简单讲，就是分类吧。如果大量使用枚举的话，这么干，在写代码的时候，就很方便调用啦。  </p>
+<pre><code>public class 用接口组织枚举 {
+    public static void main(String[] args) {
+        Food cf = chineseFood.dumpling;
+        Food jf = Food.JapaneseFood.fishpiece;
+        for (Food food : chineseFood.values()) {
+            System.out.println(food);
+        }
+        for (Food food : Food.JapaneseFood.values()) {
+            System.out.println(food);
+        }
+    }
+}
+interface Food {
+    enum JapaneseFood implements Food {
+        suse, fishpiece
+    }
+}
+enum chineseFood implements Food {
+    dumpling, tofu
+}</code></pre><h3 id="枚举类集合"><a href="#枚举类集合" class="headerlink" title="枚举类集合"></a>枚举类集合</h3><p>java.util.EnumSet和java.util.EnumMap是两个枚举集合。EnumSet保证集合中的元素不重复；EnumMap中的 key是enum类型，而value则可以是任意类型。</p>
+<p>EnumSet在JDK中没有找到实现类，这里写一个EnumMap的例子</p>
+<pre><code>public class 枚举类集合 {
+    public static void main(String[] args) {
+        EnumMap&lt;Color, String&gt; map = new EnumMap&lt;Color, String&gt;(Color.class);
+        map.put(Color.Blue, &quot;Blue&quot;);
+        map.put(Color.Yellow, &quot;Yellow&quot;);
+        map.put(Color.Red, &quot;Red&quot;);
+        System.out.println(map.get(Color.Red));
+    }
+}</code></pre><h2 id="使用枚举类的注意事项"><a href="#使用枚举类的注意事项" class="headerlink" title="使用枚举类的注意事项"></a>使用枚举类的注意事项</h2><p><img src="https://img-blog.csdn.net/20170112172420090" alt="image"></p>
+<p>枚举类型对象之间的值比较，是可以使用==，直接来比较值，是否相等的，不是必须使用equals方法的哟。</p>
+<p>因为枚举类Enum已经重写了equals方法</p>
+<pre><code>/**
+ * Returns true if the specified object is equal to this
+ * enum constant.
+ *
+ * @param other the object to be compared for equality with this object.
+ * @return  true if the specified object is equal to this
+ *          enum constant.
+ */
+public final boolean equals(Object other) {
+    return this==other;
+}</code></pre><h2 id="枚举类的底层原理"><a href="#枚举类的底层原理" class="headerlink" title="枚举类的底层原理"></a>枚举类的底层原理</h2><p>这部分参考<a href="https://blog.csdn.net/mhmyqn/article/details/48087247" target="_blank" rel="noopener">https://blog.csdn.net/mhmyqn/article/details/48087247</a></p>
+<blockquote>
+<p>Java从JDK1.5开始支持枚举，也就是说，Java一开始是不支持枚举的，就像泛型一样，都是JDK1.5才加入的新特性。通常一个特性如果在一开始没有提供，在语言发展后期才添加，会遇到一个问题，就是向后兼容性的问题。</p>
+<p>像Java在1.5中引入的很多特性，为了向后兼容，编译器会帮我们写的源代码做很多事情，比如泛型为什么会擦除类型，为什么会生成桥接方法，foreach迭代，自动装箱/拆箱等，这有个术语叫“语法糖”，而编译器的特殊处理叫“解语法糖”。那么像枚举也是在JDK1.5中才引入的，又是怎么实现的呢？</p>
+</blockquote>
+<blockquote>
+<p>Java在1.5中添加了java.lang.Enum抽象类，它是所有枚举类型基类。提供了一些基础属性和基础方法。同时，对把枚举用作Set和Map也提供了支持，即java.util.EnumSet和java.util.EnumMap。</p>
+</blockquote>
+<p>接下来定义一个简单的枚举类</p>
+<pre><code>public enum Day {
+    MONDAY {
+        @Override
+        void say() {
+            System.out.println(&quot;MONDAY&quot;);
+        }
+    }
+    , TUESDAY {
+        @Override
+        void say() {
+            System.out.println(&quot;TUESDAY&quot;);
+        }
+    }, FRIDAY(&quot;work&quot;){
+        @Override
+        void say() {
+            System.out.println(&quot;FRIDAY&quot;);
+        }
+    }, SUNDAY(&quot;free&quot;){
+        @Override
+        void say() {
+            System.out.println(&quot;SUNDAY&quot;);
+        }
+    };
+    String work;
+    //没有构造参数时，每个实例可以看做常量。
+    //使用构造参数时，每个实例都会变得不一样，可以看做不同的类型，所以编译后会生成实例个数对应的class。
+    private Day(String work) {
+        this.work = work;
+    }
+    private Day() {
+
+    }
+    //枚举实例必须实现枚举类中的抽象方法
+    abstract void say ();
+
+}</code></pre><p>反编译结果</p>
+<pre><code>D:\MyTech\out\production\MyTech\com\javase\枚举类&gt;javap Day.class
+Compiled from &quot;Day.java&quot;
+
+public abstract class com.javase.枚举类.Day extends java.lang.Enum&lt;com.javase.枚举类.Day&gt; {
+  public static final com.javase.枚举类.Day MONDAY;
+  public static final com.javase.枚举类.Day TUESDAY;
+  public static final com.javase.枚举类.Day FRIDAY;
+  public static final com.javase.枚举类.Day SUNDAY;
+  java.lang.String work;
+  public static com.javase.枚举类.Day[] values();
+  public static com.javase.枚举类.Day valueOf(java.lang.String);
+  abstract void say();
+  com.javase.枚举类.Day(java.lang.String, int, com.javase.枚举类.Day$1);
+  com.javase.枚举类.Day(java.lang.String, int, java.lang.String, com.javase.枚举类.Day$1);
+  static {};
+}</code></pre><blockquote>
+<p>可以看到，一个枚举在经过编译器编译过后，变成了一个抽象类，它继承了java.lang.Enum；而枚举中定义的枚举常量，变成了相应的public static final属性，而且其类型就抽象类的类型，名字就是枚举常量的名字.</p>
+<p>同时我们可以在Operator.class的相同路径下看到四个内部类的.class文件com/mikan/Day$1.class、com/mikan/Day$2.class、com/mikan/Day$3.class、com/mikan/Day$4.class，也就是说这四个命名字段分别使用了内部类来实现的；同时添加了两个方法values()和valueOf(String)；我们定义的构造方法本来只有一个参数，但却变成了三个参数；同时还生成了一个静态代码块。这些具体的内容接下来仔细看看。</p>
+</blockquote>
+<p>下面分析一下字节码中的各部分，其中：</p>
+<pre><code>InnerClasses:
+     static #23; //class com/javase/枚举类/Day$4
+     static #18; //class com/javase/枚举类/Day$3
+     static #14; //class com/javase/枚举类/Day$2
+     static #10; //class com/javase/枚举类/Day$1</code></pre><p>从中可以看到它有4个内部类，这四个内部类的详细信息后面会分析。</p>
+<pre><code>static {};
+    descriptor: ()V
+    flags: ACC_STATIC
+    Code:
+      stack=5, locals=0, args_size=0
+         0: new           #10                 // class com/javase/枚举类/Day$1
+         3: dup
+         4: ldc           #11                 // String MONDAY
+         6: iconst_0
+         7: invokespecial #12                 // Method com/javase/枚举类/Day$1.&quot;&lt;init&gt;&quot;:(Ljava/lang/String;I)V
+        10: putstatic     #13                 // Field MONDAY:Lcom/javase/枚举类/Day;
+        13: new           #14                 // class com/javase/枚举类/Day$2
+        16: dup
+        17: ldc           #15                 // String TUESDAY
+        19: iconst_1
+        20: invokespecial #16                 // Method com/javase/枚举类/Day$2.&quot;&lt;init&gt;&quot;:(Ljava/lang/String;I)V
+        //后面类似，这里省略
+}</code></pre><p>其实编译器生成的这个静态代码块做了如下工作：分别设置生成的四个公共静态常量字段的值，同时编译器还生成了一个静态字段$VALUES，保存的是枚举类型定义的所有枚举常量<br>编译器添加的values方法：</p>
+<pre><code>public static com.javase.Day[] values();  
+  flags: ACC_PUBLIC, ACC_STATIC  
+  Code:  
+    stack=1, locals=0, args_size=0  
+       0: getstatic     #2                  // Field $VALUES:[Lcom/javase/Day;  
+       3: invokevirtual #3                  // Method &quot;[Lcom/mikan/Day;&quot;.clone:()Ljava/lang/Object;  
+       6: checkcast     #4                  // class &quot;[Lcom/javase/Day;&quot;  
+       9: areturn  
+这个方法是一个公共的静态方法，所以我们可以直接调用该方法（Day.values()）,返回这个枚举值的数组，另外，这个方法的实现是，克隆在静态代码块中初始化的$VALUES字段的值，并把类型强转成Day[]类型返回。</code></pre><p>造方法为什么增加了两个参数？</p>
+<p>有一个问题，构造方法我们明明只定义了一个参数，为什么生成的构造方法是三个参数呢？</p>
+<pre><code>从Enum类中我们可以看到，为每个枚举都定义了两个属性，name和ordinal，name表示我们定义的枚举常量的名称，如FRIDAY、TUESDAY，而ordinal是一个顺序号，根据定义的顺序分别赋予一个整形值，从0开始。在枚举常量初始化时，会自动为初始化这两个字段，设置相应的值，所以才在构造方法中添加了两个参数。即：
+
+另外三个枚举常量生成的内部类基本上差不多，这里就不重复说明了。</code></pre><blockquote>
+<p>我们可以从Enum类的代码中看到，定义的name和ordinal属性都是final的，而且大部分方法也都是final的，特别是clone、readObject、writeObject这三个方法，这三个方法和枚举通过静态代码块来进行初始化一起。</p>
+</blockquote>
+<blockquote>
+<p>它保证了枚举类型的不可变性，不能通过克隆，不能通过序列化和反序列化来复制枚举，这能保证一个枚举常量只是一个实例，即是单例的，所以在effective java中推荐使用枚举来实现单例。</p>
+</blockquote>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>枚举本质上是通过普通的类来实现的，只是编译器为我们进行了处理。<strong>每个枚举类型都继承自java.lang.Enum，并自动添加了values和valueOf方法。</strong></p>
+<p>而每个枚举常量是一个静态常量字段，<strong>使用内部类实现</strong>，该内部类继承了枚举类。<strong>所有枚举常量都通过静态代码块来进行初始化，即在类加载期间就初始化</strong>。</p>
+<p>另外通过把clone、readObject、writeObject这三个方法定义为final的，同时实现是抛出相应的异常。这样保证了每个枚举类型及枚举常量都是不可变的。<strong>可以利用枚举的这两个特性来实现线程安全的单例。</strong></p>
+</div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+        
+      </div>
+      
+      
+      
+    </div>
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#初探枚举类"><span class="nav-number">1.</span> <span class="nav-text">初探枚举类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#枚举类-语法"><span class="nav-number">2.</span> <span class="nav-text">枚举类-语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#枚举类的具体使用"><span class="nav-number">3.</span> <span class="nav-text">枚举类的具体使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常量"><span class="nav-number">3.1.</span> <span class="nav-text">常量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#switch"><span class="nav-number">3.2.</span> <span class="nav-text">switch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#向枚举中添加新方法"><span class="nav-number">3.3.</span> <span class="nav-text">向枚举中添加新方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#覆盖枚举的方法"><span class="nav-number">3.4.</span> <span class="nav-text">覆盖枚举的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现接口"><span class="nav-number">3.5.</span> <span class="nav-text">实现接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用接口组织枚举"><span class="nav-number">3.6.</span> <span class="nav-text">使用接口组织枚举</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#枚举类集合"><span class="nav-number">3.7.</span> <span class="nav-text">枚举类集合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用枚举类的注意事项"><span class="nav-number">4.</span> <span class="nav-text">使用枚举类的注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#枚举类的底层原理"><span class="nav-number">5.</span> <span class="nav-text">枚举类的底层原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

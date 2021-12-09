@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="接口,抽象类,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透">
+<meta name="keywords" content="接口,抽象类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="夯实Java基础系列6:一文搞懂抽象类和接口，从基础到面试题，揭秘其本质区别！">
+<meta property="og:url" content="http://yoursite.com/2019/09/06/6抽象类和接口/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img-blog.csdn.net/20180429143444890?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4NzQxOTcx/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:23.926Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="夯实Java基础系列6:一文搞懂抽象类和接口，从基础到面试题，揭秘其本质区别！">
+<meta name="twitter:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20180429143444890?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4NzQxOTcx/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/09/06/6抽象类和接口/">
+
+
+
+
+
+  <title>夯实Java基础系列6:一文搞懂抽象类和接口，从基础到面试题，揭秘其本质区别！ | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/06/6抽象类和接口/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">夯实Java基础系列6:一文搞懂抽象类和接口，从基础到面试题，揭秘其本质区别！</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-06T15:56:26+08:00">
+                2019-09-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/" itemprop="url" rel="index">
+                    <span itemprop="name">Java技术江湖</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/Java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/09/06/6抽象类和接口/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/09/06/6抽象类和接口/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章首发于我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透彻，也整合了很多我认为不错的技术博客内容，引用其中了一些比较好的博客文章，如有侵权，请联系作者。<br>该系列博文会告诉你如何从入门到进阶，一步步地学习Java基础知识，并上手进行实战，接着了解每个Java知识点背后的实现原理，更完整地了解整个Java技术体系，形成自己的知识框架。为了更好地总结和检验你的学习成果，本系列文章也会提供每个知识点对应的面试题以及参考答案。</p>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+<a id="more"></a>
+
+
+<h2 id="抽象类介绍"><a href="#抽象类介绍" class="headerlink" title="抽象类介绍"></a>抽象类介绍</h2><p>什么是抽象？</p>
+<p>百度给出的解释是：从具体事物抽出、概括出它们共同的方面、本质属性与关系等，而将个别的、非本质的方面、属性与关系舍弃，这种思维过程，称为抽象。</p>
+<p>这句话概括了抽象的概念，而在Java中，你可以只给出方法的定义不去实现方法的具体事物，由子类去根据具体需求来具体实现。</p>
+<p>这种只给出方法定义而不具体实现的方法被称为抽象方法，抽象方法是没有方法体的，在代码的表达上就是没有“{}”。</p>
+<p>包含一个或多个抽象方法的类也必须被声明为抽象类。</p>
+<p>使用abstract修饰符来表示抽象方法以及抽象类。</p>
+<pre><code>//有抽象方法的类也必须被声明为abstract
+public abstract class Test1 {
+
+    //抽象方法，不能有“{}”
+    public abstract void f();
+
+}</code></pre><p>抽象类除了包含抽象方法外，还可以包含具体的变量和具体的方法。类即使不包含抽象方法，也可以被声明为抽象类，防止被实例化。</p>
+<p>抽象类不能被实例化，也就是不能使用new关键字来得到一个抽象类的实例，抽象方法必须在子类中被实现。</p>
+<pre><code>//有抽象方法的类也必须被声明为abstract
+public class Test1 {
+
+    public static void main(String[] args) {
+        Teacher teacher=new Teacher(&quot;教师&quot;);
+        teacher.work();
+
+        Driver driver=new Driver(&quot;驾驶员&quot;);
+        driver.work();
+    }
+
+}
+//一个抽象类
+abstract class People{
+    //抽象方法
+    public abstract void work();
+}
+class Teacher extends People{
+    private String work;
+    public Teacher(String work) {
+        this.work=work;
+    }
+    @Override
+    public void work() {
+        System.out.println(&quot;我的职业是&quot;+this.work);
+    }
+
+}
+class Driver extends People{
+    private String work;
+    public Driver(String work) {
+        this.work=work;
+    }
+    @Override
+    public void work() {
+        System.out.println(&quot;我的职业是&quot;+this.work);
+    }
+
+}</code></pre><blockquote>
+<p>运行结果：<br>我的职业是教师<br>我的职业是驾驶员<br>几点说明:</p>
+</blockquote>
+<p>抽象类不能直接使用，需要子类去实现抽象类，然后使用其子类的实例。然而可以创建一个变量，其类型也是一个抽象类，并让他指向具体子类的一个实例，也就是可以使用抽象类来充当形参，实际实现类为实参，也就是多态的应用。</p>
+<pre><code>People people=new Teacher(&quot;教师&quot;);
+people.work();</code></pre><p>不能有抽象构造方法或抽象静态方法。</p>
+<p>如果非要使用new关键在来创建一个抽象类的实例的话，可以这样：</p>
+<pre><code>People people=new People() {
+    @Override
+    public void work() {
+        //实现这个方法的具体功能
+    }
+        };</code></pre><p>个人不推荐这种方法，代码读起来有点累。</p>
+<p>在下列情况下，一个类将成为抽象类：</p>
+<pre><code>当一个类的一个或多个方法是抽象方法时。
+当类是一个抽象类的子类，并且不能实现父类的所有抽象方法时。
+当一个类实现一个接口，并且不能实现接口的所有抽象方法时。
+注意：
+上面说的是这些情况下一个类将称为抽象类，没有说抽象类就一定会是这些情况。
+抽象类可以不包含抽象方法，包含抽象方法的类就一定是抽象类。
+事实上，抽象类可以是一个完全正常实现的类。</code></pre><h3 id="为什么要用抽象类"><a href="#为什么要用抽象类" class="headerlink" title="为什么要用抽象类"></a>为什么要用抽象类</h3><p>老是在想为什么要引用抽象类，一般类不就够用了吗。一般类里定义的方法，子类也可以覆盖，没必要定义成抽象的啊。</p>
+<p>看了下面的文章，明白了一点。</p>
+<p>其实不是说抽象类有什么用，一般类确实也能满足应用，但是现实中确实有些父类中的方法确实没有必要写，因为各个子类中的这个方法肯定会有不同，所以没有必要再父类里写。当然你也可以把抽象类都写成非抽象类，但是这样没有必要。</p>
+<p>而写成抽象类，这样别人看到你的代码，或你看到别人的代码，你就会注意抽象方法，而知道这个方法是在子类中实现的，所以，有个提示作用。</p>
+<h3 id="一个抽象类小故事"><a href="#一个抽象类小故事" class="headerlink" title="一个抽象类小故事"></a>一个抽象类小故事</h3><p>下面看一个关于抽象类的小故事</p>
+<pre id="best-answer-content" name="code">问你个问题，你知道什么是“东西”吗？什么是“物体”吗？ 
+“麻烦你，小王。帮我把那个东西拿过来好吗” 
+在生活中，你肯定用过这个词－－东西。 
+小王：“你要让我帮你拿那个水杯吗？” 
+你要的是水杯类的对象。而东西是水杯的父类。通常东西类没有实例对象，但我们有时需要东西的引用指向它的子类实例。 
+
+你看你的房间乱成什么样子了，以后不要把东西乱放了，知道么？ 
+
+上面讲的只是子类和父类。而没有说明抽象类的作用。抽象类是据有一个或多个抽象方法的类，必须声明为抽象类。抽象类的特点是，不能创建实例。 
+
+这些该死的抽象类，也不知道它有什么屁用。我非要把它改一改不可。把抽象类中的抽象方法都改为空实现。也就是给抽象方法加上一个方法体，不过这个方法体是空的。这回抽象类就没有抽象方法了。它就可以不在抽象了。 
+
+当你这么尝试之后，你发现，原来的代码没有任何变化。大家都还是和原来一样，工作的很好。你这回可能更加相信，抽象类根本就没有什么用。但总是不死心，它应该有点用吧，不然创造Java的这伙传说中的天才不成了傻子了吗？ 
+
+### 一个抽象类小游戏
+
+接下来，我们来写一个小游戏。俄罗斯方块！我们来分析一下它需要什么类？
+我知道它要在一个矩形的房子里完成。这个房子的上面出现一个方块，慢慢的下落，当它接触到地面或是其它方块的尸体时，它就停止下落了。然后房子的上面又会出现一个新的方块，与前一个方块一样，也会慢慢的下落。在它还没有死亡之前，我可以尽量的移动和翻转它。这样可以使它起到落地时起到一定的作用，如果好的话，还可以减下少几行呢。这看起来好象人生一样，它在为后来人努力着。
+当然，我们不是真的要写一个游戏。所以我们简化它。我抽象出两个必须的类，一个是那个房间，或者就它地图也行。另一个是方块。我发现方块有很多种，数一下，共6种。它们都是四个小矩形构成的。但是它们还有很多不同，例如：它们的翻转方法不同。先把这个问题放到一边去，我们回到房子这个类中。
+
+房子上面总是有方块落下来，房子应该有个属性是方块。当一个方块死掉后，再创建一个方块，让它出现在房子的上面。当玩家要翻转方法时，它翻转的到底是哪个方块呢？当然，房子中只有一个方块可以被翻转，就是当前方块。它是房子的一个属性。那这个属性到底是什么类型的呢？方块有很多不同啊，一共有6种之多，我需要写六个类。一个属性不可能有六种类型吧。当然一个属性只能有一种类型。
+
+我们写一个方块类，用它来派生出6个子类。而房子类的当前方块属性的类型是方块类型。它可以指向任何子类。但是，当我调用当前方块的翻转方法时，它的子类都有吗？如果你把翻转方法写到方块类中，它的子类自然也就有了。可以这六种子类的翻转方法是不同的。我们知道'田'方块，它只有一种状态，无论你怎么翻转它。而长条的方块有两种状态。一种是‘－’，另一种是‘｜’。这可怎么办呢？我们知道Java的多态性，你可以让子类来重写父类的方法。也就是说，在父类中定义这个方法，子类在重写这个方法。
+
+那么在父类的这个翻转方法中，我写一些什么代码呢？让它有几种状态呢？因为我们不可能实例化一个方块类的实例，所以它的翻转方法中的代码并不重要。而子类必须去重写它。那么你可以在父类的翻转方法中不写任何代码，也就是空方法。
+
+我们发现，方法类不可能有实例，它的翻转方法的内容可以是任何的代码。而子类必须重写父类的翻转方法。这时，你可以把方块类写成抽象类，而它的抽象方法就是翻转方法。当然，你也可以把方块类写为非抽象的，也可以在方块类的翻转方法中写上几千行的代码。但这样好吗？难道你是微软派来的，非要说Java中的很多东西都是没有用的吗？
+
+当我看到方块类是抽象的，我会很关心它的抽象方法。我知道它的子类一定会重写它，而且，我会去找到抽象类的引用。它一定会有多态性的体现。
+
+但是，如果你没有这样做，我会认为可能会在某个地方，你会实例化一个方块类的实例，但我找了所有的地方都没有找到。最后我会大骂你一句，你是来欺骗我的吗，你这个白痴。
+
+把那些和“东西”差不多的类写成抽象的。而水杯一样的类就可以不是抽象的了。当然水杯也有几千块钱一个的和几块钱一个的。水杯也有子类，例如，我用的水杯都很高档，大多都是一次性的纸水杯。
+
+记住一点，面向对象不是来自于Java，面向对象就在你的生活中。而Java的面向对象是方便你解决复杂的问题。这不是说面向对象很简单，虽然面向对象很复杂，但Java知道，你很了解面向对象，因为它就在你身边。</pre>
+
+<h2 id="接口介绍"><a href="#接口介绍" class="headerlink" title="接口介绍"></a>接口介绍</h2><p>接口（英文：Interface），在JAVA编程语言中是一个抽象类型，是抽象方法的集合，接口通常以interface来声明。一个类通过继承接口的方式，从而来继承接口的抽象方法。</p>
+<p>接口并不是类，编写接口的方式和类很相似，但是它们属于不同的概念。类描述对象的属性和方法。接口则包含类要实现的方法。</p>
+<p>除非实现接口的类是抽象类，否则该类要定义接口中的所有方法。</p>
+<p>接口无法被实例化，但是可以被实现。一个实现接口的类，必须实现接口内所描述的所有方法，否则就必须声明为抽象类。另外，在 Java 中，接口类型可用来声明一个变量，他们可以成为一个空指针，或是被绑定在一个以此接口实现的对象。</p>
+<h3 id="接口与类相似点："><a href="#接口与类相似点：" class="headerlink" title="接口与类相似点："></a>接口与类相似点：</h3><ul>
+<li>一个接口可以有多个方法。</li>
+<li>接口文件保存在 .java 结尾的文件中，文件名使用接口名。</li>
+<li>接口的字节码文件保存在 .class 结尾的文件中。</li>
+<li>接口相应的字节码文件必须在与包名称相匹配的目录结构中。</li>
+</ul>
+<h3 id="接口与类的区别："><a href="#接口与类的区别：" class="headerlink" title="接口与类的区别："></a>接口与类的区别：</h3><ul>
+<li>接口不能用于实例化对象。</li>
+<li>接口没有构造方法。</li>
+<li>接口中所有的方法必须是抽象方法。</li>
+<li>接口不能包含成员变量，除了 static 和 final 变量。</li>
+<li>接口不是被类继承了，而是要被类实现。</li>
+<li>接口支持多继承。</li>
+</ul>
+<h3 id="接口特性"><a href="#接口特性" class="headerlink" title="接口特性"></a>接口特性</h3><ul>
+<li>接口中每一个方法也是隐式抽象的,接口中的方法会被隐式的指定为 <strong>public abstract</strong>（只能是 public abstract，其他修饰符都会报错）。</li>
+<li>接口中可以含有变量，但是接口中的变量会被隐式的指定为 <strong>public static final</strong> 变量（并且只能是 public，用 private 修饰会报编译错误）。</li>
+<li>接口中的方法是不能在接口中实现的，只能由实现接口的类来实现接口中的方法。</li>
+</ul>
+<h3 id="抽象类和接口的区别"><a href="#抽象类和接口的区别" class="headerlink" title="抽象类和接口的区别"></a>抽象类和接口的区别</h3><ul>
+<li>1. 抽象类中的方法可以有方法体，就是能实现方法的具体功能，但是接口中的方法不行。</li>
+<li>2. 抽象类中的成员变量可以是各种类型的，而接口中的成员变量只能是 <strong>public static final</strong> 类型的。</li>
+<li>3. 接口中不能含有静态代码块以及静态方法(用 static 修饰的方法)，而抽象类是可以有静态代码块和静态方法。</li>
+<li>4. 一个类只能继承一个抽象类，而一个类却可以实现多个接口。</li>
+</ul>
+<blockquote>
+<p><strong>注</strong>：JDK 1.8 以后，接口里可以有静态方法和方法体了。</p>
+</blockquote>
+<h3 id="接口的使用："><a href="#接口的使用：" class="headerlink" title="接口的使用："></a>接口的使用：</h3><p>  我们来举个例子，定义一个抽象类People，一个普通子类Student，两个接口。子类Student继承父类People,并实现接口Study，Write</p>
+<p>代码演示：</p>
+<pre><code>package demo;
+//构建一个抽象类People
+abstract class People{
+    //父类属性私有化
+    private String name;
+    private int age;
+    //提供父类的构造器
+    public People(String name,int age){
+        this.name = name;
+        this.age = age;
+    }
+    //提供获取和设置属性的getter()/setter()方法
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    //提供一个抽象方法
+    public abstract void talk();    
+}
+
+//定义一个接口
+interface Study{
+    //设置课程数量为3
+    int COURSENUM = 3;
+    //构建一个默认方法
+    default void stu(){
+        System.out.println(&quot;学生需要学习&quot;+COURSENUM+&quot;门课程&quot;);
+    }
+}
+
+//再定义一个接口
+interface Write{
+    //定义一个抽象方法
+    void print();
+}
+
+//子类继承People,实现接口Study,Write
+class Student extends People implements Study,Write{
+    //通过super关键字调用父类的构造器
+    public Student(String name, int age) {
+        super(name, age);
+    }
+    //实现父类的抽象方法
+    public void talk() {
+        System.out.println(&quot;我的名字叫&quot;+this.getName()+&quot;,今年&quot;+this.getAge()+&quot;岁&quot;);
+    }
+    //实现Write接口的抽象方法
+    public void print() {
+        System.out.println(&quot;学生会写作业&quot;);
+    }
+}
+
+public class InterfaceDemo{
+    public static void main(String[] args) {
+        //构建student对象
+        Student student = new Student(&quot;dodo&quot;, 22);
+        //调用父类的抽象方法
+        student.talk();
+        //调用接口Write中的抽象方法
+        student.print();
+        //调用接口Study中的默认方法
+        student.stu();
+    }
+}</code></pre><p>代码讲解：上述例子结合了抽象类和接口的知识，内容较多，同学们可以多看多敲一下，学习学习。</p>
+<p>接口的实现：类名 implements 接口名，有多个接口名，用“，”隔开即可。</p>
+<p>接口的作用——制定标准<br>   接口师表尊，所谓的标准，指的是各方共同遵守一个守则，只有操作标准统一了，所有的参与者才可以按照统一的规则操作。</p>
+<pre><code>如电脑可以和各个设备连接，提供统一的USB接口，其他设备只能通过USB接口和电脑相连
+
+代码实现：
+
+package demo;
+
+interface USB 
+{
+    public void work() ;    // 拿到USB设备就表示要进行工作
+}
+
+class Print implements USB         //实现类（接口类）    
+{                               // 打印机实现了USB接口标准（对接口的方法实现）
+    public void work() 
+   {
+        System.out.println(&quot;打印机用USB接口，连接,开始工作。&quot;) ;
+    }
+}
+class Flash implements USB         //实现类（接口类）                  
+{                                  // U盘实现了USB接口标准（对接口的方法实现）
+    public void work() 
+    {
+        System.out.println(&quot;U盘使用USB接口，连接,开始工作。&quot;) ;
+    }
+}
+
+class Computer 
+{
+    public void plugin(USB usb)             //plugin的意思是插件，参数为接收接口类
+    {
+        usb.work() ;    // 按照固定的方式进行工作
+    }
+}
+public class InterfaceStandards { public static void main(String args[]) { Computer computer = new Computer() ; computer.plugin(new Print()) ; //实例化接口类， 在电脑上使用打印机 computer.plugin(new Flash()) ; //实例化接口类， 在电脑上使用U盘 }}</code></pre><p>代码讲解：上述例子，就给我们展示了接口制定标准的作用，怎么指定的呢？看下面代码</p>
+<pre><code>class Computer 
+{
+    public void plugin(USB usb)             //plugin的意思是插件，参数为接收接口类
+    {
+        usb.work() ;    // 按照固定的方式进行工作
+    }
+}</code></pre><p>我们可以看到，Computer类里面定义了一个方法plugin()，它的参数内写的是USB usb,即表示plugin()方法里，接收的是一个usb对象，而打印机和U盘对象可以通过向上转型当参数，传入方法里。我们来重新写一个main方法帮助大家理解</p>
+<p>代码演示：</p>
+<pre><code>public class InterfaceStandards 
+{
+    public static void main(String args[]) 
+    {   
+        Computer computer = new Computer() ;
+
+        USB usb = new Print();
+        computer.plugin(usb) ;   //实例化接口类， 在电脑上使用打印机
+        usb = new Flash();
+        computer.plugin(usb) ;   //实例化接口类， 在电脑上使用U盘
+    }
+}</code></pre><p>代码讲解：我们修改了主函数后，发现，使用了两次的向上转型给了USB，虽然使用的都是usb对象，但赋值的子类对象不一样，实现的方法体也不同，这就很像现实生活，无论我使用的是打印机，还是U盘，我都是通过USB接口和电脑连接的，这就是接口的作用之一——制定标准</p>
+<p>我们来个图继续帮助大家理解一下：</p>
+<p><img src="https://img-blog.csdn.net/20180429143444890?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4NzQxOTcx/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="image"></p>
+<p>上面的图：我们学习前面的章节多态可以知道对象的多态可以通过动态绑定来实现，即使用向上转型，我们知道类，数组，接口都是引用类型变量，什么是引用类型变量？</p>
+<p>引用类型变量都会有一个地址的概念，即指向性的概念，当USB usb = new Print(),此时usb对象是指向new Print()的，当usb = new Flash()后，这时候usb变量就会指向new Flash()，我们会说这是子类对象赋值给了父类对象usb，而在内存中，我们应该说，usb指向了new Flash();</p>
+<h3 id="接口最佳实践：设计模式中的工厂模式"><a href="#接口最佳实践：设计模式中的工厂模式" class="headerlink" title="接口最佳实践：设计模式中的工厂模式"></a>接口最佳实践：设计模式中的工厂模式</h3><pre><code>首先我们来认识一下什么是工厂模式？工厂模式是为了解耦：把对象的创建和使用的过程分开。就是Class A 想调用 Class B ，那么A只是调用B的方法，而至于B的实例化，就交给工厂类。
+
+其次，工厂模式可以降低代码重复。如果创建对象B的过程都很复杂，需要一定的代码量，而且很多地方都要用到，那么就会有很多的重复代码。我们可以这些创建对象B的代码放到工厂里统一管理。既减少了重复代码，也方便以后对B的创建过程的修改维护。
+
+由于创建过程都由工厂统一管理，所以发生业务逻辑变化，不需要找到所有需要创建B的地方去逐个修正，只需要在工厂里修改即可，降低维护成本。同理，想把所有调用B的地方改成B的子类C，只需要在对应生产B的工厂中或者工厂的方法中修改其生产的对象为C即可，而不需要找到所有的new B（）改为newC()。</code></pre><p>代码演示：</p>
+<pre><code>package demo;
+
+import java.util.Scanner;
+
+interface Fruit                        //定义一个水果标准
+{
+    public abstract void eat();
+}
+
+class Apple implements Fruit
+{
+    public void eat()
+    {
+        System.out.println(&quot;吃苹果&quot;);
+    }
+}
+class Orange implements Fruit
+{
+    public void eat()
+    {
+        System.out.println(&quot;吃橘子&quot;);
+    }
+}
+
+class factory
+{
+    public static Fruit getInstance(String className)  //返回值是Fruit的子类
+    {
+        if(&quot;apple&quot;.equals(className))
+        {
+            return new Apple();
+        }
+        else if(&quot;orange&quot;.equals(className))
+        {
+            return new Orange();
+        }
+        else
+        {
+            return null;
+        }
+    }
+}
+
+public class ComplexFactory {
+    public static void main(String[] args)
+    {    
+        System.out.println(&quot;请输入水果的英文名:&quot;);
+        Scanner sc = new Scanner(System.in);
+        String ans = sc.nextLine();
+        Fruit f = factory.getInstance(ans);   //初始化参数
+        f.eat();
+        sc.close();
+    }
+}</code></pre><p>代码讲解：上述代码部分我们讲一下factory这个类，类中有一个getInstance方法，我们用了static关键字修饰，在使用的时候我们就在main中使用类名.方法名调用。</p>
+<p>Fruit f = factory.getInstance(ans);   //初始化参数<br>在Factory的getInstance()方法中，我们就可以通过逻辑的实现，将对象的创建和使用的过程分开了。</p>
+<pre><code>总结点评：在接口的学习中，大家可以理解接口是特殊的抽象类，java中类可以实现多个接口，接口中成员属性默认是public static final修饰，可以省略；成员方法默认是public abstract修饰，同样可以省略，接口中还可定义带方法体的默认方法，需要使用default修饰。利用接口我们还可以制定标准，还能够使用工厂模式，将对象的创建和使用过程分开。</code></pre><h2 id="接口与抽象类的本质区别是什么？"><a href="#接口与抽象类的本质区别是什么？" class="headerlink" title="接口与抽象类的本质区别是什么？"></a>接口与抽象类的本质区别是什么？</h2><h3 id="基本语法区别"><a href="#基本语法区别" class="headerlink" title="基本语法区别"></a>基本语法区别</h3><p>在 Java 中，接口和抽象类的定义语法是不一样的。这里以动物类为例来说明，其中定义接口的示意代码如下：</p>
+<pre>public interface Animal
+{
+    //所有动物都会吃
+    public void eat();
+
+    //所有动物都会飞
+    public void fly();
+}</pre>
+
+<p>定义抽象类的示意代码如下：</p>
+<pre>public abstract class Animal
+{
+    //所有动物都会吃
+    public abstract void eat();
+
+    //所有动物都会飞
+    public void fly(){};
+}</pre>
+
+<p>可以看到，在接口内只能是功能的定义，而抽象类中则可以包括功能的定义和功能的实现。在接口中，所有的属性肯定是 public、static 和 final，所有的方法都是 abstract，所以可以默认不写上述标识符；在抽象类中，既可以包含抽象的定义，也可以包含具体的实现方法。</p>
+<p>在具体的实现类上，接口和抽象类的实 现类定义方式也是不一样的，其中接口实现类的示意代码如下：</p>
+<pre>public class concreteAnimal implements Animal
+{
+    //所有动物都会吃
+    public void eat(){}
+
+    //所有动物都会飞
+    public void fly(){}
+}</pre>
+
+<p>抽象类的实现类示意代码如下：</p>
+<pre>public class concreteAnimal extends Animal
+{
+    //所有动物都会吃
+    public void eat(){}
+
+    //所有动物都会飞
+    public void fly(){}
+}</pre>
+
+<p>可以看到，在接口的实现类中使用 implements 关键字；而在抽象类的实现类中，则使用 extends 关键字。一个接口的实现类可以实现多个接口，而一个抽象类的实现类则只能实现一个抽象类。</p>
+<h3 id="设计思想区别"><a href="#设计思想区别" class="headerlink" title="设计思想区别"></a>设计思想区别</h3><p>从前面抽象类的具体实现类的实现方式可以看出，其实在 Java 中，抽象类和具体实现类之间是一种继承关系，也就是说如果釆用抽象类的方式，则父类和子类在概念上应该是相同的。接口却不一样，如果采用接口的方式，则父类和子类在概念上不要求相同。</p>
+<p>接口只是抽取相互之间没有关系的类的共同特征，而不用关注类之间的关系，它可以使没有层次关系的类具有相同的行为。因此，可以这样说：抽象类是对一组具有相同属性和方法的逻辑上有关系的事物的一种抽象，而接口则是对一组具有相同属性和方法的逻辑上不相关的事物的一种抽象。</p>
+<p>仍然以前面动物类的设计为例来说明接口和抽象类关于设计思想的区别，该动物类默认所有的动物都具有吃的功能，其中定义接口的示意代码如下：</p>
+<pre>public interface Animal
+{
+    //所有动物都会吃
+    public void eat();
+}</pre>
+
+<p>定义抽象类的示意代码如下：</p>
+<pre>public abstract class Animal
+{
+    //所有动物都会吃
+    public abstract void eat();
+}</pre>
+
+<p>不管是实现接口，还是继承抽象类的具体动物，都具有吃的功能，具体的动物类的示意代码如下。</p>
+<p>接口实现类的示意代码如下：</p>
+<pre>public class concreteAnimal implements Animal
+{
+    //所有动物都会吃
+    public void eat(){}
+}</pre>
+
+<p>抽象类的实现类示意代码如下：</p>
+<pre>public class concreteAnimal extends Animal
+{
+    //所有动物都会吃
+    public void eat(){}
+}</pre>
+
+<p>当然，具体的动物类不光具有吃的功能，比如有些动物还会飞，而有些动物却会游泳，那么该如何设计这个抽象的动物类呢？可以别在接口和抽象类中增加飞的功能，其中定义接口的示意代码如下：</p>
+<pre>public interface Animal
+{
+    //所有动物都会吃
+    public void eat();
+
+    //所有动物都会飞
+    public void fly();
+}</pre>
+
+<p>定义抽象类的示意代码如下：</p>
+<pre><code>public abstract class Animal
+{
+    //所有动物都会吃
+    public abstract void eat();
+
+    //所有动物都会飞
+    public void fly(){};
+}</code></pre><p>这样一来，不管是接口还是抽象类的实现类，都具有飞的功能，这显然不能满足要求，因为只有一部分动物会飞，而会飞的却不一定是动物，比如飞机也会飞。那该如何设计呢？有很多种方案，比如再设计一个动物的接口类，该接口具有飞的功能，示意代码如下：</p>
+<pre>public interface AnimaiFly
+{
+    //所有动物都会飞
+    public void fly();
+}</pre>
+
+<p>那些具体的动物类，如果有飞的功能的话，除了实现吃的接口外，再实现飞的接口，示意代码如下：</p>
+<pre>public class concreteAnimal implements Animal,AnimaiFly
+{
+    //所有动物都会吃
+    public void eat(){}
+
+    //动物会飞
+    public void fly();
+}</pre>
+
+<p>那些不需要飞的功能的具体动物类只实现具体吃的功能的接口即可。另外一种解决方案是再设计一个动物的抽象类，该抽象类具有飞的功能，示意代码如下：</p>
+<pre>public abstract class AnimaiFly
+{
+    //动物会飞
+    public void fly();
+}</pre>
+
+<p>但此时没有办法实现那些既有吃的功能，又有飞的功能的具体动物类。因为在 Java 中具体的实现类只能实现一个抽象类。一个折中的解决办法是，让这个具有飞的功能的抽象类，继承具有吃的功能的抽象类，示意代码如下：</p>
+<pre>public abstract class AnimaiFly extends Animal
+{
+    //动物会飞
+    public void fly();
+}</pre>
+
+<p>此时，对那些只需要吃的功能的具体动物类来说，继承 Animal 抽象类即可。对那些既有吃的功能又有飞的功能的具体动物类来说，则需要继承 AnimalFly 抽象类。</p>
+<p>但此时对客户端有一个问题，那就是不能针对所有的动物类都使用 Animal 抽象类来进行编程，因为 Animal 抽象类不具有飞的功能，这不符合面向对象的设计原则，因此这种解决方案其实是行不通的。</p>
+<p>还有另外一种解决方案，即具有吃的功能的抽象动物类用抽象类来实现，而具有飞的功能的类用接口实现；或者具有吃的功能的抽象动物类用接口来实现，而具有飞的功能的类用抽象类实现。</p>
+<p>具有吃的功能的抽象动物类用抽象类来实现，示意代码如下：</p>
+<pre>public abstract class Animal
+{
+    //所有动物都会吃
+    public abstract void eat();
+}</pre>
+
+<p>具有飞的功能的类用接口实现，示意代码如下：</p>
+<pre>public interface AnimaiFly
+{
+    //动物会飞
+    public void fly();
+}</pre>
+
+<p>既具有吃的功能又具有飞的功能的具体的动物类，则继承 Animal 动物抽象类，实现 AnimalFly 接口，示意代码如下：</p>
+<pre>public class concreteAnimal extends Animal implements AnimaiFly
+{
+    //所有动物都会吃
+    public void eat(){}
+
+    //动物会飞
+    public void fly();
+}</pre>
+
+<p>或者具有吃的功能的抽象动物类用接口来实现，示意代码如下：</p>
+<pre>public interface Animal
+{
+    //所有动物都会吃
+    public abstract void eat();
+}</pre>
+
+<p>具有飞的功能的类用抽象类实现，示意代码如下：</p>
+<pre>public abstract class AnimaiFly
+{
+    //动物会飞
+    public void fly(){};
+}</pre>
+
+<p>既具有吃的功能又具有飞的功能的具体的动物类，则实现 Animal 动物类接口，继承 AnimaiFly 抽象类，示意代码如下：</p>
+<pre>public class concreteAnimal extends AnimaiFly implements Animal
+{
+    //所有动物都会吃
+    public void eat(){}
+
+    //动物会飞
+    public void fly();
+}</pre>
+
+<p>这些解决方案有什么不同呢？再回过头来看接口和抽象类的区别：抽象类是对一组具有相同属性和方法的逻辑上有关系的事物的一种抽象，而接口则是对一组具有相同属性和方法的逻辑上不相关的事物的一种抽象，因此抽象类表示的是“is a”关系，接口表示的是“like a”关系。</p>
+<p>假设现在要研究的系统只是动物系统，如果设计人员认为对既具有吃的功能又具有飞的功能的具体的动物类来说，它和只具有吃的功能的动物一样，都是动物，是一组逻辑上有关系的事物，因此这里应该使用抽象类来抽象具有吃的功能的动物类，即继承 Animal 动物抽象类，实现 AnimalFly 接口。</p>
+<p>如果设计人员认为对既具有吃的功能，又具有飞的功能的具体的动物类来说，它和只具有飞的功能的动物一样，都是动物，是一组逻辑上有关系的事物，因此这里应该使用抽象类来抽象具有飞的功能的动物类，即实现 Animal 动物类接口，继承 AnimaiFly 抽象类。</p>
+<p>假设现在要研究的系统不只是动物系统，如果设计人员认为不管是吃的功能，还是飞的功能和动物类没有什么关系，因为飞机也会飞，人也会吃，则这里应该实现两个接口来分别抽象吃的功能和飞的功能，即除实现吃的 Animal 接口外，再实现飞的 AnimalFly 接口。</p>
+<p>从上面的分析可以看出，对于接口和抽象类的选择，反映出设计人员看待问题的不同角度，即抽象类用于一组相关的事物，表示的是“is a”的关系，而接口用于一组不相关的事物，表示的是“like a”的关系。</p>
+<h3 id="如何回答面试题：接口和抽象类的区别"><a href="#如何回答面试题：接口和抽象类的区别" class="headerlink" title="如何回答面试题：接口和抽象类的区别?"></a>如何回答面试题：接口和抽象类的区别?</h3><p>接口(interface)和抽象类(abstract class)是支持抽象类定义的两种机制。</p>
+<p>接口是公开的，不能有私有的方法或变量，接口中的所有方法都没有方法体，通过关键字interface实现。</p>
+<p>抽象类是可以有私有方法或私有变量的，通过把类或者类中的方法声明为abstract来表示一个类是抽象类，被声明为抽象的方法不能包含方法体。子类实现方法必须含有相同的或者更低的访问级别(public-&gt;protected-&gt;private)。抽象类的子类为父类中所有抽象方法的具体实现，否则也是抽象类。</p>
+<p>接口可以被看作是抽象类的变体，接口中所有的方法都是抽象的，可以通过接口来间接的实现多重继承。接口中的成员变量都是static final类型，由于抽象类可以包含部分方法的实现，所以，在一些场合下抽象类比接口更有优势。</p>
+<p> <strong>相同点</strong></p>
+<p>（1）都不能被实例化<br>（2）接口的实现类或抽象类的子类都只有实现了接口或抽象类中的方法后才能实例化。</p>
+<p> <strong>不同点</strong></p>
+<p>（1）接口只有定义，不能有方法的实现，java 1.8中可以定义default方法体，而抽象类可以有定义与实现，方法可在抽象类中实现。</p>
+<p>（2）实现接口的关键字为implements，继承抽象类的关键字为extends。一个类可以实现多个接口，但一个类只能继承一个抽象类。所以，使用接口可以间接地实现多重继承。</p>
+<p>（3）接口强调特定功能的实现，而抽象类强调所属关系。</p>
+<p>（4）接口成员变量默认为public static final，必须赋初值，不能被修改；其所有的成员方法都是public、abstract的。抽象类中成员变量默认default，可在子类中被重新定义，也可被重新赋值；抽象方法被abstract修饰，不能被private、static、synchronized和native等修饰，必须以分号结尾，不带花括号。</p>
+<p>（5）接口被用于常用的功能，便于日后维护和添加删除，而抽象类更倾向于充当公共类的角色，不适用于日后重新对立面的代码修改。功能需要累积时用抽象类，不需要累积时用接口。</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="http://c.biancheng.net/view/1012.html" target="_blank" rel="noopener">http://c.biancheng.net/view/1012.html</a><br><a href="https://blog.csdn.net/wxw20147854/article/details/88712029" target="_blank" rel="noopener">https://blog.csdn.net/wxw20147854/article/details/88712029</a><br><a href="https://blog.csdn.net/zhangquan2015/article/details/82808399" target="_blank" rel="noopener">https://blog.csdn.net/zhangquan2015/article/details/82808399</a><br><a href="https://blog.csdn.net/qq_38741971/article/details/80099567" target="_blank" rel="noopener">https://blog.csdn.net/qq_38741971/article/details/80099567</a><br><a href="https://www.runoob.com/java/java-interfaces.html" target="_blank" rel="noopener">https://www.runoob.com/java/java-interfaces.html</a><br><a href="https://blog.csdn.net/fengyunjh/article/details/6605085" target="_blank" rel="noopener">https://blog.csdn.net/fengyunjh/article/details/6605085</a><br><a href="https://blog.csdn.net/xkfanhua/article/details/80567557" target="_blank" rel="noopener">https://blog.csdn.net/xkfanhua/article/details/80567557</a></p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/接口/" rel="tag"># 接口</a>
+          
+            <a href="/tags/抽象类/" rel="tag"># 抽象类</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/06/MySQL/重新学习MySQL数据库6：浅谈MySQL的中事务与锁/" rel="next" title="重新学习MySQL数据库6：浅谈MySQL的中事务与锁">
+                <i class="fa fa-chevron-left"></i> 重新学习MySQL数据库6：浅谈MySQL的中事务与锁
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/07/MySQL/重新学习Mysql数据库7：详解MyIsam与InnoDB引擎的锁实现/" rel="prev" title="重新学习Mysql数据库7：详解MyIsam与InnoDB引擎的锁实现">
+                重新学习Mysql数据库7：详解MyIsam与InnoDB引擎的锁实现 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#抽象类介绍"><span class="nav-number">1.</span> <span class="nav-text">抽象类介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要用抽象类"><span class="nav-number">1.1.</span> <span class="nav-text">为什么要用抽象类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一个抽象类小故事"><span class="nav-number">1.2.</span> <span class="nav-text">一个抽象类小故事</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接口介绍"><span class="nav-number">2.</span> <span class="nav-text">接口介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#接口与类相似点："><span class="nav-number">2.1.</span> <span class="nav-text">接口与类相似点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接口与类的区别："><span class="nav-number">2.2.</span> <span class="nav-text">接口与类的区别：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接口特性"><span class="nav-number">2.3.</span> <span class="nav-text">接口特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#抽象类和接口的区别"><span class="nav-number">2.4.</span> <span class="nav-text">抽象类和接口的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接口的使用："><span class="nav-number">2.5.</span> <span class="nav-text">接口的使用：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接口最佳实践：设计模式中的工厂模式"><span class="nav-number">2.6.</span> <span class="nav-text">接口最佳实践：设计模式中的工厂模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接口与抽象类的本质区别是什么？"><span class="nav-number">3.</span> <span class="nav-text">接口与抽象类的本质区别是什么？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本语法区别"><span class="nav-number">3.1.</span> <span class="nav-text">基本语法区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设计思想区别"><span class="nav-number">3.2.</span> <span class="nav-text">设计思想区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何回答面试题：接口和抽象类的区别"><span class="nav-number">3.3.</span> <span class="nav-text">如何回答面试题：接口和抽象类的区别?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">4.</span> <span class="nav-text">参考文章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">5.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">5.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">5.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

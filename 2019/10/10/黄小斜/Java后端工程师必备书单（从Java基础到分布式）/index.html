@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="干货资源,书单,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的微信公众号【黄小斜】，也会同步到我的个人博客：  www.how2playlife.com  如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联">
+<meta name="keywords" content="干货资源,书单">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java后端工程师必备书单（从Java基础到分布式）">
+<meta property="og:url" content="http://yoursite.com/2019/10/10/黄小斜/Java后端工程师必备书单（从Java基础到分布式）/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的微信公众号【黄小斜】，也会同步到我的个人博客：  www.how2playlife.com  如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsqoHcGCTTk8lwnicOzjrYsEPS0m4z5TptXoUlzlFfu7hsLfWk9gBz5hA/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsCYHvAMX255u3jPtfmknRsYt7JRS48VvzZSIiarQTNM96pv942AbmgIA/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsLee9tvMJ90MGvsY1xTf696Nzs5reVs7he5Zxm6vs9Mia7tpCqFib9WnA/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MspicVeFKBcEkU1GcE8YbqlKlaqZez3oA0ib6hohvOJ5nCp4ibYqm5LqibaQ/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsShU8y0B9b6pJ4ExOIexD8LOolfhVvAeFicg0vQXzaZqmZoj9Uj178gA/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsoRGA0QC4DLZy08ybPlaLVKrYS2ricexI06zbPtuHT1VrjLC2HsXAAdA/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsIsAElOVjXPZaPLbqRxBDHtcN7dLOVpTxicFfMCSlRvtibypntLxJbItg/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MstdxG8HczJnOCP6M5C06Zt4QgKn3koJ5qLJk6R9cT2p8ZJt0PRz9Yxg/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Msian7X4kGKPeU2lEOTN6bgTKbYCRFvGp3a38OaCanfMNaaH35vQEicEmQ/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsOZ46lb6ATwho5MxHyvCmia91uVp5rd5PTGJrGiacONVibgVU5whibxt0YA/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsfZ0XycKZ0GYdtA9vD78ZGA4MHQfmDLMA2WWjmoU7VOnvM7cCHv7jKw/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Msicrg4GrcBwcfVskpU2ER3ichxkZLmelObPkle2xZXQakpqJ72iazxubdQ/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Msxv333llv2svDSzJhMehe7MGe0dmUWMayDFkEJthXjTV5IzOgzGHUDw/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Ms4k0NHxprIMXNFOPQPIgsL3JQMbwZlmTTYicmYFZaGSRwmw0VNXLtxrA/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Ms3a2wib6W7zxWmMRGeeaj7qSDgDbcSSRg4JiafJ6veibia1huSMYiaIApeOA/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsnJM4AZySogwnc18edVYiaibWbtZZlJt87zQ79mQxBdib1td82ceibdxQjg/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Ms5dloj3RticzOPib4sLQ198ibd6uukhh9mQAkylibNxZcQVgNmdgpJuuYibg/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsqHAgLGrtTqQC6EXb9UnIw1A7xXZwzPvNzLVBcMovlicXs6GdhapZQ6w/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MswO0s5EYF4ETZ75h4mIwDnGWPDdkBSZLCypMFEH6bx3fFsYN6HFhH2w/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsVAiaXRCibH0niccx3lI8eQJEcewVbzymYIfSiafytfibqg6uY4OWjN8HXbg/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsXQCMLd9PwB74EAoWDZWKslQaicJn0lkfpS8vUiba9n4rQbnN4jsJXibRQ/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsvItQbtqibRdPJvHrPu5WJlJLPyP9JS7jIsM8PwvQarn2bndmoF4ricKg/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsR7yXam5xjrMJc5FajShzqK8ib5FcIBUqGdzcvcJe6XEuW8Vyc5PKRqA/640?wx_fmt=png">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsE6AxZgMjGh3HYb1tblQVUGk6FjOQ74omphiaqrE2VZgqY8aianHaA9VQ/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Msia1wMFrvWicOC3kEiazfqS4cz9eXmVdwmu1G7ucIOUUtx914KlicxIwuOA/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Msibbox9gJ2wV8EZofhrs4RXLcZpXCUboGCChzf2NNScibtVCytt1iamwdw/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Ms9k4687xRSru4FicK1Mia6xO0Z6cBQVuYibfzUHlq2Kh9XpN5Oel37tbibA/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsDz6nCG9LhHxjVVEIrB5n03443oFENiak2kwJ1Eicj0diacfp67icUAFjYg/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Msgwk2uEmyhyHlTAbEL2GHbW0BQaXSUm5myDq9XbJWEa6eQBXpcyo2vg/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsvicPSEMHB2AyGQxBNic3r3LBEukSXlTTxKExRazE2HEDLtXEqVNkq6hA/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsfLtH0gzib1kXiab1iaB7T7W4DqJhEIY7DaY6XMskos6OSS8MwblfexERg/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MscrpdBT6nbJ32zd46Q0cjkH7ReTjuE7OibZpMZPbhNe74t6iagU03mO5A/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Msre7k7xFaH32lu2ibDibNbkIpnRvK4XP5KJicLfZicteOvkFbttIZ8bZKcg/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsDM0fL3YQ81tyskxJRdW4raFbwCUIMVCXw3aQ594DR9ib6OdTVLm7DZg/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Ms54ygz1Uicdj9SkbbewcyA78SsESGDNn3VNjTDTDhW18G406UaOlCNXA/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsicmqxK5NtFkiaEEMuOicZUGWQlloNzIhsKvrLibZYFOic0MtTo2iciaxrUH3w/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsnYBbshOibs9eMXMpsb4BAMNe2Gl0zfbdoEnwVkgYYZqnHE8jTNI5x7Q/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsA0cLZgXBkHU0FtBGaD3WusGHu9VGgAeFGy2YaK7dSlOibLnVtxMZHDA/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Msl8vtjticonEQopz007VDV1ZqA024AaSWicLpW12ib0bqAc5ibNK5XpKGGg/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsSOY9dKWKloIqmyiarqrJr3yZDchPndlWFV6k5QyvdLoVA8mWtcfpT4A/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsHhNAAvX06XgaWh8iaxT0Kqj8fdERs48qkA8wSxpnva9WWrMx9O7ibEBQ/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsHR3BrVSXFjib3REYKciasfa8VQ5iaPKdwEp6I73ONWZDbroKSicYib4QvsQ/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MspWgNeRfHAzCxNicg1BOFIYL2jUgGB7CgCXxUqfVsPRicTppk49HNSNlQ/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MscJ1Mvq3qTe5fVOXUvyqPHzPZvEvDjhsQVoicfjCibkxRDVWOjyj0DmFA/640?wx_fmt=png">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsbqrsXhbiclTXRA3gI8wibEV5pNJ11XAN3SEVu0zXh4vMEN942MqblpOw/640?wx_fmt=jpeg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Ms1LB8BJFyw8npMNjUajzicmZRO7QibDubblqAl88OuN6WAVtAUqILGeXA/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Msz3J8ciah5m58wtiaLSnT7dHIpcVqBVggn2wmS6SVsGjvSeB5OVc3rZ0w/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MssH1SXJian4O6D85sZF2OseyGmKJjxE0aJ2GFlNlPdPmZMibwJahTIjTw/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:24.030Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java后端工程师必备书单（从Java基础到分布式）">
+<meta name="twitter:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的微信公众号【黄小斜】，也会同步到我的个人博客：  www.how2playlife.com  如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联">
+<meta name="twitter:image" content="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsqoHcGCTTk8lwnicOzjrYsEPS0m4z5TptXoUlzlFfu7hsLfWk9gBz5hA/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/10/黄小斜/Java后端工程师必备书单（从Java基础到分布式）/">
+
+
+
+
+
+  <title>Java后端工程师必备书单（从Java基础到分布式） | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/10/黄小斜/Java后端工程师必备书单（从Java基础到分布式）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java后端工程师必备书单（从Java基础到分布式）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-10T15:56:26+08:00">
+                2019-10-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/黄小斜原创系列/" itemprop="url" rel="index">
+                    <span itemprop="name">黄小斜原创系列</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/黄小斜原创系列/Java学习/" itemprop="url" rel="index">
+                    <span itemprop="name">Java学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/10/黄小斜/Java后端工程师必备书单（从Java基础到分布式）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/10/黄小斜/Java后端工程师必备书单（从Java基础到分布式）/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章首发于我的微信公众号【黄小斜】，也会同步到我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+<a id="more"></a>
+
+
+<p>Java开发工程师一般负责后端开发，当然也有专门做Java Web的工程师，但是随着前后端的分离，越来越多的Java工程师需要往大后端方向发展。</p>
+<p>今天我们就来介绍一下Java后端开发者的书单。</p>
+<p>首先要感谢一下江南白衣大大的后端书架，让我在初学阶段读到了很多好书，直到现在都印象深刻。</p>
+<p>我在两年的学习历程中看了很多的书，其中不乏XXX入门到精通，XXX王者归来，XXX指南什么的。</p>
+<p>虽然这类书确实毛病很多，但是作为非科班的我来说，当时还是看的津津有味。直到后来我看到一些优秀的书籍，以及白衣哥的书架，我才逐渐认识到看一些精品书籍的好处。</p>
+<p>所以我们今天就从这些精品书籍中挑选一些优秀书籍来推荐给大家，当然其中有一些书我自己也没有时间看完。</p>
+<p>接下来我们按照后端技术栈各个部分的内容来推荐书籍。</p>
+<h1 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h1><h2 id="1-TCP-IP卷一"><a href="#1-TCP-IP卷一" class="headerlink" title="1 TCP/IP卷一"></a>1 TCP/IP卷一</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsqoHcGCTTk8lwnicOzjrYsEPS0m4z5TptXoUlzlFfu7hsLfWk9gBz5hA/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt></p>
+<p>这本其实我刚开始没看太懂，可能是当时太水的原因，但是一般是大牛力荐的书。</p>
+<h2 id="2-计算机网络：自顶向下"><a href="#2-计算机网络：自顶向下" class="headerlink" title="2 计算机网络：自顶向下"></a>2 计算机网络：自顶向下</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsCYHvAMX255u3jPtfmknRsYt7JRS48VvzZSIiarQTNM96pv942AbmgIA/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt></p>
+<p>这本从应用层讲到物理层，感觉这种方式学起来更轻松，我比较推荐小白看这本。</p>
+<h2 id="3-图解HTTP和图解TCP-IP"><a href="#3-图解HTTP和图解TCP-IP" class="headerlink" title="3 图解HTTP和图解TCP/IP"></a>3 图解HTTP和图解TCP/IP</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsLee9tvMJ90MGvsY1xTf696Nzs5reVs7he5Zxm6vs9Mia7tpCqFib9WnA/640?wx_fmt=jpeg" alt></p>
+<p>相较于前两本大厚书，这两本书更加亲民，小白可以买来看看，还是很适合入门的。</p>
+<h2 id="4-计算机网络"><a href="#4-计算机网络" class="headerlink" title="4 计算机网络"></a>4 计算机网络</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MspicVeFKBcEkU1GcE8YbqlKlaqZez3oA0ib6hohvOJ5nCp4ibYqm5LqibaQ/640?wx_fmt=jpeg" alt></p>
+<p>没错，就是这本教材，作为非科班选手自己看这本书，那叫一个欲仙欲死啊，看完就忘记了。</p>
+<h1 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h1><h2 id="1-深入理解计算机系统"><a href="#1-深入理解计算机系统" class="headerlink" title="1 深入理解计算机系统"></a>1 深入理解计算机系统</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsShU8y0B9b6pJ4ExOIexD8LOolfhVvAeFicg0vQXzaZqmZoj9Uj178gA/640?wx_fmt=jpeg" alt></p>
+<p>这本书不是严格意义上的操作系统书籍，而是对计算机基础和操作系统做了一个串联，可以解决你很多对于计算机的疑惑，并且对操作系统有一定理解。</p>
+<p>其实这本书还是很厚的，有一定难度，建议有一些基础后再看。</p>
+<h2 id="2-现代操作系统"><a href="#2-现代操作系统" class="headerlink" title="2 现代操作系统"></a>2 现代操作系统</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsoRGA0QC4DLZy08ybPlaLVKrYS2ricexI06zbPtuHT1VrjLC2HsXAAdA/640?wx_fmt=jpeg" alt></p>
+<p>这本书其实我没怎么看，比较详细地讲解了操作系，但是也是大家都比较推崇的书，还是那句话，很厚，慎看。</p>
+<h2 id="3-Linux内核设计与实现"><a href="#3-Linux内核设计与实现" class="headerlink" title="3 Linux内核设计与实现"></a>3 Linux内核设计与实现</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsIsAElOVjXPZaPLbqRxBDHtcN7dLOVpTxicFfMCSlRvtibypntLxJbItg/640?wx_fmt=jpeg" alt></p>
+<p>当你对操作系统有一定理解以后，这本书将为你打开学习Linux内核的大门，当然在此之前你得有一定的c语言开发能力，以及对Linux的了解。反正，我现在还没开始准备好看这本书。</p>
+<h2 id="4-Unix网络编程"><a href="#4-Unix网络编程" class="headerlink" title="4 Unix网络编程"></a>4 Unix网络编程</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MstdxG8HczJnOCP6M5C06Zt4QgKn3koJ5qLJk6R9cT2p8ZJt0PRz9Yxg/640?wx_fmt=jpeg" alt></p>
+<p>这两本书的厚度绝对让你感到绝望，其实就是讲解了Unix内核是如何实现网络通信的，其中涉及到很多网络，操作系统的知识，并且你要熟悉c语言。总之，这是一本奉为网络编程神书的存在，不过我等新手还是拿他压压泡面就好了。</p>
+<p>网上有很多博客会参照该书的内容，可以去看看它们。</p>
+<h1 id="数据结构与算法"><a href="#数据结构与算法" class="headerlink" title="数据结构与算法"></a>数据结构与算法</h1><p>不瞒你说，由于我非科班，所以算法基础比较差，数据结构是考研时跟着天勤考研指南学的，学习算法也是一路坎坷，举步维艰。还是分享几本比较靠谱的书吧。</p>
+<h2 id="1-算法导论"><a href="#1-算法导论" class="headerlink" title="1 算法导论"></a>1 算法导论</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Msian7X4kGKPeU2lEOTN6bgTKbYCRFvGp3a38OaCanfMNaaH35vQEicEmQ/640?wx_fmt=jpeg" alt></p>
+<p>你问我是不是认真的，我就是说说而已，这本书我买来没看过。</p>
+<h2 id="2-数据结构与算法（Java版）"><a href="#2-数据结构与算法（Java版）" class="headerlink" title="2 数据结构与算法（Java版）"></a>2 数据结构与算法（Java版）</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsOZ46lb6ATwho5MxHyvCmia91uVp5rd5PTGJrGiacONVibgVU5whibxt0YA/640?wx_fmt=jpeg" alt></p>
+<p>这本书对于初学者来说还是比较友好的，当然学Java的看这本。</p>
+<h2 id="3-算法图解，啊哈算法"><a href="#3-算法图解，啊哈算法" class="headerlink" title="3 算法图解，啊哈算法"></a>3 算法图解，啊哈算法</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsfZ0XycKZ0GYdtA9vD78ZGA4MHQfmDLMA2WWjmoU7VOnvM7cCHv7jKw/640?wx_fmt=jpeg" alt></p>
+<p>这两部书籍非常适合学习算法的入门，前者主要用图解的形式覆盖了大部分常用算法，包括dp，贪心等等，可以作为入门书，后者则把很多常用算法都进行了实现，包括搜索，图，树等一些比较高级的常用算法。</p>
+<h2 id="4-剑指offer"><a href="#4-剑指offer" class="headerlink" title="4 剑指offer"></a>4 剑指offer</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Msicrg4GrcBwcfVskpU2ER3ichxkZLmelObPkle2xZXQakpqJ72iazxubdQ/640?wx_fmt=jpeg" alt></p>
+<p>这本书还是要强烈推荐的，毕竟是面试题经常参考的书籍，当然最好有前面基本的铺垫再看，可能收获更大，这本书在面试之前一般都要嚼烂。</p>
+<h2 id="5-LeetCode"><a href="#5-LeetCode" class="headerlink" title="5 LeetCode"></a>5 LeetCode</h2><p>这不是一本书，是一个题库，算法么，终究还是要靠刷题来提升熟练度的。</p>
+<h1 id="Java基础"><a href="#Java基础" class="headerlink" title="Java基础"></a>Java基础</h1><h1 id="1-Java编程思想"><a href="#1-Java编程思想" class="headerlink" title="1 Java编程思想"></a>1 Java编程思想</h1><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Msxv333llv2svDSzJhMehe7MGe0dmUWMayDFkEJthXjTV5IzOgzGHUDw/640?wx_fmt=jpeg" alt></p>
+<p>这本书也是被誉为Java神书的存在了，但是对新手不友好，适合有些基础再看，当然要选择性地看。我当时大概只看了1/3</p>
+<h1 id="2-Java核心技术卷一"><a href="#2-Java核心技术卷一" class="headerlink" title="2 Java核心技术卷一"></a>2 Java核心技术卷一</h1><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Ms4k0NHxprIMXNFOPQPIgsL3JQMbwZlmTTYicmYFZaGSRwmw0VNXLtxrA/640?wx_fmt=jpeg" alt></p>
+<p>这本书还是比较适合入门的，当然，这种厚皮书要看完还是很有难度的，不过比起上面那本要简单一些</p>
+<h1 id="Java进阶"><a href="#Java进阶" class="headerlink" title="Java进阶"></a>Java进阶</h1><h2 id="1-深入理解JVM虚拟机"><a href="#1-深入理解JVM虚拟机" class="headerlink" title="1 深入理解JVM虚拟机"></a>1 深入理解JVM虚拟机</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Ms3a2wib6W7zxWmMRGeeaj7qSDgDbcSSRg4JiafJ6veibia1huSMYiaIApeOA/640?wx_fmt=jpeg" alt></p>
+<p>这本书是Java开发者必须看的书，很多jvm的文章都是提取这本书的内容。JVM是Java虚拟机，赋予了Java程序生命，所以好好看看把，我自己就已经看了三遍了。</p>
+<h2 id="2-Java并发编程实战"><a href="#2-Java并发编程实战" class="headerlink" title="2 Java并发编程实战"></a>2 Java并发编程实战</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsnJM4AZySogwnc18edVYiaibWbtZZlJt87zQ79mQxBdib1td82ceibdxQjg/640?wx_fmt=jpeg" alt></p>
+<p>这本书是Java 并发包作者写的书，所以非常权威，但是比较晦涩难懂，我看的云里雾里的，大家可以按需选择。</p>
+<h2 id="3-Java并发编程艺术"><a href="#3-Java并发编程艺术" class="headerlink" title="3 Java并发编程艺术"></a>3 Java并发编程艺术</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Ms5dloj3RticzOPib4sLQ198ibd6uukhh9mQAkylibNxZcQVgNmdgpJuuYibg/640?wx_fmt=jpeg" alt></p>
+<p>这本书是国内作者写的Java并发书籍，比上面那一本更简单易懂，适合作为并发编程的入门书籍，当然，学习并发原理之前，还是先把Java的多线程搞懂吧。</p>
+<h2 id="4-Effective-Java"><a href="#4-Effective-Java" class="headerlink" title="4 Effective Java"></a>4 Effective Java</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsqHAgLGrtTqQC6EXb9UnIw1A7xXZwzPvNzLVBcMovlicXs6GdhapZQ6w/640?wx_fmt=jpeg" alt></p>
+<p>这本书和Java编程思想一样被称为神书，主要讲的是Java的一些优化技巧和规范，没有一定开发经验的人看这本书会觉得索然无味，不知所云，所以，先搁着吧。</p>
+<h2 id="5-Java性能调优指南"><a href="#5-Java性能调优指南" class="headerlink" title="5 Java性能调优指南"></a>5 Java性能调优指南</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MswO0s5EYF4ETZ75h4mIwDnGWPDdkBSZLCypMFEH6bx3fFsYN6HFhH2w/640?wx_fmt=jpeg" alt></p>
+<p>说到JVM调优，可能会有很多的面试题浮现在你的脑海里，这本书比较权威地讲解了Java的性能调优方法，不过我还没怎么看，有空好好看看。</p>
+<h2 id="6-Netty权威指南"><a href="#6-Netty权威指南" class="headerlink" title="6 Netty权威指南"></a>6 Netty权威指南</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsVAiaXRCibH0niccx3lI8eQJEcewVbzymYIfSiafytfibqg6uY4OWjN8HXbg/640?wx_fmt=jpeg" alt></p>
+<p>Netty是基于NIO开发的网络编程框架，使用Java代码编程，其实这本书也可以放在网络或者Java Web部分。不过NIO属于JDK自带的一部分，是必须要掌握的，而对于Netty，大家如果学有余力的话也可以看看。</p>
+<h1 id="JavaWeb"><a href="#JavaWeb" class="headerlink" title="JavaWeb"></a>JavaWeb</h1><h2 id="1-深入JavaWeb技术内幕"><a href="#1-深入JavaWeb技术内幕" class="headerlink" title="1 深入JavaWeb技术内幕"></a>1 深入JavaWeb技术内幕</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsXQCMLd9PwB74EAoWDZWKslQaicJn0lkfpS8vUiba9n4rQbnN4jsJXibRQ/640?wx_fmt=jpeg" alt></p>
+<p>这本书是Java Web的集大成之作，涵盖了大部分Java Web开发的知识点，不过一本书显然无法把所有细节都讲完，但是作为Java Web的入门或者进阶书籍来看的话还是很不错的。</p>
+<h2 id="2-How-Tomcat-Works"><a href="#2-How-Tomcat-Works" class="headerlink" title="2 How Tomcat Works"></a>2 How Tomcat Works</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsvItQbtqibRdPJvHrPu5WJlJLPyP9JS7jIsM8PwvQarn2bndmoF4ricKg/640?wx_fmt=jpeg" alt></p>
+<p>Java Web很重要的一部分内容就是Tomcat，作为应用服务器，Tomcat使用Java开发，其源代码和架构设计都是经典之作。</p>
+<p>这是一本讲解Tomcat基本原理的书籍，很好地通过剖析源码来讲解Tomcat的内部结构和运行机制，但是需要一定的基础才能够看懂，我还没看这本书，日后再拜读。</p>
+<h2 id="3-Tomcat架构解析"><a href="#3-Tomcat架构解析" class="headerlink" title="3 Tomcat架构解析"></a>3 Tomcat架构解析</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_png/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsR7yXam5xjrMJc5FajShzqK8ib5FcIBUqGdzcvcJe6XEuW8Vyc5PKRqA/640?wx_fmt=png" alt></p>
+<p>和上面这本书类似，主要讲解Tomcat原理和架构，，要看懂这本书的话，前提是你要对Java基础，NIO以及设计模式有所了解。这本书我也还没看。</p>
+<h2 id="4-Spring实战"><a href="#4-Spring实战" class="headerlink" title="4 Spring实战"></a>4 Spring实战</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsE6AxZgMjGh3HYb1tblQVUGk6FjOQ74omphiaqrE2VZgqY8aianHaA9VQ/640?wx_fmt=jpeg" alt></p>
+<p>这本书适合作为Spring的入门书籍，把Spring的概念，使用方式等内容都讲的比较清楚。并且也介绍了Spring MVC的部分内容，Spring框架还是更注重实践的，所以跟着书上的内容去做吧。</p>
+<h2 id="5-Spring源码深度解析"><a href="#5-Spring源码深度解析" class="headerlink" title="5 Spring源码深度解析"></a>5 Spring源码深度解析</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Msia1wMFrvWicOC3kEiazfqS4cz9eXmVdwmu1G7ucIOUUtx914KlicxIwuOA/640?wx_fmt=jpeg" alt></p>
+<p>学会Spring基础后，可以花点时间看看这本讲源码的书了，这本书对于新手来说不太友好，主要也是因为Spring的代码结构比较复杂，大家也可以看一些博客来完成对源码的学习。</p>
+<h2 id="6-Spring-MVC学习指南"><a href="#6-Spring-MVC学习指南" class="headerlink" title="6 Spring MVC学习指南"></a>6 Spring MVC学习指南</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Msibbox9gJ2wV8EZofhrs4RXLcZpXCUboGCChzf2NNScibtVCytt1iamwdw/640?wx_fmt=jpeg" alt></p>
+<p>本书是一本Spring MVC的教程，内容细致、讲解清晰，非常适合Web开发者和想要使用Spring MVC开发基于Java的Web应用的读者阅读。但是由于出的比较早，所以不太适合现在版本。</p>
+<h2 id="6-Maven实战"><a href="#6-Maven实战" class="headerlink" title="6 Maven实战"></a>6 Maven实战</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Ms9k4687xRSru4FicK1Mia6xO0Z6cBQVuYibfzUHlq2Kh9XpN5Oel37tbibA/640?wx_fmt=jpeg" alt></p>
+<p>Maven是Java Web开发中不可缺少的一部分，如果想要全面了解其实现原理的话，可以看看这本书。</p>
+<h1 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h1><h2 id="1-数据库原理"><a href="#1-数据库原理" class="headerlink" title="1 数据库原理"></a>1 数据库原理</h2><p>数据库原理应该是教材吧，这本书作为数据库入门来说还是可以的，毕竟不是专门做DB的，看大厚书用处不大，这本书把数据库的基本概念都讲完了。</p>
+<h2 id="1-sql必知必会"><a href="#1-sql必知必会" class="headerlink" title="1 sql必知必会"></a>1 sql必知必会</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsDz6nCG9LhHxjVVEIrB5n03443oFENiak2kwJ1Eicj0diacfp67icUAFjYg/640?wx_fmt=jpeg" alt></p>
+<p>这本书主要是讲解sql语句怎么写，毕竟数据库最重要的一点就是要熟练地使用sql语句，当然这本书也可以当做工具书来使用。</p>
+<h2 id="2-深入浅出MySQL"><a href="#2-深入浅出MySQL" class="headerlink" title="2 深入浅出MySQL"></a>2 深入浅出MySQL</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Msgwk2uEmyhyHlTAbEL2GHbW0BQaXSUm5myDq9XbJWEa6eQBXpcyo2vg/640?wx_fmt=jpeg" alt></p>
+<p>这本书适合作为MySQL的学习书籍，当你有了一定的MySQL使用经验后，可以看看它，该书从数据库的基础、开发、优化、管理维护和架构5个方面对MySQL进行了详细的介绍，讲的不算特别深，但是足够我们使用了。这本书我也只看了一部分。</p>
+<h2 id="3-MySQL技术内幕：innodb存储引擎"><a href="#3-MySQL技术内幕：innodb存储引擎" class="headerlink" title="3 MySQL技术内幕：innodb存储引擎"></a>3 MySQL技术内幕：innodb存储引擎</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsvicPSEMHB2AyGQxBNic3r3LBEukSXlTTxKExRazE2HEDLtXEqVNkq6hA/640?wx_fmt=jpeg" alt></p>
+<p>看完上面那本书以后，对MySQL算是比较熟悉了，不过对于面试中常考的innodb引擎，还是推荐一下这本书把，专门讲解了innodb存储引擎的相关内容。我还没有细看，但是内容足够你学好innodb了。</p>
+<h2 id="4-高性能Mysql"><a href="#4-高性能Mysql" class="headerlink" title="4 高性能Mysql"></a>4 高性能Mysql</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsfLtH0gzib1kXiab1iaB7T7W4DqJhEIY7DaY6XMskos6OSS8MwblfexERg/640?wx_fmt=jpeg" alt></p>
+<p>这本书可以说是很厚了，更适合DBA拜读，讲的太详细了，打扰了。</p>
+<h2 id="5-Redis实战"><a href="#5-Redis实战" class="headerlink" title="5 Redis实战"></a>5 Redis实战</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MscrpdBT6nbJ32zd46Q0cjkH7ReTjuE7OibZpMZPbhNe74t6iagU03mO5A/640?wx_fmt=jpeg" alt></p>
+<p>和MySQL一样，学习Redis的第一步最好也是先实战一下，通过这本书就可以较好地掌握Redis的使用方法，以及相关数据结构了。</p>
+<h2 id="6-Redis设计与实现"><a href="#6-Redis设计与实现" class="headerlink" title="6 Redis设计与实现"></a>6 Redis设计与实现</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Msre7k7xFaH32lu2ibDibNbkIpnRvK4XP5KJicLfZicteOvkFbttIZ8bZKcg/640?wx_fmt=jpeg" alt></p>
+<p>该书全面而完整地讲解了 Redis 的内部运行机制,对 Redis 的大多数单机功能以及所有多机功能的实现原理进行了介绍。这本书把Redis的基本原理讲的一清二楚，包括数据结构，持久化，集群等内容，有空应该看看。</p>
+<h1 id="分布式"><a href="#分布式" class="headerlink" title="分布式"></a>分布式</h1><h2 id="1-分布式Java应用"><a href="#1-分布式Java应用" class="headerlink" title="1 分布式Java应用"></a>1 分布式Java应用</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsDM0fL3YQ81tyskxJRdW4raFbwCUIMVCXw3aQ594DR9ib6OdTVLm7DZg/640?wx_fmt=jpeg" alt></p>
+<p>这本书是淘宝大牛写的书，主要讲的就是使用rpc来构建分布式的Java应用，讲了很多基础的东西，可以作为入门书籍，不过这本书我之前没有遇到，所以没看过。</p>
+<h2 id="2-大型网站技术架构"><a href="#2-大型网站技术架构" class="headerlink" title="2 大型网站技术架构"></a>2 大型网站技术架构</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Ms54ygz1Uicdj9SkbbewcyA78SsESGDNn3VNjTDTDhW18G406UaOlCNXA/640?wx_fmt=jpeg" alt></p>
+<p>这本淘宝系技术指南还是非常值得推崇的，可以说是把大型网站的现代架构进行了一次简单的总结，内容涵盖了各方面，主要讲的是概念，很适合没接触过架构的同学入门。看完以后你会觉得后端技术原来这么博大精深。</p>
+<h2 id="3-大型分布式网站架构设计与实践"><a href="#3-大型分布式网站架构设计与实践" class="headerlink" title="3 大型分布式网站架构设计与实践"></a>3 大型分布式网站架构设计与实践</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsicmqxK5NtFkiaEEMuOicZUGWQlloNzIhsKvrLibZYFOic0MtTo2iciaxrUH3w/640?wx_fmt=jpeg" alt></p>
+<p>这本书与上面一书相比更倾向于实践，主要讲的是分布式架构的一些解决方案，但是如果你没有接触过相关的场景，可能会看的云里雾里。</p>
+<h2 id="4-分布式服务框架原理与实践"><a href="#4-分布式服务框架原理与实践" class="headerlink" title="4 分布式服务框架原理与实践"></a>4 分布式服务框架原理与实践</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsnYBbshOibs9eMXMpsb4BAMNe2Gl0zfbdoEnwVkgYYZqnHE8jTNI5x7Q/640?wx_fmt=jpeg" alt></p>
+<p>上面那本书讲的是分布式架构的实践，而这本书更专注于分布式服务的原理讲解和对应实践，很好地讲述了分布式服务的基本概念，相关技术，以及解决方案等，对于想要学习分布式服务框架的同学来说是本好书。</p>
+<h2 id="5-大型网站系统与Java中间件开发实践"><a href="#5-大型网站系统与Java中间件开发实践" class="headerlink" title="5 大型网站系统与Java中间件开发实践"></a>5 大型网站系统与Java中间件开发实践</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsA0cLZgXBkHU0FtBGaD3WusGHu9VGgAeFGy2YaK7dSlOibLnVtxMZHDA/640?wx_fmt=jpeg" alt></p>
+<p>话说这些书的名字真实够长的。这本书也是阿里系出品，主要讲的是大型网站系统以及使用的相关中间件，毕竟阿里是中间件大户，所以很多中间件对应用再网站系统中，对于想学习这方面技术的同学来说可以一看。</p>
+<h2 id="6-从Paxos到Zookeeper分布式一致性原理与实践"><a href="#6-从Paxos到Zookeeper分布式一致性原理与实践" class="headerlink" title="6 从Paxos到Zookeeper分布式一致性原理与实践"></a>6 从Paxos到Zookeeper分布式一致性原理与实践</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Msl8vtjticonEQopz007VDV1ZqA024AaSWicLpW12ib0bqAc5ibNK5XpKGGg/640?wx_fmt=jpeg" alt></p>
+<p>说起分布式系统，我们需要了解它的原理，相关理论及技术，这本书也是从这个角度出发，讲解了分布式系统的一些常用概念，并且带出了分布式一哥zookeeper，可以说是想学分布式技术的同学必看的书籍。</p>
+<h2 id="7-大规模分布式存储系统"><a href="#7-大规模分布式存储系统" class="headerlink" title="7 大规模分布式存储系统"></a>7 大规模分布式存储系统</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsSOY9dKWKloIqmyiarqrJr3yZDchPndlWFV6k5QyvdLoVA8mWtcfpT4A/640?wx_fmt=jpeg" alt></p>
+<p>这本书是阿里巴巴oceanbase核心开发大佬写的书，讲的是分布式存储相关的原理和解决方案，该书不是很厚，如果想做存储方向的同学可以看看。</p>
+<h1 id="云计算"><a href="#云计算" class="headerlink" title="云计算"></a>云计算</h1><p>云计算方面的内容主要是我在实习阶段接触的，如果只是应用开发方向的话这块不懂也罢。主要还是看个人兴趣。</p>
+<h2 id="1-OpenStack设计与实现"><a href="#1-OpenStack设计与实现" class="headerlink" title="1 OpenStack设计与实现"></a>1 OpenStack设计与实现</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsHhNAAvX06XgaWh8iaxT0Kqj8fdERs48qkA8wSxpnva9WWrMx9O7ibEBQ/640?wx_fmt=jpeg" alt></p>
+<p>OpenStack是基于KVM技术的一套私有云生态。这本书很好地讲解了OpenStack的一些基本原理，包括各个组件的设计与实现，比起另一本《OpenStack王者归来》简单易懂的多。当然，前提最好是你对Linux内核和网络有所了解。</p>
+<h2 id="2-docker入门与实践"><a href="#2-docker入门与实践" class="headerlink" title="2 docker入门与实践"></a>2 docker入门与实践</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsHR3BrVSXFjib3REYKciasfa8VQ5iaPKdwEp6I73ONWZDbroKSicYib4QvsQ/640?wx_fmt=jpeg" alt></p>
+<p>docker是现在应用部署的主流方案了，所以了解一下还是挺有必要的，这本书作为入门书籍足够让你会使用docker了。</p>
+<h2 id="3-kubenetes权威指南"><a href="#3-kubenetes权威指南" class="headerlink" title="3 kubenetes权威指南"></a>3 kubenetes权威指南</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MspWgNeRfHAzCxNicg1BOFIYL2jUgGB7CgCXxUqfVsPRicTppk49HNSNlQ/640?wx_fmt=jpeg" alt></p>
+<p>kubenetes是docker的集群解决方案，也是一个微服务的解决方案，所以这本书涉及的内容非常多，需要有网络，操作系统以及docker相关的基础。我看这本书的时候可以说是非常晕的。</p>
+<h1 id="大数据"><a href="#大数据" class="headerlink" title="大数据"></a>大数据</h1><p>和云计算一样，大数据方面的内容也不算是Java后端技术栈所需要的，但是这也能为你加分，并且让你跟大数据开发的岗位沾点边，何乐而不为。</p>
+<h2 id="1-大数据技术原理与应用"><a href="#1-大数据技术原理与应用" class="headerlink" title="1 大数据技术原理与应用"></a>1 大数据技术原理与应用</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_png/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MscJ1Mvq3qTe5fVOXUvyqPHzPZvEvDjhsQVoicfjCibkxRDVWOjyj0DmFA/640?wx_fmt=png" alt></p>
+<p>作为大数据方面的一本教材，厦大教授写的这本书还是非常赞的，从最基础的原理方面讲解了Hadoop的生态系统，并且把每个组件的原理都讲得比较清楚，另外也加入了spark，storm等内容，可以说是大数据入门非常好的一本书了。</p>
+<h2 id="2-Hadoop实战"><a href="#2-Hadoop实战" class="headerlink" title="2 Hadoop实战"></a>2 Hadoop实战</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MsbqrsXhbiclTXRA3gI8wibEV5pNJ11XAN3SEVu0zXh4vMEN942MqblpOw/640?wx_fmt=jpeg" alt></p>
+<p>这本书很厚，我买的时候大概看了一遍，一头雾水。所以建议先看上面那本书，再来看更加进阶的书籍，否则可能就是浪费时间了。</p>
+<h2 id="3-Hadoop权威指南"><a href="#3-Hadoop权威指南" class="headerlink" title="3 Hadoop权威指南"></a>3 Hadoop权威指南</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Ms1LB8BJFyw8npMNjUajzicmZRO7QibDubblqAl88OuN6WAVtAUqILGeXA/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt></p>
+<p>这本书主要对Hadoop生态中组件进行详细讲解，有点太详细了，如果不是做大数据方向的话，可以不看。</p>
+<h1 id="其他："><a href="#其他：" class="headerlink" title="其他："></a>其他：</h1><h2 id="1-Git权威指南"><a href="#1-Git权威指南" class="headerlink" title="1 Git权威指南"></a>1 Git权威指南</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5Msz3J8ciah5m58wtiaLSnT7dHIpcVqBVggn2wmS6SVsGjvSeB5OVc3rZ0w/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt></p>
+<p>Git是现在大公司主流的代码协同工具，如果你想要了解其底层原理，可以看看这本书。</p>
+<h2 id="2-重构"><a href="#2-重构" class="headerlink" title="2 重构"></a>2 重构</h2><p><img src="https://mmbiz.qpic.cn/mmbiz_jpg/XHh0SksQZPOTBB6VxkibFrAMBJ8ibbR5MssH1SXJian4O6D85sZF2OseyGmKJjxE0aJ2GFlNlPdPmZMibwJahTIjTw/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" alt></p>
+<p>这本书主要介绍的是代码重构的一些指导思想和最佳实践。有重构需求的同学可以看看。</p>
+<h2 id="3-n"><a href="#3-n" class="headerlink" title="3 - n"></a>3 - n</h2><p>其他方面的书籍就太多了，比如软件工程方面的，测试方面，Linux方面，以及讲一些程序员自我提升的书籍，就不一一列举了，因为这部分的内容可以不归入Java后端的技术栈。</p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/干货资源/" rel="tag"># 干货资源</a>
+          
+            <a href="/tags/书单/" rel="tag"># 书单</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/10/黄小斜/Java工程师修炼之路（校招总结）/" rel="next" title="Java工程师修炼之路（校招总结）">
+                <i class="fa fa-chevron-left"></i> Java工程师修炼之路（校招总结）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/10/并发编程/Java并发指南10：Java 读写锁 ReentrantReadWriteLock 源码分析/" rel="prev" title="Java并发指南10：Java 读写锁 ReentrantReadWriteLock 源码分析">
+                Java并发指南10：Java 读写锁 ReentrantReadWriteLock 源码分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#网络"><span class="nav-number">1.</span> <span class="nav-text">网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-TCP-IP卷一"><span class="nav-number">1.1.</span> <span class="nav-text">1 TCP/IP卷一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-计算机网络：自顶向下"><span class="nav-number">1.2.</span> <span class="nav-text">2 计算机网络：自顶向下</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-图解HTTP和图解TCP-IP"><span class="nav-number">1.3.</span> <span class="nav-text">3 图解HTTP和图解TCP/IP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-计算机网络"><span class="nav-number">1.4.</span> <span class="nav-text">4 计算机网络</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#操作系统"><span class="nav-number">2.</span> <span class="nav-text">操作系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-深入理解计算机系统"><span class="nav-number">2.1.</span> <span class="nav-text">1 深入理解计算机系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-现代操作系统"><span class="nav-number">2.2.</span> <span class="nav-text">2 现代操作系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Linux内核设计与实现"><span class="nav-number">2.3.</span> <span class="nav-text">3 Linux内核设计与实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Unix网络编程"><span class="nav-number">2.4.</span> <span class="nav-text">4 Unix网络编程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据结构与算法"><span class="nav-number">3.</span> <span class="nav-text">数据结构与算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-算法导论"><span class="nav-number">3.1.</span> <span class="nav-text">1 算法导论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-数据结构与算法（Java版）"><span class="nav-number">3.2.</span> <span class="nav-text">2 数据结构与算法（Java版）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-算法图解，啊哈算法"><span class="nav-number">3.3.</span> <span class="nav-text">3 算法图解，啊哈算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-剑指offer"><span class="nav-number">3.4.</span> <span class="nav-text">4 剑指offer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-LeetCode"><span class="nav-number">3.5.</span> <span class="nav-text">5 LeetCode</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java基础"><span class="nav-number">4.</span> <span class="nav-text">Java基础</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Java编程思想"><span class="nav-number">5.</span> <span class="nav-text">1 Java编程思想</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Java核心技术卷一"><span class="nav-number">6.</span> <span class="nav-text">2 Java核心技术卷一</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java进阶"><span class="nav-number">7.</span> <span class="nav-text">Java进阶</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-深入理解JVM虚拟机"><span class="nav-number">7.1.</span> <span class="nav-text">1 深入理解JVM虚拟机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Java并发编程实战"><span class="nav-number">7.2.</span> <span class="nav-text">2 Java并发编程实战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Java并发编程艺术"><span class="nav-number">7.3.</span> <span class="nav-text">3 Java并发编程艺术</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Effective-Java"><span class="nav-number">7.4.</span> <span class="nav-text">4 Effective Java</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Java性能调优指南"><span class="nav-number">7.5.</span> <span class="nav-text">5 Java性能调优指南</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Netty权威指南"><span class="nav-number">7.6.</span> <span class="nav-text">6 Netty权威指南</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JavaWeb"><span class="nav-number">8.</span> <span class="nav-text">JavaWeb</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-深入JavaWeb技术内幕"><span class="nav-number">8.1.</span> <span class="nav-text">1 深入JavaWeb技术内幕</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-How-Tomcat-Works"><span class="nav-number">8.2.</span> <span class="nav-text">2 How Tomcat Works</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Tomcat架构解析"><span class="nav-number">8.3.</span> <span class="nav-text">3 Tomcat架构解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Spring实战"><span class="nav-number">8.4.</span> <span class="nav-text">4 Spring实战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Spring源码深度解析"><span class="nav-number">8.5.</span> <span class="nav-text">5 Spring源码深度解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Spring-MVC学习指南"><span class="nav-number">8.6.</span> <span class="nav-text">6 Spring MVC学习指南</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Maven实战"><span class="nav-number">8.7.</span> <span class="nav-text">6 Maven实战</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据库"><span class="nav-number">9.</span> <span class="nav-text">数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-数据库原理"><span class="nav-number">9.1.</span> <span class="nav-text">1 数据库原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-sql必知必会"><span class="nav-number">9.2.</span> <span class="nav-text">1 sql必知必会</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-深入浅出MySQL"><span class="nav-number">9.3.</span> <span class="nav-text">2 深入浅出MySQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-MySQL技术内幕：innodb存储引擎"><span class="nav-number">9.4.</span> <span class="nav-text">3 MySQL技术内幕：innodb存储引擎</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-高性能Mysql"><span class="nav-number">9.5.</span> <span class="nav-text">4 高性能Mysql</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Redis实战"><span class="nav-number">9.6.</span> <span class="nav-text">5 Redis实战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Redis设计与实现"><span class="nav-number">9.7.</span> <span class="nav-text">6 Redis设计与实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式"><span class="nav-number">10.</span> <span class="nav-text">分布式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-分布式Java应用"><span class="nav-number">10.1.</span> <span class="nav-text">1 分布式Java应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-大型网站技术架构"><span class="nav-number">10.2.</span> <span class="nav-text">2 大型网站技术架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-大型分布式网站架构设计与实践"><span class="nav-number">10.3.</span> <span class="nav-text">3 大型分布式网站架构设计与实践</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-分布式服务框架原理与实践"><span class="nav-number">10.4.</span> <span class="nav-text">4 分布式服务框架原理与实践</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-大型网站系统与Java中间件开发实践"><span class="nav-number">10.5.</span> <span class="nav-text">5 大型网站系统与Java中间件开发实践</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-从Paxos到Zookeeper分布式一致性原理与实践"><span class="nav-number">10.6.</span> <span class="nav-text">6 从Paxos到Zookeeper分布式一致性原理与实践</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-大规模分布式存储系统"><span class="nav-number">10.7.</span> <span class="nav-text">7 大规模分布式存储系统</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#云计算"><span class="nav-number">11.</span> <span class="nav-text">云计算</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-OpenStack设计与实现"><span class="nav-number">11.1.</span> <span class="nav-text">1 OpenStack设计与实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-docker入门与实践"><span class="nav-number">11.2.</span> <span class="nav-text">2 docker入门与实践</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-kubenetes权威指南"><span class="nav-number">11.3.</span> <span class="nav-text">3 kubenetes权威指南</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#大数据"><span class="nav-number">12.</span> <span class="nav-text">大数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-大数据技术原理与应用"><span class="nav-number">12.1.</span> <span class="nav-text">1 大数据技术原理与应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Hadoop实战"><span class="nav-number">12.2.</span> <span class="nav-text">2 Hadoop实战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Hadoop权威指南"><span class="nav-number">12.3.</span> <span class="nav-text">3 Hadoop权威指南</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他："><span class="nav-number">13.</span> <span class="nav-text">其他：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Git权威指南"><span class="nav-number">13.1.</span> <span class="nav-text">1 Git权威指南</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-重构"><span class="nav-number">13.2.</span> <span class="nav-text">2 重构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-n"><span class="nav-number">13.3.</span> <span class="nav-text">3 - n</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">13.4.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">13.4.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">13.4.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

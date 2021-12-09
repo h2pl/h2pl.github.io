@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content=",">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="今天我们来探索一下HashSet，TreeSet与LinkedHashSet的基本原理与源码实现，由于这三个set都是基于之前文章的三个map进行实现的，所以推荐大家先看一下前面有关map的文章，结合使用味道更佳。 具体代码在我的GitHub中可以找到 https://github.com/h2pl/MyTech 文章首发于我的个人博客： https://h2pl.github.io/2018/0">
+<meta name="keywords" content="Java集合框架">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Java集合详解7：HashSet，TreeSet与LinkedHashSet">
+<meta property="og:url" content="http://yoursite.com/wait/collection7.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="今天我们来探索一下HashSet，TreeSet与LinkedHashSet的基本原理与源码实现，由于这三个set都是基于之前文章的三个map进行实现的，所以推荐大家先看一下前面有关map的文章，结合使用味道更佳。 具体代码在我的GitHub中可以找到 https://github.com/h2pl/MyTech 文章首发于我的个人博客： https://h2pl.github.io/2018/0">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://segmentfault.com/img/remote/1460000004854595">
+<meta property="og:updated_time" content="2021-11-24T08:03:24.063Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java集合详解7：HashSet，TreeSet与LinkedHashSet">
+<meta name="twitter:description" content="今天我们来探索一下HashSet，TreeSet与LinkedHashSet的基本原理与源码实现，由于这三个set都是基于之前文章的三个map进行实现的，所以推荐大家先看一下前面有关map的文章，结合使用味道更佳。 具体代码在我的GitHub中可以找到 https://github.com/h2pl/MyTech 文章首发于我的个人博客： https://h2pl.github.io/2018/0">
+<meta name="twitter:image" content="https://segmentfault.com/img/remote/1460000004854595">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/wait/collection7.html">
+
+
+
+
+
+  <title>Java集合详解7：HashSet，TreeSet与LinkedHashSet | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline">Java集合详解7：HashSet，TreeSet与LinkedHashSet</h1>
+
+
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <div id="vip-container"><p>今天我们来探索一下HashSet，TreeSet与LinkedHashSet的基本原理与源码实现，由于这三个set都是基于之前文章的三个map进行实现的，所以推荐大家先看一下前面有关map的文章，结合使用味道更佳。</p>
+<p>具体代码在我的GitHub中可以找到</p>
+<p><a href="https://github.com/h2pl/MyTech" target="_blank" rel="noopener">https://github.com/h2pl/MyTech</a></p>
+<p>文章首发于我的个人博客：</p>
+<p><a href="https://h2pl.github.io/2018/05/12/collection7" target="_blank" rel="noopener">https://h2pl.github.io/2018/05/12/collection7</a></p>
+<p>更多关于Java后端学习的内容请到我的CSDN博客上查看：</p>
+<p><a href="https://blog.csdn.net/a724888" target="_blank" rel="noopener">https://blog.csdn.net/a724888</a></p>
+<p>我的个人博客主要发原创文章，也欢迎浏览<br><a href="https://h2pl.github.io/" target="_blank" rel="noopener">https://h2pl.github.io/</a></p>
+<p>本文参考<br><a href="http://cmsblogs.com/?p=599" target="_blank" rel="noopener">http://cmsblogs.com/?p=599</a></p>
+<a id="more"></a>
+
+<h1 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><pre><code>public class HashSet&lt;E&gt;
+    extends AbstractSet&lt;E&gt;
+    implements Set&lt;E&gt;, Cloneable, java.io.Serializable</code></pre><p>HashSet继承AbstractSet类，实现Set、Cloneable、Serializable接口。其中AbstractSet提供 Set 接口的骨干实现，从而最大限度地减少了实现此接口所需的工作。<br>==Set接口是一种不包括重复元素的Collection，它维持它自己的内部排序，所以随机访问没有任何意义。==</p>
+<p>本文基于1.8jdk进行源码分析。</p>
+<p> 基本属性</p>
+<p>基于HashMap实现，底层使用HashMap保存所有元素</p>
+<pre><code>private transient HashMap&lt;E,Object&gt; map;
+
+//定义一个Object对象作为HashMap的value
+private static final Object PRESENT = new Object();</code></pre><p> 构造函数</p>
+<pre><code>/**
+     * 默认构造函数
+     * 初始化一个空的HashMap，并使用默认初始容量为16和加载因子0.75。
+     */
+    public HashSet() {
+        map = new HashMap&lt;&gt;();
+    }
+
+    /**
+     * 构造一个包含指定 collection 中的元素的新 set。
+     */
+    public HashSet(Collection&lt;? extends E&gt; c) {
+        map = new HashMap&lt;&gt;(Math.max((int) (c.size()/.75f) + 1, 16));
+        addAll(c);
+    }
+
+    /**
+     * 构造一个新的空 set，其底层 HashMap 实例具有指定的初始容量和指定的加载因子
+     */
+    public HashSet(int initialCapacity, float loadFactor) {
+        map = new HashMap&lt;&gt;(initialCapacity, loadFactor);
+    }
+
+    /**
+     * 构造一个新的空 set，其底层 HashMap 实例具有指定的初始容量和默认的加载因子（0.75）。
+     */
+    public HashSet(int initialCapacity) {
+       map = new HashMap&lt;&gt;(initialCapacity);
+    }
+
+    /**
+     * 在API中我没有看到这个构造函数，今天看源码才发现（原来访问权限为包权限，不对外公开的）
+     * 以指定的initialCapacity和loadFactor构造一个新的空链接哈希集合。
+     * dummy 为标识 该构造函数主要作用是对LinkedHashSet起到一个支持作用
+     */
+    HashSet(int initialCapacity, float loadFactor, boolean dummy) {
+       map = new LinkedHashMap&lt;&gt;(initialCapacity, loadFactor);
+    }
+ 从构造函数中可以看出HashSet所有的构造都是构造出一个新的HashMap，其中最后一个构造函数，为包访问权限是不对外公开，仅仅只在使用LinkedHashSet时才会发生作用。</code></pre><h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p> 既然HashSet是基于HashMap，那么对于HashSet而言，其方法的实现过程是非常简单的。</p>
+<pre><code>public Iterator&lt;E&gt; iterator() {
+        return map.keySet().iterator();
+    }</code></pre><blockquote>
+<p>iterator()方法返回对此 set 中元素进行迭代的迭代器。返回元素的顺序并不是特定的。</p>
+<p>底层调用HashMap的keySet返回所有的key，这点反应了HashSet中的所有元素都是保存在HashMap的key中，value则是使用的PRESENT对象，该对象为static final。</p>
+</blockquote>
+<pre><code>public int size() {
+        return map.size();
+    }
+   size()返回此 set 中的元素的数量（set 的容量）。底层调用HashMap的size方法，返回HashMap容器的大小。
+
+public boolean isEmpty() {
+        return map.isEmpty();
+    }
+    isEmpty()，判断HashSet()集合是否为空，为空返回 true，否则返回false。
+
+public boolean contains(Object o) {
+        return map.containsKey(o);
+}
+
+public boolean containsKey(Object key) {
+    return getNode(hash(key), key) != null;
+}
+
+//最终调用该方法进行节点查找
+final Node&lt;K,V&gt; getNode(int hash, Object key) {
+    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; first, e; int n; K k;
+    //先检查桶的头结点是否存在
+    if ((tab = table) != null &amp;&amp; (n = tab.length) &gt; 0 &amp;&amp;
+        (first = tab[(n - 1) &amp; hash]) != null) {
+        if (first.hash == hash &amp;&amp; // always check first node
+            ((k = first.key) == key || (key != null &amp;&amp; key.equals(k))))
+            return first;
+            //不是头结点，则遍历链表，如果是树节点则使用树节点的方法遍历，直到找到，或者为null
+        if ((e = first.next) != null) {
+            if (first instanceof TreeNode)
+                return ((TreeNode&lt;K,V&gt;)first).getTreeNode(hash, key);
+            do {
+                if (e.hash == hash &amp;&amp;
+                    ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))
+                    return e;
+            } while ((e = e.next) != null);
+        }
+    }
+    return null;
+}</code></pre><p>contains()，判断某个元素是否存在于HashSet()中，存在返回true，否则返回false。更加确切的讲应该是要满足这种关系才能返回true：(o==null ? e==null : o.equals(e))。底层调用containsKey判断HashMap的key值是否为空。</p>
+<pre><code>public boolean add(E e) {
+        return map.put(e, PRESENT)==null;
+}
+
+public V put(K key, V value) {
+    return putVal(hash(key), key, value, false, true);
+}
+
+map的put方法：
+final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+               boolean evict) {
+    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, i;
+
+    //确认初始化
+    if ((tab = table) == null || (n = tab.length) == 0)
+        n = (tab = resize()).length;
+
+    //如果桶为空，直接插入新元素，也就是entry
+    if ((p = tab[i = (n - 1) &amp; hash]) == null)
+        tab[i] = newNode(hash, key, value, null);
+    else {
+        Node&lt;K,V&gt; e; K k;
+        //如果冲突，分为三种情况
+        //key相等时让旧entry等于新entry即可
+        if (p.hash == hash &amp;&amp;
+            ((k = p.key) == key || (key != null &amp;&amp; key.equals(k))))
+            e = p;
+        //红黑树情况
+        else if (p instanceof TreeNode)
+            e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(this, tab, hash, key, value);
+        else {
+            //如果key不相等，则连成链表
+            for (int binCount = 0; ; ++binCount) {
+                if ((e = p.next) == null) {
+                    p.next = newNode(hash, key, value, null);
+                    if (binCount &gt;= TREEIFY_THRESHOLD - 1) // -1 for 1st
+                        treeifyBin(tab, hash);
+                    break;
+                }
+                if (e.hash == hash &amp;&amp;
+                    ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))
+                    break;
+                p = e;
+            }
+        }
+        if (e != null) { // existing mapping for key
+            V oldValue = e.value;
+            if (!onlyIfAbsent || oldValue == null)
+                e.value = value;
+            afterNodeAccess(e);
+            return oldValue;
+        }
+    }
+    ++modCount;
+    if (++size &gt; threshold)
+        resize();
+    afterNodeInsertion(evict);
+    return null;
+}</code></pre><blockquote>
+<p>这里注意一点，hashset只是不允许重复的元素加入，而不是不允许元素连成链表，因为只要key的equals方法判断为true时它们是相等的，此时会发生value的替换，因为所有entry的value一样，所以和没有插入时一样的。</p>
+<p>而当两个hashcode相同但key不相等的entry插入时，仍然会连成一个链表，长度超过8时依然会和hashmap一样扩展成红黑树，看完源码之后笔者才明白自己之前理解错了。所以看源码还是蛮有好处的。hashset基本上就是使用hashmap的方法再次实现了一遍而已，只不过value全都是同一个object，让你以为相同元素没有插入，事实上只是value替换成和原来相同的值而已。</p>
+</blockquote>
+<p>当add方法发生冲突时，如果key相同，则替换value，如果key不同，则连成链表。       </p>
+<p>add()如果此 set 中尚未包含指定元素，则添加指定元素。如果此Set没有包含满足(e==null ? e2==null : e.equals(e2)) 的e2时，则将e2添加到Set中，否则不添加且返回false。</p>
+<p>由于底层使用HashMap的put方法将key = e，value=PRESENT构建成key-value键值对，当此e存在于HashMap的key中，则value将会覆盖原有value，但是key保持不变，所以如果将一个已经存在的e元素添加中HashSet中，新添加的元素是不会保存到HashMap中，所以这就满足了HashSet中元素不会重复的特性。</p>
+<pre><code>public boolean remove(Object o) {
+    return map.remove(o)==PRESENT;
+}</code></pre><p>remove如果指定元素存在于此 set 中，则将其移除。底层使用HashMap的remove方法删除指定的Entry。</p>
+<pre><code>public void clear() {
+    map.clear();
+}</code></pre><p>clear从此 set 中移除所有元素。底层调用HashMap的clear方法清除所有的Entry。</p>
+<pre><code>public Object clone() {
+        try {
+            HashSet&lt;E&gt; newSet = (HashSet&lt;E&gt;) super.clone();
+            newSet.map = (HashMap&lt;E, Object&gt;) map.clone();
+            return newSet;
+        } catch (CloneNotSupportedException e) {
+            throw new InternalError();
+        }
+    }</code></pre><p>clone返回此 HashSet 实例的浅表副本：并没有复制这些元素本身。</p>
+<p>后记：</p>
+<blockquote>
+<p>由于HashSet底层使用了HashMap实现，使其的实现过程变得非常简单，如果你对HashMap比较了解，那么HashSet简直是小菜一碟。有两个方法对HashMap和HashSet而言是非常重要的，下篇将详细讲解hashcode和equals。</p>
+</blockquote>
+<h1 id="TreeSet"><a href="#TreeSet" class="headerlink" title="TreeSet"></a>TreeSet</h1><p>与HashSet是基于HashMap实现一样，TreeSet同样是基于TreeMap实现的。在《Java提高篇（二七）—–TreeMap》中LZ详细讲解了TreeMap实现机制，如果客官详情看了这篇博文或者多TreeMap有比较详细的了解，那么TreeSet的实现对您是喝口水那么简单。</p>
+<h2 id="TreeSet定义"><a href="#TreeSet定义" class="headerlink" title="TreeSet定义"></a>TreeSet定义</h2><p>我们知道TreeMap是一个有序的二叉树，那么同理TreeSet同样也是一个有序的，它的作用是提供有序的Set集合。通过源码我们知道TreeSet基础AbstractSet，实现NavigableSet、Cloneable、Serializable接口。</p>
+<p>其中AbstractSet提供 Set 接口的骨干实现，从而最大限度地减少了实现此接口所需的工作。</p>
+<p>NavigableSet是扩展的 SortedSet，具有了为给定搜索目标报告最接近匹配项的导航方法，这就意味着它支持一系列的导航方法。比如查找与指定目标最匹配项。Cloneable支持克隆，Serializable支持序列化。</p>
+<pre><code>public class TreeSet&lt;E&gt; extends AbstractSet&lt;E&gt;
+    implements NavigableSet&lt;E&gt;, Cloneable, java.io.Serializable</code></pre><p>同时在TreeSet中定义了如下几个变量。</p>
+<pre><code>private transient NavigableMap&lt;E,Object&gt; m;
+
+//PRESENT会被当做Map的value与key构建成键值对
+ private static final Object PRESENT = new Object();</code></pre><p>其构造方法：</p>
+<pre><code>//默认构造方法，根据其元素的自然顺序进行排序
+
+public TreeSet() {
+    this(new TreeMap&lt;E,Object&gt;());
+}
+
+//构造一个包含指定 collection 元素的新 TreeSet，它按照其元素的自然顺序进行排序。
+public TreeSet(Comparator&lt;? super E&gt; comparator) {
+        this(new TreeMap&lt;&gt;(comparator));
+}
+
+//构造一个新的空 TreeSet，它根据指定比较器进行排序。
+public TreeSet(Collection&lt;? extends E&gt; c) {
+    this();
+    addAll(c);
+}
+
+//构造一个与指定有序 set 具有相同映射关系和相同排序的新 TreeSet。
+public TreeSet(SortedSet&lt;E&gt; s) {
+    this(s.comparator());
+    addAll(s);
+}
+
+TreeSet(NavigableMap&lt;E,Object&gt; m) {
+    this.m = m;
+}</code></pre><p>二、TreeSet主要方法</p>
+<p>1、add：将指定的元素添加到此 set（如果该元素尚未存在于 set 中）。</p>
+<pre><code>public boolean add(E e) {
+        return m.put(e, PRESENT)==null;
+    }
+
+public V put(K key, V value) {
+    Entry&lt;K,V&gt; t = root;
+    if (t == null) {
+    //空树时，判断节点是否为空
+        compare(key, key); // type (and possibly null) check
+
+        root = new Entry&lt;&gt;(key, value, null);
+        size = 1;
+        modCount++;
+        return null;
+    }
+    int cmp;
+    Entry&lt;K,V&gt; parent;
+    // split comparator and comparable paths
+    Comparator&lt;? super K&gt; cpr = comparator;
+    //非空树，根据传入比较器进行节点的插入位置查找
+    if (cpr != null) {
+        do {
+            parent = t;
+            //节点比根节点小，则找左子树，否则找右子树
+            cmp = cpr.compare(key, t.key);
+            if (cmp &lt; 0)
+                t = t.left;
+            else if (cmp &gt; 0)
+                t = t.right;
+                //如果key的比较返回值相等，直接更新值（一般compareto相等时equals方法也相等）
+            else
+                return t.setValue(value);
+        } while (t != null);
+    }
+    else {
+    //如果没有传入比较器，则按照自然排序
+        if (key == null)
+            throw new NullPointerException();
+        @SuppressWarnings(&quot;unchecked&quot;)
+            Comparable&lt;? super K&gt; k = (Comparable&lt;? super K&gt;) key;
+        do {
+            parent = t;
+            cmp = k.compareTo(t.key);
+            if (cmp &lt; 0)
+                t = t.left;
+            else if (cmp &gt; 0)
+                t = t.right;
+            else
+                return t.setValue(value);
+        } while (t != null);
+    }
+    //查找的节点为空，直接插入，默认为红节点
+    Entry&lt;K,V&gt; e = new Entry&lt;&gt;(key, value, parent);
+    if (cmp &lt; 0)
+        parent.left = e;
+    else
+        parent.right = e;
+        //插入后进行红黑树调整
+    fixAfterInsertion(e);
+    size++;
+    modCount++;
+    return null;
+}    </code></pre><p>2、get：获取元素</p>
+<pre><code>public V get(Object key) {
+    Entry&lt;K,V&gt; p = getEntry(key);
+    return (p==null ? null : p.value);
+}</code></pre><p>该方法与put的流程类似，只不过是把插入换成了查找</p>
+<p>3、ceiling：返回此 set 中大于等于给定元素的最小元素；如果不存在这样的元素，则返回 null。</p>
+<pre><code>public E ceiling(E e) {
+        return m.ceilingKey(e);
+    }</code></pre><p>4、clear：移除此 set 中的所有元素。</p>
+<pre><code>public void clear() {
+        m.clear();
+    }</code></pre><p>5、clone：返回 TreeSet 实例的浅表副本。属于浅拷贝。</p>
+<pre><code>public Object clone() {
+        TreeSet&lt;E&gt; clone = null;
+        try {
+            clone = (TreeSet&lt;E&gt;) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new InternalError();
+        }
+
+        clone.m = new TreeMap&lt;&gt;(m);
+        return clone;
+    }</code></pre><p>6、comparator：返回对此 set 中的元素进行排序的比较器；如果此 set 使用其元素的自然顺序，则返回 null。</p>
+<pre><code>public Comparator&lt;? super E&gt; comparator() {
+        return m.comparator();
+    }</code></pre><p>7、contains：如果此 set 包含指定的元素，则返回 true。</p>
+<pre><code>public boolean contains(Object o) {
+        return m.containsKey(o);
+    }</code></pre><p>8、descendingIterator：返回在此 set 元素上按降序进行迭代的迭代器。</p>
+<pre><code>public Iterator&lt;E&gt; descendingIterator() {
+        return m.descendingKeySet().iterator();
+    }</code></pre><p>9、descendingSet：返回此 set 中所包含元素的逆序视图。</p>
+<pre><code>public NavigableSet&lt;E&gt; descendingSet() {
+        return new TreeSet&lt;&gt;(m.descendingMap());
+    }</code></pre><p>10、first：返回此 set 中当前第一个（最低）元素。</p>
+<pre><code>public E first() {
+        return m.firstKey();
+    }</code></pre><p>11、floor：返回此 set 中小于等于给定元素的最大元素；如果不存在这样的元素，则返回 null。</p>
+<pre><code>public E floor(E e) {
+        return m.floorKey(e);
+    }</code></pre><p>12、headSet：返回此 set 的部分视图，其元素严格小于 toElement。</p>
+<pre><code>public SortedSet&lt;E&gt; headSet(E toElement) {
+        return headSet(toElement, false);
+    }</code></pre><p>13、higher：返回此 set 中严格大于给定元素的最小元素；如果不存在这样的元素，则返回 null。</p>
+<pre><code>public E higher(E e) {
+        return m.higherKey(e);
+    }</code></pre><p>14、isEmpty：如果此 set 不包含任何元素，则返回 true。</p>
+<pre><code>public boolean isEmpty() {
+        return m.isEmpty();
+    }</code></pre><p>15、iterator：返回在此 set 中的元素上按升序进行迭代的迭代器。</p>
+<pre><code>public Iterator&lt;E&gt; iterator() {
+        return m.navigableKeySet().iterator();
+    }</code></pre><p>16、last：返回此 set 中当前最后一个（最高）元素。</p>
+<pre><code>public E last() {
+        return m.lastKey();
+    }</code></pre><p>17、lower：返回此 set 中严格小于给定元素的最大元素；如果不存在这样的元素，则返回 null。</p>
+<pre><code>public E lower(E e) {
+        return m.lowerKey(e);
+    }</code></pre><p>18、pollFirst：获取并移除第一个（最低）元素；如果此 set 为空，则返回 null。</p>
+<pre><code>public E pollFirst() {
+        Map.Entry&lt;E,?&gt; e = m.pollFirstEntry();
+        return (e == null) ? null : e.getKey();
+    }</code></pre><p>19、pollLast：获取并移除最后一个（最高）元素；如果此 set 为空，则返回 null。</p>
+<pre><code>public E pollLast() {
+        Map.Entry&lt;E,?&gt; e = m.pollLastEntry();
+        return (e == null) ? null : e.getKey();
+    }</code></pre><p>20、remove：将指定的元素从 set 中移除（如果该元素存在于此 set 中）。</p>
+<pre><code>public boolean remove(Object o) {
+        return m.remove(o)==PRESENT;
+    }</code></pre><p>该方法与put类似，只不过把插入换成了删除，并且要进行删除后调整</p>
+<p>21、size：返回 set 中的元素数（set 的容量）。</p>
+<pre><code>public int size() {
+        return m.size();
+    }</code></pre><p>22、subSet：返回此 set 的部分视图</p>
+<pre><code>/**
+     * 返回此 set 的部分视图，其元素范围从 fromElement 到 toElement。
+     */
+     public NavigableSet&lt;E&gt; subSet(E fromElement, boolean fromInclusive,
+             E toElement,   boolean toInclusive) {
+             return new TreeSet&lt;&gt;(m.subMap(fromElement, fromInclusive,
+                  toElement,   toInclusive));
+     }
+
+     /**
+      * 返回此 set 的部分视图，其元素从 fromElement（包括）到 toElement（不包括）。
+      */
+     public SortedSet&lt;E&gt; subSet(E fromElement, E toElement) {
+         return subSet(fromElement, true, toElement, false);
+     }</code></pre><p>23、tailSet：返回此 set 的部分视图</p>
+<pre><code>/**
+     * 返回此 set 的部分视图，其元素大于（或等于，如果 inclusive 为 true）fromElement。
+     */
+    public NavigableSet&lt;E&gt; tailSet(E fromElement, boolean inclusive) {
+        return new TreeSet&lt;&gt;(m.tailMap(fromElement, inclusive));
+    }
+
+    /**
+     * 返回此 set 的部分视图，其元素大于等于 fromElement。
+     */
+    public SortedSet&lt;E&gt; tailSet(E fromElement) {
+        return tailSet(fromElement, true);
+    }</code></pre><h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>由于TreeSet是基于TreeMap实现的，所以如果我们对treeMap有了一定的了解，对TreeSet那是小菜一碟，我们从TreeSet中的源码可以看出，其实现过程非常简单，几乎所有的方法实现全部都是基于TreeMap的。</p>
+<h1 id="LinkedHashSet"><a href="#LinkedHashSet" class="headerlink" title="LinkedHashSet"></a>LinkedHashSet</h1><h2 id="LinkedHashSet内部是如何工作的"><a href="#LinkedHashSet内部是如何工作的" class="headerlink" title="LinkedHashSet内部是如何工作的"></a>LinkedHashSet内部是如何工作的</h2><p>LinkedHashSet是HashSet的一个“扩展版本”，HashSet并不管什么顺序，不同的是LinkedHashSet会维护“插入顺序”。HashSet内部使用HashMap对象来存储它的元素，而LinkedHashSet内部使用LinkedHashMap对象来存储和处理它的元素。这篇文章，我们将会看到LinkedHashSet内部是如何运作的及如何维护插入顺序的。</p>
+<p>我们首先着眼LinkedHashSet的构造函数。在LinkedHashSet类中一共有4个构造函数。这些构造函数都只是简单地调用父类构造函数（如HashSet类的构造函数）。<br>下面看看LinkedHashSet的构造函数是如何定义的。</p>
+<pre><code>//Constructor - 1
+
+public LinkedHashSet(int initialCapacity, float loadFactor)
+{
+      super(initialCapacity, loadFactor, true);              //Calling super class constructor
+}
+
+//Constructor - 2
+
+public LinkedHashSet(int initialCapacity)
+{
+        super(initialCapacity, .75f, true);             //Calling super class constructor
+}
+
+//Constructor - 3
+
+public LinkedHashSet()
+{
+        super(16, .75f, true);                //Calling super class constructor
+}
+
+//Constructor - 4
+
+public LinkedHashSet(Collection&lt;? extends E&gt; c)
+{
+        super(Math.max(2*c.size(), 11), .75f, true);          //Calling super class constructor
+        addAll(c);
+}</code></pre><p>在上面的代码片段中，你可能注意到4个构造函数调用的是同一个父类的构造函数。这个构造函数（父类的，译者注）是一个包内私有构造函数（见下面的代码，HashSet的构造函数没有使用public公开，译者注），它只能被LinkedHashSet使用。</p>
+<p>这个构造函数需要初始容量，负载因子和一个boolean类型的哑值（没有什么用处的参数，作为标记，译者注）等参数。这个哑参数只是用来区别这个构造函数与HashSet的其他拥有初始容量和负载因子参数的构造函数，下面是这个构造函数的定义，</p>
+<pre><code>HashSet(int initialCapacity, float loadFactor, boolean dummy)
+{
+        map = new LinkedHashMap&lt;&gt;(initialCapacity, loadFactor);
+}</code></pre><p>显然，这个构造函数内部初始化了一个LinkedHashMap对象，这个对象恰好被LinkedHashSet用来存储它的元素。</p>
+<p>LinkedHashSet并没有自己的方法，所有的方法都继承自它的父类HashSet，因此，对LinkedHashSet的所有操作方式就好像对HashSet操作一样。</p>
+<p>唯一的不同是内部使用不同的对象去存储元素。在HashSet中，插入的元素是被当做HashMap的键来保存的，而在LinkedHashSet中被看作是LinkedHashMap的键。</p>
+<p>这些键对应的值都是常量PRESENT（PRESENT是HashSet的静态成员变量，译者注）。</p>
+<h2 id="LinkedHashSet是如何维护插入顺序的"><a href="#LinkedHashSet是如何维护插入顺序的" class="headerlink" title="LinkedHashSet是如何维护插入顺序的"></a>LinkedHashSet是如何维护插入顺序的</h2><blockquote>
+<p>LinkedHashSet使用LinkedHashMap对象来存储它的元素，插入到LinkedHashSet中的元素实际上是被当作LinkedHashMap的键保存起来的。</p>
+<p>LinkedHashMap的每一个键值对都是通过内部的静态类Entry&lt;K, V&gt;实例化的。这个 Entry&lt;K, V&gt;类继承了HashMap.Entry类。</p>
+<p>这个静态类增加了两个成员变量，before和after来维护LinkedHasMap元素的插入顺序。这两个成员变量分别指向前一个和后一个元素，这让LinkedHashMap也有类似双向链表的表现。</p>
+</blockquote>
+<pre><code>private static class Entry&lt;K,V&gt; extends HashMap.Entry&lt;K,V&gt;
+{
+        // These fields comprise the doubly linked list used for iteration.
+        Entry&lt;K,V&gt; before, after;
+
+        Entry(int hash, K key, V value, HashMap.Entry&lt;K,V&gt; next) {
+            super(hash, key, value, next);
+        }
+}</code></pre><p>从上面代码看到的LinkedHashMap内部类的前面两个成员变量——before和after负责维护LinkedHashSet的插入顺序。LinkedHashMap定义的成员变量header保存的是<br>这个双向链表的头节点。header的定义就像下面这样，</p>
+<p>接下来看一个例子就知道LinkedHashSet内部是如何工作的了。</p>
+<pre><code>public class LinkedHashSetExample
+{
+    public static void main(String[] args)
+    {
+        //Creating LinkedHashSet
+
+        LinkedHashSet&lt;String&gt; set = new LinkedHashSet&lt;String&gt;();
+
+        //Adding elements to LinkedHashSet
+
+        set.add(&quot;BLUE&quot;);
+
+        set.add(&quot;RED&quot;);
+
+        set.add(&quot;GREEN&quot;);    
+
+        set.add(&quot;BLACK&quot;);
+    }
+}</code></pre><p>下面的图片展示了这个程序是如何运行的。</p>
+<p><img src="https://segmentfault.com/img/remote/1460000004854595" alt="image"></p>
+<p>如果你知道LinkedHashMap内部是如何工作的，就非常容易明白LinkedHashSet内部是如何工作的。看一遍LinkedHashSet和LinkedHashMap的源码，<br>你就能够准确地理解在Java中LinkedHashSet内部是如何工作的。</p>
+</div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+        
+      </div>
+      
+      
+      
+    </div>
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HashSet"><span class="nav-number">1.</span> <span class="nav-text">HashSet</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义"><span class="nav-number">1.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法"><span class="nav-number">1.2.</span> <span class="nav-text">方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TreeSet"><span class="nav-number">2.</span> <span class="nav-text">TreeSet</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TreeSet定义"><span class="nav-number">2.1.</span> <span class="nav-text">TreeSet定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后"><span class="nav-number">2.2.</span> <span class="nav-text">最后</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LinkedHashSet"><span class="nav-number">3.</span> <span class="nav-text">LinkedHashSet</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LinkedHashSet内部是如何工作的"><span class="nav-number">3.1.</span> <span class="nav-text">LinkedHashSet内部是如何工作的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LinkedHashSet是如何维护插入顺序的"><span class="nav-number">3.2.</span> <span class="nav-text">LinkedHashSet是如何维护插入顺序的</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本节主要介绍字符串类型和相关包装类的使用和原理。 具体代码在我的GitHub中可以找到  https://github.com/h2pl/MyTech  喜欢的话麻烦点下星哈 文章首发于我的个人博客：  https://h2pl.github.io/2018/04/23/javase3  更多关于Java后端学习的内容请到我的CSDN博客上查看： https://blog.csdn.net/a72">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Java基础3：深入理解String及包装类">
+<meta property="og:url" content="http://yoursite.com/wait/javase3.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本节主要介绍字符串类型和相关包装类的使用和原理。 具体代码在我的GitHub中可以找到  https://github.com/h2pl/MyTech  喜欢的话麻烦点下星哈 文章首发于我的个人博客：  https://h2pl.github.io/2018/04/23/javase3  更多关于Java后端学习的内容请到我的CSDN博客上查看： https://blog.csdn.net/a72">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://pic1.zhimg.com/80/46c03ae5abf6111879423f38375207cc_hd.jpg">
+<meta property="og:image" content="https://pic2.zhimg.com/80/356d116d3fd43b622fc9721d399f5631_hd.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:24.086Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java基础3：深入理解String及包装类">
+<meta name="twitter:description" content="本节主要介绍字符串类型和相关包装类的使用和原理。 具体代码在我的GitHub中可以找到  https://github.com/h2pl/MyTech  喜欢的话麻烦点下星哈 文章首发于我的个人博客：  https://h2pl.github.io/2018/04/23/javase3  更多关于Java后端学习的内容请到我的CSDN博客上查看： https://blog.csdn.net/a72">
+<meta name="twitter:image" content="https://pic1.zhimg.com/80/46c03ae5abf6111879423f38375207cc_hd.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/wait/javase3.html">
+
+
+
+
+
+  <title>Java基础3：深入理解String及包装类 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline">Java基础3：深入理解String及包装类</h1>
+
+
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <div id="vip-container"><p>本节主要介绍字符串类型和相关包装类的使用和原理。</p>
+<p>具体代码在我的GitHub中可以找到</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/MyTech" target="_blank" rel="noopener">https://github.com/h2pl/MyTech</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下星哈</p>
+<p>文章首发于我的个人博客：</p>
+<blockquote>
+<p><a href="https://h2pl.github.io/2018/04/23/javase3" target="_blank" rel="noopener">https://h2pl.github.io/2018/04/23/javase3</a></p>
+</blockquote>
+<p>更多关于Java后端学习的内容请到我的CSDN博客上查看：</p>
+<p><a href="https://blog.csdn.net/a724888" target="_blank" rel="noopener">https://blog.csdn.net/a724888</a></p>
+<a id="more"></a>
+
+<h2 id="String的连接"><a href="#String的连接" class="headerlink" title="String的连接"></a>String的连接</h2><pre><code>@Test
+public void contact () {
+    //1连接方式
+    String s1 = &quot;a&quot;;
+    String s2 = &quot;a&quot;;
+    String s3 = &quot;a&quot; + s2;
+    String s4 = &quot;a&quot; + &quot;a&quot;;
+    String s5 = s1 + s2;
+    //表达式只有常量时，编译期完成计算
+    //表达式有变量时，运行期才计算，所以地址不一样
+    System.out.println(s3 == s4); //f
+    System.out.println(s3 == s5); //f
+    System.out.println(s4 == &quot;aa&quot;); //t
+
+}</code></pre><h2 id="String类型的intern"><a href="#String类型的intern" class="headerlink" title="String类型的intern"></a>String类型的intern</h2><pre><code>public void intern () {
+    //2：string的intern使用
+    //s1是基本类型，比较值。s2是string实例，比较实例地址
+    //字符串类型用equals方法比较时只会比较值
+    String s1 = &quot;a&quot;;
+    String s2 = new String(&quot;a&quot;);
+    //调用intern时,如果s2中的字符不在常量池，则加入常量池并返回常量的引用
+    String s3 = s2.intern();
+    System.out.println(s1 == s2);
+    System.out.println(s1 == s3);
+}</code></pre><h2 id="String类型的equals"><a href="#String类型的equals" class="headerlink" title="String类型的equals"></a>String类型的equals</h2><pre><code>//字符串的equals方法
+//    public boolean equals(Object anObject) {
+//            if (this == anObject) {
+//                return true;
+//            }
+//            if (anObject instanceof String) {
+//                String anotherString = (String)anObject;
+//                int n = value.length;
+//                if (n == anotherString.value.length) {
+//                    char v1[] = value;
+//                    char v2[] = anotherString.value;
+//                    int i = 0;
+//                    while (n-- != 0) {
+//                        if (v1[i] != v2[i])
+//                            return false;
+//                        i++;
+//                    }
+//                    return true;
+//                }
+//            }
+//            return false;
+//        }</code></pre><h2 id="StringBuffer和Stringbuilder"><a href="#StringBuffer和Stringbuilder" class="headerlink" title="StringBuffer和Stringbuilder"></a>StringBuffer和Stringbuilder</h2><p>底层是继承父类的可变字符数组value</p>
+<pre><code>/**
+ * The value is used for character storage.
+ */
+char[] value;
+初始化容量为16
+
+/**
+ * Constructs a string builder with no characters in it and an
+ * initial capacity of 16 characters.
+ */
+public StringBuilder() {
+    super(16);
+}
+这两个类的append方法都是来自父类AbstractStringBuilder的方法
+
+public AbstractStringBuilder append(String str) {
+    if (str == null)
+        return appendNull();
+    int len = str.length();
+    ensureCapacityInternal(count + len);
+    str.getChars(0, len, value, count);
+    count += len;
+    return this;
+}
+@Override
+public StringBuilder append(String str) {
+    super.append(str);
+    return this;
+}
+
+@Override
+public synchronized StringBuffer append(String str) {
+    toStringCache = null;
+    super.append(str);
+    return this;
+}</code></pre><h3 id="append"><a href="#append" class="headerlink" title="append"></a>append</h3><pre><code>Stringbuffer在大部分涉及字符串修改的操作上加了synchronized关键字来保证线程安全，效率较低。
+
+String类型在使用 + 运算符例如
+
+String a = &quot;a&quot;
+
+a = a + a;时，实际上先把a封装成stringbuilder，调用append方法后再用tostring返回，所以当大量使用字符串加法时，会大量地生成stringbuilder实例，这是十分浪费的，这种时候应该用stringbuilder来代替string。</code></pre><h3 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h3><pre><code>#注意在append方法中调用到了一个函数
+
+ensureCapacityInternal(count + len);
+该方法是计算append之后的空间是否足够，不足的话需要进行扩容
+
+public void ensureCapacity(int minimumCapacity) {
+    if (minimumCapacity &gt; 0)
+        ensureCapacityInternal(minimumCapacity);
+}
+private void ensureCapacityInternal(int minimumCapacity) {
+    // overflow-conscious code
+    if (minimumCapacity - value.length &gt; 0) {
+        value = Arrays.copyOf(value,
+                newCapacity(minimumCapacity));
+    }
+}
+如果新字符串长度大于value数组长度则进行扩容
+
+扩容后的长度一般为原来的两倍 + 2；
+
+假如扩容后的长度超过了jvm支持的最大数组长度MAX_ARRAY_SIZE。
+
+考虑两种情况
+
+如果新的字符串长度超过int最大值，则抛出异常，否则直接使用数组最大长度作为新数组的长度。
+
+private int hugeCapacity(int minCapacity) {
+    if (Integer.MAX_VALUE - minCapacity &lt; 0) { // overflow
+        throw new OutOfMemoryError();
+    }
+    return (minCapacity &gt; MAX_ARRAY_SIZE)
+        ? minCapacity : MAX_ARRAY_SIZE;
+}</code></pre><h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><pre><code>这两个类型的删除操作：
+
+都是调用父类的delete方法进行删除
+
+public AbstractStringBuilder delete(int start, int end) {
+    if (start &lt; 0)
+        throw new StringIndexOutOfBoundsException(start);
+    if (end &gt; count)
+        end = count;
+    if (start &gt; end)
+        throw new StringIndexOutOfBoundsException();
+    int len = end - start;
+    if (len &gt; 0) {
+        System.arraycopy(value, start+len, value, start, count-end);
+        count -= len;
+    }
+    return this;
+}
+事实上是将剩余的字符重新拷贝到字符数组value。</code></pre><p>这里用到了system.arraycopy来拷贝数组，速度是比较快的</p>
+<h2 id="system-arraycopy方法"><a href="#system-arraycopy方法" class="headerlink" title="system.arraycopy方法"></a>system.arraycopy方法</h2><pre><code>转自知乎：
+
+在主流高性能的JVM上（HotSpot VM系、IBM J9 VM系、JRockit系等等），可以认为System.arraycopy()在拷贝数组时是可靠高效的——如果发现不够高效的情况，请报告performance bug，肯定很快就会得到改进。
+
+java.lang.System.arraycopy()方法在Java代码里声明为一个native方法。所以最naïve的实现方式就是通过JNI调用JVM里的native代码来实现。</code></pre><h2 id="String的不可变性"><a href="#String的不可变性" class="headerlink" title="String的不可变性"></a>String的不可变性</h2><p>关于String的不可变性，这里转一个不错的回答</p>
+<h3 id="什么是不可变？"><a href="#什么是不可变？" class="headerlink" title="什么是不可变？"></a>什么是不可变？</h3><p>String不可变很简单，如下图，给一个已有字符串”abcd”第二次赋值成”abcedl”，不是在原内存地址上修改数据，而是重新指向一个新对象，新地址。<br><img src="https://pic1.zhimg.com/80/46c03ae5abf6111879423f38375207cc_hd.jpg" alt="image">     </p>
+<h3 id="String为什么不可变？"><a href="#String为什么不可变？" class="headerlink" title="String为什么不可变？"></a>String为什么不可变？</h3><p>翻开JDK源码，java.lang.String类起手前三行，是这样写的：</p>
+<pre><code>public final class String implements java.io.Serializable, Comparable&lt;String&gt;, CharSequence {   
+  /** String本质是个char数组. 而且用final关键字修饰.*/     
+private final char value[];  ...  ...
+ } </code></pre><p>首先String类是用final关键字修饰，这说明String不可继承。再看下面，String类的主力成员字段value是个char[]数组，而且是用final修饰的。</p>
+<p>final修饰的字段创建以后就不可改变。  有的人以为故事就这样完了，其实没有。因为虽然value是不可变，也只是value这个引用地址不可变。挡不住Array数组是可变的事实。</p>
+<p>Array的数据结构看下图。<br><img src="https://pic2.zhimg.com/80/356d116d3fd43b622fc9721d399f5631_hd.jpg" alt="image">    </p>
+<p>也就是说Array变量只是stack上的一个引用，数组的本体结构在heap堆。</p>
+<p>String类里的value用final修饰，只是说stack里的这个叫value的引用地址不可变。没有说堆里array本身数据不可变。看下面这个例子，  </p>
+<pre><code>final int[] value={1,2,3} ；
+int[] another={4,5,6};
+ value=another;    //编译器报错，final不可变 value用final修饰，编译器不允许我把value指向堆区另一个地址。
+但如果我直接对数组元素动手，分分钟搞定。
+
+ final int[] value={1,2,3};
+ value[2]=100;  //这时候数组里已经是{1,2,100}   所以String是不可变，关键是因为SUN公司的工程师。
+ 在后面所有String的方法里很小心的没有去动Array里的元素，没有暴露内部成员字段。
+
+private final char value[]这一句里，private的私有访问权限的作用都比final大。而且设计师还很小心地把整个String设成final禁止继承，避免被其他人继承后破坏。所以String是不可变的关键都在底层的实现，而不是一个final。考验的是工程师构造数据类型，封装数据的功力。 </code></pre><h3 id="不可变有什么好处？"><a href="#不可变有什么好处？" class="headerlink" title="不可变有什么好处？"></a>不可变有什么好处？</h3><p>这个最简单地原因，就是为了安全。看下面这个场景（有评论反应例子不够清楚，现在完整地写出来），一个函数appendStr( )在不可变的String参数后面加上一段“bbb”后返回。appendSb( )负责在可变的StringBuilder后面加“bbb”。</p>
+<p>总结以下String的不可变性。</p>
+<blockquote>
+<p>1 首先final修饰的类只保证不能被继承，并且该类的对象在堆内存中的地址不会被改变。</p>
+<p>2 但是持有String对象的引用本身是可以改变的，比如他可以指向其他的对象。</p>
+</blockquote>
+<blockquote>
+<p>3 final修饰的char数组保证了char数组的引用不可变。但是可以通过char[0] = ‘a’来修改值。不过String内部并不提供方法来完成这一操作，所以String的不可变也是基于代码封装和访问控制的。</p>
+</blockquote>
+<p>举个例子</p>
+<pre><code>final class Fi {
+    int a;
+    final int b = 0;
+    Integer s;
+
+}
+final char[]a = {&apos;a&apos;};
+final int[]b = {1};
+@Test
+public void final修饰类() {
+    //引用没有被final修饰，所以是可变的。
+    //final只修饰了Fi类型，即Fi实例化的对象在堆中内存地址是不可变的。
+    //虽然内存地址不可变，但是可以对内部的数据做改变。
+    Fi f = new Fi();
+    f.a = 1;
+    System.out.println(f);
+    f.a = 2;
+    System.out.println(f);
+    //改变实例中的值并不改变内存地址。
+
+
+    Fi ff = f;
+    //让引用指向新的Fi对象，原来的f对象由新的引用ff持有。
+    //引用的指向改变也不会改变原来对象的地址
+    f = new Fi();
+    System.out.println(f);
+    System.out.println(ff);
+}
+这里的对f.a的修改可以理解为char[0] = &apos;a&apos;这样的操作。只改变数据值，不改变内存值。</code></pre><p>有关常量池和intern的内容在上一节讲到了。</p>
+<p>具体参考：<a href="https://blog.csdn.net/a724888/article/details/80041698" target="_blank" rel="noopener">https://blog.csdn.net/a724888/article/details/80041698</a></p>
+<p>下一节重讲一下final关键字。</p>
+<p>具体参考：<a href="https://blog.csdn.net/a724888/article/details/80045107" target="_blank" rel="noopener">https://blog.csdn.net/a724888/article/details/80045107</a></p>
+</div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+        
+      </div>
+      
+      
+      
+    </div>
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#String的连接"><span class="nav-number">1.</span> <span class="nav-text">String的连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String类型的intern"><span class="nav-number">2.</span> <span class="nav-text">String类型的intern</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String类型的equals"><span class="nav-number">3.</span> <span class="nav-text">String类型的equals</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#StringBuffer和Stringbuilder"><span class="nav-number">4.</span> <span class="nav-text">StringBuffer和Stringbuilder</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#append"><span class="nav-number">4.1.</span> <span class="nav-text">append</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩容"><span class="nav-number">4.2.</span> <span class="nav-text">扩容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除"><span class="nav-number">4.3.</span> <span class="nav-text">删除</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#system-arraycopy方法"><span class="nav-number">5.</span> <span class="nav-text">system.arraycopy方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String的不可变性"><span class="nav-number">6.</span> <span class="nav-text">String的不可变性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是不可变？"><span class="nav-number">6.1.</span> <span class="nav-text">什么是不可变？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String为什么不可变？"><span class="nav-number">6.2.</span> <span class="nav-text">String为什么不可变？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不可变有什么好处？"><span class="nav-number">6.3.</span> <span class="nav-text">不可变有什么好处？</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

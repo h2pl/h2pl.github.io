@@ -1,0 +1,2109 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Tomcat,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《走进JavaWeb技术世界》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰">
+<meta name="keywords" content="Tomcat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="走进JavaWeb技术世界6：Tomcat5总体架构剖析">
+<meta property="og:url" content="http://yoursite.com/2019/10/18/走进JavaWeb技术世界/走进JavaWeb技术世界6：Tomcat5总体架构剖析/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《走进JavaWeb技术世界》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img-blog.csdn.net/20180603163955992?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppbmdsZTE4ODIwMTA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image002.png">
+<meta property="og:image" content="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image003.png">
+<meta property="og:image" content="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image004.png">
+<meta property="og:image" content="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image005.png">
+<meta property="og:image" content="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image006.png">
+<meta property="og:image" content="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image007.png">
+<meta property="og:image" content="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image008.png">
+<meta property="og:image" content="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image009.png">
+<meta property="og:image" content="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image010.png">
+<meta property="og:image" content="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image011.png">
+<meta property="og:image" content="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image012.png">
+<meta property="og:image" content="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image013.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:24.013Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="走进JavaWeb技术世界6：Tomcat5总体架构剖析">
+<meta name="twitter:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《走进JavaWeb技术世界》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20180603163955992?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppbmdsZTE4ODIwMTA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/18/走进JavaWeb技术世界/走进JavaWeb技术世界6：Tomcat5总体架构剖析/">
+
+
+
+
+
+  <title>走进JavaWeb技术世界6：Tomcat5总体架构剖析 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/18/走进JavaWeb技术世界/走进JavaWeb技术世界6：Tomcat5总体架构剖析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">走进JavaWeb技术世界6：Tomcat5总体架构剖析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-18T15:56:26+08:00">
+                2019-10-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/" itemprop="url" rel="index">
+                    <span itemprop="name">Java技术江湖</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/JavaWeb/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaWeb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/18/走进JavaWeb技术世界/走进JavaWeb技术世界6：Tomcat5总体架构剖析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/18/走进JavaWeb技术世界/走进JavaWeb技术世界6：Tomcat5总体架构剖析/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章首发于我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>本文是微信公众号【Java技术江湖】的《走进JavaWeb技术世界》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透彻，也整合了很多我认为不错的技术博客内容，引用其中了一些比较好的博客文章，如有侵权，请联系作者。</p>
+<p>该系列博文会告诉你如何从入门到进阶，从servlet到框架，从ssm再到SpringBoot，一步步地学习JavaWeb基础知识，并上手进行实战，接着了解JavaWeb项目中经常要使用的技术和组件，包括日志组件、Maven、Junit，等等内容，以便让你更完整地了解整个Java Web技术体系，形成自己的知识框架。</p>
+<p>为了更好地总结和检验你的学习成果，本系列文章也会提供每个知识点对应的面试题以及参考答案。</p>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+<p><strong>文末赠送8000G的Java架构师学习资料，需要的朋友可以到文末了解领取方式，资料包括Java基础、进阶、项目和架构师等免费学习资料，更有数据库、分布式、微服务等热门技术学习视频，内容丰富，兼顾原理和实践，另外也将赠送作者原创的Java学习指南、Java程序员面试指南等干货资源）</strong></p>
+<a id="more"></a>
+<h2 id="Tomcat-总体结构"><a href="#Tomcat-总体结构" class="headerlink" title="Tomcat 总体结构"></a>Tomcat 总体结构</h2><p>Tomcat 的结构很复杂，但是 Tomcat 也非常的模块化，找到了 Tomcat 最核心的模块，您就抓住了 Tomcat 的“七寸”。下面是 Tomcat 的总体结构图：</p>
+<p><img src="https://img-blog.csdn.net/20180603163955992?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppbmdsZTE4ODIwMTA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<p>从上图中可以看出 Tomcat 的心脏是两个组件：Connector 和 Container，关于这两个组件将在后面详细介绍。Connector 组件是可以被替换，这样可以提供给服务器设计者更多的选择，因为这个组件是如此重要，不仅跟服务器的设计的本身，而且和不同的应用场景也十分相关，所以一个 Container 可以选择对应多个 Connector。多个 Connector 和一个 Container 就形成了一个 Service，Service 的概念大家都很熟悉了，有了 Service 就可以对外提供服务了，但是 Service 还要一个生存的环境，必须要有人能够给她生命、掌握其生死大权，那就非 Server 莫属了。所以整个 Tomcat 的生命周期由 Server 控制。</p>
+<h3 id="以-Service-作为“婚姻”"><a href="#以-Service-作为“婚姻”" class="headerlink" title="以 Service 作为“婚姻”"></a>以 Service 作为“婚姻”</h3><p>我们将 Tomcat 中 Connector、Container 作为一个整体比作一对情侣的话，Connector 主要负责对外交流，可以比作为 Boy，Container 主要处理 Connector 接受的请求，主要是处理内部事务，可以比作为 Girl。那么这个 Service 就是连接这对男女的结婚证了。是 Service 将它们连接在一起，共同组成一个家庭。当然要组成一个家庭还要很多其它的元素。</p>
+<p>说白了，Service 只是在 Connector 和 Container 外面多包一层，把它们组装在一起，向外面提供服务，一个 Service 可以设置多个 Connector，但是只能有一个 Container 容器。这个 Service 接口的方法列表如下：</p>
+<h5 id="图-2-Service-接口"><a href="#图-2-Service-接口" class="headerlink" title="图 2. Service 接口"></a>图 2. Service 接口</h5><p><img src="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image002.png" alt="图 2\. Service 接口"></p>
+<p>从 Service 接口中定义的方法中可以看出，它主要是为了关联 Connector 和 Container，同时会初始化它下面的其它组件，注意接口中它并没有规定一定要控制它下面的组件的生命周期。所有组件的生命周期在一个 Lifecycle 的接口中控制，这里用到了一个重要的设计模式，关于这个接口将在后面介绍。</p>
+<p>Tomcat 中 Service 接口的标准实现类是 StandardService 它不仅实现了 Service 借口同时还实现了 Lifecycle 接口，这样它就可以控制它下面的组件的生命周期了。StandardService 类结构图如下：</p>
+<h5 id="图-3-StandardService-的类结构图"><a href="#图-3-StandardService-的类结构图" class="headerlink" title="图 3. StandardService 的类结构图"></a>图 3. StandardService 的类结构图</h5><p><img src="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image003.png" alt="图 3\. StandardService 的类结构图"></p>
+<p>从上图中可以看出除了 Service 接口的方法的实现以及控制组件生命周期的 Lifecycle 接口的实现，还有几个方法是用于在事件监听的方法的实现，不仅是这个 Service 组件，Tomcat 中其它组件也同样有这几个方法，这也是一个典型的设计模式，将在后面介绍。</p>
+<p>下面看一下 StandardService 中主要的几个方法实现的代码，下面是 setContainer 和 addConnector 方法的源码：</p>
+<h5 id="清单-1-StandardService-SetContainer"><a href="#清单-1-StandardService-SetContainer" class="headerlink" title="清单 1. StandardService. SetContainer"></a>清单 1. StandardService. SetContainer</h5><pre><code>public void setContainer(Container container) {
+
+    Container oldContainer = this.container;
+
+    if ((oldContainer != null) &amp;&amp; (oldContainer instanceof Engine))
+
+        ((Engine) oldContainer).setService(null);
+
+    this.container = container;
+
+    if ((this.container != null) &amp;&amp; (this.container instanceof Engine))
+
+        ((Engine) this.container).setService(this);
+
+    if (started &amp;&amp; (this.container != null) &amp;&amp; (this.container instanceof Lifecycle)) {
+
+        try {
+
+            ((Lifecycle) this.container).start();
+
+        } catch (LifecycleException e) {
+
+            ;
+
+        }
+
+    }
+
+    synchronized (connectors) {
+
+        for (int i = 0; i &lt; connectors.length; i++)
+
+            connectors[i].setContainer(this.container);
+
+    }
+
+    if (started &amp;&amp; (oldContainer != null) &amp;&amp; (oldContainer instanceof Lifecycle)) {
+
+        try {
+
+            ((Lifecycle) oldContainer).stop();
+
+        } catch (LifecycleException e) {
+
+            ;
+
+        }
+
+    }
+
+    support.firePropertyChange(&quot;container&quot;, oldContainer, this.container);
+
+}</code></pre><p>这段代码很简单，其实就是先判断当前的这个 Service 有没有已经关联了 Container，如果已经关联了，那么去掉这个关联关系—— oldContainer.setService(null)。如果这个 oldContainer 已经被启动了，结束它的生命周期。然后再替换新的关联、再初始化并开始这个新的 Container</p>
+<p>的生命周期。最后将这个过程通知感兴趣的事件监听程序。这里值得注意的地方就是，修改 Container 时要将新的 Container 关联到每个 Connector，还好 Container 和 Connector 没有双向关联，不然这个关联关系将会很难维护。</p>
+<h5 id="清单-2-StandardService-addConnector"><a href="#清单-2-StandardService-addConnector" class="headerlink" title="清单 2. StandardService. addConnector"></a>清单 2. StandardService. addConnector</h5><pre><code>public void addConnector(Connector connector) {
+
+    synchronized (connectors) {
+
+        connector.setContainer(this.container);
+
+        connector.setService(this);
+
+        Connector results[] = new Connector[connectors.length + 1];
+
+        System.arraycopy(connectors, 0, results, 0, connectors.length);
+
+        results[connectors.length] = connector;
+
+        connectors = results;
+
+        if (initialized) {
+
+            try {
+
+                connector.initialize();
+
+            } catch (LifecycleException e) {
+
+                e.printStackTrace(System.err);
+
+            }
+
+        }
+
+        if (started &amp;&amp; (connector instanceof Lifecycle)) {
+
+            try {
+
+                ((Lifecycle) connector).start();
+
+            } catch (LifecycleException e) {
+
+                ;
+
+            }
+
+        }
+
+        support.firePropertyChange(&quot;connector&quot;, null, connector);
+
+    }
+
+}</code></pre><p>上面是 addConnector 方法，这个方法也很简单，首先是设置关联关系，然后是初始化工作，开始新的生命周期。这里值得一提的是，注意 Connector 用的是数组而不是 List 集合，这个从性能角度考虑可以理解，有趣的是这里用了数组但是并没有向我们平常那样，一开始就分配一个固定大小的数组，它这里的实现机制是：重新创建一个当前大小的数组对象，然后将原来的数组对象 copy 到新的数组中，这种方式实现了类似的动态数组的功能，这种实现方式，值得我们以后拿来借鉴。</p>
+<p>最新的 Tomcat6 中 StandardService 也基本没有变化，但是从 Tomcat5 开始 Service、Server 和容器类都继承了 MBeanRegistration 接口，Mbeans 的管理更加合理。</p>
+<h3 id="以-Server-为“居”"><a href="#以-Server-为“居”" class="headerlink" title="以 Server 为“居”"></a>以 Server 为“居”</h3><p>前面说一对情侣因为 Service 而成为一对夫妻，有了能够组成一个家庭的基本条件，但是它们还要有个实体的家，这是它们在社会上生存之本，有了家它们就可以安心的为人民服务了，一起为社会创造财富。</p>
+<p>Server 要完成的任务很简单，就是要能够提供一个接口让其它程序能够访问到这个 Service 集合、同时要维护它所包含的所有 Service 的生命周期，包括如何初始化、如何结束服务、如何找到别人要访问的 Service。还有其它的一些次要的任务，如您住在这个地方要向当地政府去登记啊、可能还有要配合当地公安机关日常的安全检查什么的。</p>
+<p>Server 的类结构图如下：</p>
+<h5 id="图-4-Server-的类结构图"><a href="#图-4-Server-的类结构图" class="headerlink" title="图 4. Server 的类结构图"></a>图 4. Server 的类结构图</h5><p><img src="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image004.png" alt="图 4\. Server 的类结构图"></p>
+<p>它的标准实现类 StandardServer 实现了上面这些方法，同时也实现了 Lifecycle、MbeanRegistration 两个接口的所有方法，下面主要看一下 StandardServer 重要的一个方法 addService 的实现：</p>
+<h5 id="清单-3-StandardServer-addService"><a href="#清单-3-StandardServer-addService" class="headerlink" title="清单 3. StandardServer.addService"></a>清单 3. StandardServer.addService</h5><pre><code>public void addService(Service service) {
+
+    service.setServer(this);
+
+    synchronized (services) {
+
+        Service results[] = new Service[services.length + 1];
+
+        System.arraycopy(services, 0, results, 0, services.length);
+
+        results[services.length] = service;
+
+        services = results;
+
+        if (initialized) {
+
+            try {
+
+                service.initialize();
+
+            } catch (LifecycleException e) {
+
+                e.printStackTrace(System.err);
+
+            }
+
+        }
+
+        if (started &amp;&amp; (service instanceof Lifecycle)) {
+
+            try {
+
+                ((Lifecycle) service).start();
+
+            } catch (LifecycleException e) {
+
+                ;
+
+            }
+
+        }
+
+        support.firePropertyChange(&quot;service&quot;, null, service);
+
+    }
+
+}</code></pre><p>从上面第一句就知道了 Service 和 Server 是相互关联的，Server 也是和 Service 管理 Connector 一样管理它，也是将 Service 放在一个数组中，后面部分的代码也是管理这个新加进来的 Service 的生命周期。Tomcat6 中也是没有什么变化的。</p>
+<h3 id="组件的生命线“Lifecycle”"><a href="#组件的生命线“Lifecycle”" class="headerlink" title="组件的生命线“Lifecycle”"></a>组件的生命线“Lifecycle”</h3><p>前面一直在说 Service 和 Server 管理它下面组件的生命周期，那它们是如何管理的呢？</p>
+<p>Tomcat 中组件的生命周期是通过 Lifecycle 接口来控制的，组件只要继承这个接口并实现其中的方法就可以统一被拥有它的组件控制了，这样一层一层的直到一个最高级的组件就可以控制 Tomcat 中所有组件的生命周期，这个最高的组件就是 Server，而控制 Server 的是 Startup，也就是您启动和关闭 Tomcat。</p>
+<p>下面是 Lifecycle 接口的类结构图：</p>
+<h5 id="图-5-Lifecycle-类结构图"><a href="#图-5-Lifecycle-类结构图" class="headerlink" title="图 5. Lifecycle 类结构图"></a>图 5. Lifecycle 类结构图</h5><p><img src="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image005.png" alt="图 5\. Lifecycle 类结构图"></p>
+<p>除了控制生命周期的 Start 和 Stop 方法外还有一个监听机制，在生命周期开始和结束的时候做一些额外的操作。这个机制在其它的框架中也被使用，如在 Spring 中。关于这个设计模式会在后面介绍。</p>
+<p>Lifecycle 接口的方法的实现都在其它组件中，就像前面中说的，组件的生命周期由包含它的父组件控制，所以它的 Start 方法自然就是调用它下面的组件的 Start 方法，Stop 方法也是一样。如在 Server 中 Start 方法就会调用 Service 组件的 Start 方法，Server 的 Start 方法代码如下：</p>
+<h5 id="清单-4-StandardServer-Start"><a href="#清单-4-StandardServer-Start" class="headerlink" title="清单 4. StandardServer.Start"></a>清单 4. StandardServer.Start</h5><pre><code>public void start() throws LifecycleException {
+
+    if (started) {
+
+        log.debug(sm.getString(&quot;standardServer.start.started&quot;));
+
+        return;
+
+    }
+
+    lifecycle.fireLifecycleEvent(BEFORE_START_EVENT, null);
+
+    lifecycle.fireLifecycleEvent(START_EVENT, null);
+
+    started = true;
+
+    synchronized (services) {
+
+        for (int i = 0; i &lt; services.length; i++) {
+
+            if (services[i] instanceof Lifecycle)
+
+                ((Lifecycle) services[i]).start();
+
+        }
+
+    }
+
+    lifecycle.fireLifecycleEvent(AFTER_START_EVENT, null);
+
+}</code></pre><p>监听的代码会包围 Service 组件的启动过程，就是简单的循环启动所有 Service 组件的 Start 方法，但是所有 Service 必须要实现 Lifecycle 接口，这样做会更加灵活。</p>
+<p>Server 的 Stop 方法代码如下：</p>
+<h5 id="清单-5-StandardServer-Stop"><a href="#清单-5-StandardServer-Stop" class="headerlink" title="清单 5. StandardServer.Stop"></a>清单 5. StandardServer.Stop</h5><pre><code>public void stop() throws LifecycleException {
+
+    if (!started)
+
+        return;
+
+    lifecycle.fireLifecycleEvent(BEFORE_STOP_EVENT, null);
+
+    lifecycle.fireLifecycleEvent(STOP_EVENT, null);
+
+    started = false;
+
+    for (int i = 0; i &lt; services.length; i++) {
+
+        if (services[i] instanceof Lifecycle)
+
+            ((Lifecycle) services[i]).stop();
+
+    }
+
+    lifecycle.fireLifecycleEvent(AFTER_STOP_EVENT, null);
+
+}</code></pre><p>它所要做的事情也和 Start 方法差不多。</p>
+<h2 id="Connector-组件"><a href="#Connector-组件" class="headerlink" title="Connector 组件"></a>Connector 组件</h2><p>Connector 组件是 Tomcat 中两个核心组件之一，它的主要任务是负责接收浏览器的发过来的 tcp 连接请求，创建一个 Request 和 Response 对象分别用于和请求端交换数据，然后会产生一个线程来处理这个请求并把产生的 Request 和 Response 对象传给处理这个请求的线程，处理这个请求的线程就是 Container 组件要做的事了。</p>
+<p>由于这个过程比较复杂，大体的流程可以用下面的顺序图来解释：</p>
+<h5 id="图-6-Connector-处理一次请求顺序图"><a href="#图-6-Connector-处理一次请求顺序图" class="headerlink" title="图 6. Connector 处理一次请求顺序图"></a>图 6. Connector 处理一次请求顺序图</h5><p><img src="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image006.png" alt="图 6\. Connector 处理一次请求顺序图"></p>
+<p>（<a href="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/origin_image006.png" target="_blank" rel="noopener">查看清晰大图</a>）</p>
+<p>Tomcat5 中默认的 Connector 是 Coyote，这个 Connector 是可以选择替换的。Connector 最重要的功能就是接收连接请求然后分配线程让 Container 来处理这个请求，所以这必然是多线程的，多线程的处理是 Connector 设计的核心。Tomcat5 将这个过程更加细化，它将 Connector 划分成 Connector、Processor、Protocol, 另外 Coyote 也定义自己的 Request 和 Response 对象。</p>
+<p>下面主要看一下 Tomcat 中如何处理多线程的连接请求，先看一下 Connector 的主要类图：</p>
+<h5 id="图-7-Connector-的主要类图"><a href="#图-7-Connector-的主要类图" class="headerlink" title="图 7. Connector 的主要类图"></a>图 7. Connector 的主要类图</h5><p><img src="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image007.png" alt="图 7\. Connector 的主要类图"></p>
+<p>（<a href="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/origin_image007.png" target="_blank" rel="noopener">查看清晰大图</a>）</p>
+<p>看一下 HttpConnector 的 Start 方法：</p>
+<h5 id="清单-6-HttpConnector-Start"><a href="#清单-6-HttpConnector-Start" class="headerlink" title="清单 6. HttpConnector.Start"></a>清单 6. HttpConnector.Start</h5><pre><code>public void start() throws LifecycleException {
+
+    if (started)
+
+        throw new LifecycleException
+
+            (sm.getString(&quot;httpConnector.alreadyStarted&quot;));
+
+    threadName = &quot;HttpConnector[&quot; + port + &quot;]&quot;;
+
+    lifecycle.fireLifecycleEvent(START_EVENT, null);
+
+    started = true;
+
+    threadStart();
+
+    while (curProcessors &lt; minProcessors) {
+
+        if ((maxProcessors &gt; 0) &amp;&amp; (curProcessors &gt;= maxProcessors))
+
+            break;
+
+        HttpProcessor processor = newProcessor();
+
+        recycle(processor);
+
+    }
+
+}</code></pre><p>threadStart() 执行就会进入等待请求的状态，直到一个新的请求到来才会激活它继续执行，这个激活是在 HttpProcessor 的 assign 方法中，这个方法是代码如下 <code>：</code></p>
+<h5 id="清单-7-HttpProcessor-assign"><a href="#清单-7-HttpProcessor-assign" class="headerlink" title="清单 7. HttpProcessor.assign"></a>清单 7. HttpProcessor.assign</h5><pre><code>synchronized void assign(Socket socket) {
+
+    while (available) {
+
+        try {
+
+            wait();
+
+        } catch (InterruptedException e) {
+
+        }
+
+    }
+
+    this.socket = socket;
+
+    available = true;
+
+    notifyAll();
+
+    if ((debug &gt;= 1) &amp;&amp; (socket != null))
+
+        log(&quot; An incoming request is being assigned&quot;);
+
+}</code></pre><p>创建 HttpProcessor 对象是会把 available 设为 false，所以当请求到来时不会进入 while 循环，将请求的 socket 赋给当期处理的 socket，并将 available 设为 true，当 available 设为 true 是 HttpProcessor 的 run 方法将被激活，接下去将会处理这次请求。</p>
+<p>Run 方法代码如下：</p>
+<h5 id="清单-8-HttpProcessor-Run"><a href="#清单-8-HttpProcessor-Run" class="headerlink" title="清单 8. HttpProcessor.Run"></a>清单 8. HttpProcessor.Run</h5><pre><code>public void run() {
+
+    while (!stopped) {
+
+        Socket socket = await();
+
+        if (socket == null)
+
+            continue;
+
+        try {
+
+            process(socket);
+
+        } catch (Throwable t) {
+
+            log(&quot;process.invoke&quot;, t);
+
+        }
+
+        connector.recycle(this);
+
+    }
+
+    synchronized (threadSync) {
+
+        threadSync.notifyAll();
+
+    }
+
+}</code></pre><p>解析 socket 的过程在 process 方法中，process 方法的代码片段如下：</p>
+<h5 id="清单-9-HttpProcessor-process"><a href="#清单-9-HttpProcessor-process" class="headerlink" title="清单 9. HttpProcessor.process"></a>清单 9. HttpProcessor.process</h5><pre><code>private void process(Socket socket) {
+
+    boolean ok = true;
+
+    boolean finishResponse = true;
+
+    SocketInputStream input = null;
+
+    OutputStream output = null;
+
+    try {
+
+        input = new SocketInputStream(socket.getInputStream(),connector.getBufferSize());
+
+    } catch (Exception e) {
+
+        log(&quot;process.create&quot;, e);
+
+        ok = false;
+
+    }
+
+    keepAlive = true;
+
+    while (!stopped &amp;&amp; ok &amp;&amp; keepAlive) {
+
+        finishResponse = true;
+
+        try {
+
+            request.setStream(input);
+
+            request.setResponse(response);
+
+            output = socket.getOutputStream();
+
+            response.setStream(output);
+
+            response.setRequest(request);
+
+            ((HttpServletResponse) response.getResponse())
+
+                .setHeader(&quot;Server&quot;, SERVER_INFO);
+
+        } catch (Exception e) {
+
+            log(&quot;process.create&quot;, e);
+
+            ok = false;
+
+        }
+
+        try {
+
+            if (ok) {
+
+                parseConnection(socket);
+
+                parseRequest(input, output);
+
+                if (!request.getRequest().getProtocol().startsWith(&quot;HTTP/0&quot;))
+
+                    parseHeaders(input);
+
+                if (http11) {
+
+                    ackRequest(output);
+
+                    if (connector.isChunkingAllowed())
+
+                        response.setAllowChunking(true);
+
+                }
+
+            }
+
+        。。。。。。
+
+        try {
+
+            ((HttpServletResponse) response).setHeader
+
+                (&quot;Date&quot;, FastHttpDateFormat.getCurrentDate());
+
+            if (ok) {
+
+                connector.getContainer().invoke(request, response);
+
+            }
+
+            。。。。。。
+
+        }
+
+        try {
+
+            shutdownInput(input);
+
+            socket.close();
+
+        } catch (IOException e) {
+
+            ;
+
+        } catch (Throwable e) {
+
+            log(&quot;process.invoke&quot;, e);
+
+        }
+
+    socket = null;
+
+}</code></pre><p>当 Connector 将 socket 连接封装成 request 和 response 对象后接下来的事情就交给 Container 来处理了。</p>
+<h2 id="Servlet-容器“Container”"><a href="#Servlet-容器“Container”" class="headerlink" title="Servlet 容器“Container”"></a>Servlet 容器“Container”</h2><p>Container 是容器的父接口，所有子容器都必须实现这个接口，Container 容器的设计用的是典型的责任链的设计模式，它有四个子容器组件构成，分别是：Engine、Host、Context、Wrapper，这四个组件不是平行的，而是父子关系，Engine 包含 Host,Host 包含 Context，Context 包含 Wrapper。通常一个 Servlet class 对应一个 Wrapper，如果有多个 Servlet 就可以定义多个 Wrapper，如果有多个 Wrapper 就要定义一个更高的 Container 了，如 Context，Context 通常就是对应下面这个配置：</p>
+<h5 id="清单-10-Server-xml"><a href="#清单-10-Server-xml" class="headerlink" title="清单 10. Server.xml"></a>清单 10. Server.xml</h5><pre><code>&lt;Context
+
+    path=&quot;/library&quot;
+
+    docBase=&quot;D:\projects\library\deploy\target\library.war&quot;
+
+    reloadable=&quot;true&quot;
+
+/&gt;</code></pre><h3 id="容器的总体设计"><a href="#容器的总体设计" class="headerlink" title="容器的总体设计"></a>容器的总体设计</h3><p>Context 还可以定义在父容器 Host 中，Host 不是必须的，但是要运行 war 程序，就必须要 Host，因为 war 中必有 web.xml 文件，这个文件的解析就需要 Host 了，如果要有多个 Host 就要定义一个 top 容器 Engine 了。而 Engine 没有父容器了，一个 Engine 代表一个完整的 Servlet 引擎。</p>
+<p>那么这些容器是如何协同工作的呢？先看一下它们之间的关系图：</p>
+<h5 id="图-8-四个容器的关系图"><a href="#图-8-四个容器的关系图" class="headerlink" title="图 8. 四个容器的关系图"></a>图 8. 四个容器的关系图</h5><p><img src="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image008.png" alt="图 8\. 四个容器的关系图"></p>
+<p>（<a href="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/origin_image008.png" target="_blank" rel="noopener">查看清晰大图</a>）</p>
+<p>当 Connector 接受到一个连接请求时，将请求交给 Container，Container 是如何处理这个请求的？这四个组件是怎么分工的，怎么把请求传给特定的子容器的呢？又是如何将最终的请求交给 Servlet 处理。下面是这个过程的时序图：</p>
+<h5 id="图-9-Engine-和-Host-处理请求的时序图"><a href="#图-9-Engine-和-Host-处理请求的时序图" class="headerlink" title="图 9. Engine 和 Host 处理请求的时序图"></a>图 9. Engine 和 Host 处理请求的时序图</h5><p><img src="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image009.png" alt="图 9\. Engine 和 Host 处理请求的时序图"></p>
+<p>（<a href="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/origin_image009.png" target="_blank" rel="noopener">查看清晰大图</a>）</p>
+<p>这里看到了 Valve 是不是很熟悉，没错 Valve 的设计在其他框架中也有用的，同样 Pipeline 的原理也基本是相似的，它是一个管道，Engine 和 Host 都会执行这个 Pipeline，您可以在这个管道上增加任意的 Valve，Tomcat 会挨个执行这些 Valve，而且四个组件都会有自己的一套 Valve 集合。您怎么才能定义自己的 Valve 呢？在 server.xml 文件中可以添加，如给 Engine 和 Host 增加一个 Valve 如下：</p>
+<h5 id="清单-11-Server-xml"><a href="#清单-11-Server-xml" class="headerlink" title="清单 11. Server.xml"></a>清单 11. Server.xml</h5><pre><code>&lt;Engine defaultHost=&quot;localhost&quot; name=&quot;Catalina&quot;&gt;
+
+
+
+    &lt;Valve className=&quot;org.apache.catalina.valves.RequestDumperValve&quot;/&gt;
+
+    ………
+
+    &lt;Host appBase=&quot;webapps&quot; autoDeploy=&quot;true&quot; name=&quot;localhost&quot; unpackWARs=&quot;true&quot;
+
+        xmlNamespaceAware=&quot;false&quot; xmlValidation=&quot;false&quot;&gt;
+
+
+
+        &lt;Valve className=&quot;org.apache.catalina.valves.FastCommonAccessLogValve&quot;
+
+            directory=&quot;logs&quot;  prefix=&quot;localhost_access_log.&quot; suffix=&quot;.txt&quot;
+
+            pattern=&quot;common&quot; resolveHosts=&quot;false&quot;/&gt;    
+
+    …………
+
+    &lt;/Host&gt;
+
+&lt;/Engine&gt;</code></pre><p>StandardEngineValve 和 StandardHostValve 是 Engine 和 Host 的默认的 Valve，它们是最后一个 Valve 负责将请求传给它们的子容器，以继续往下执行。</p>
+<p>前面是 Engine 和 Host 容器的请求过程，下面看 Context 和 Wrapper 容器时如何处理请求的。下面是处理请求的时序图：</p>
+<h5 id="图-10-Context-和-wrapper-的处理请求时序图"><a href="#图-10-Context-和-wrapper-的处理请求时序图" class="headerlink" title="图 10. Context 和 wrapper 的处理请求时序图"></a>图 10. Context 和 wrapper 的处理请求时序图</h5><p><img src="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image010.png" alt="图 10\. Context 和 wrapper 的处理请求时序图"></p>
+<p>（<a href="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/origin_image010.png" target="_blank" rel="noopener">查看清晰大图</a>）</p>
+<p>从 Tomcat5 开始，子容器的路由放在了 request 中，request 中保存了当前请求正在处理的 Host、Context 和 wrapper。</p>
+<h3 id="Engine-容器"><a href="#Engine-容器" class="headerlink" title="Engine 容器"></a>Engine 容器</h3><p>Engine 容器比较简单，它只定义了一些基本的关联关系，接口类图如下：</p>
+<h5 id="图-11-Engine-接口的类结构"><a href="#图-11-Engine-接口的类结构" class="headerlink" title="图 11. Engine 接口的类结构"></a>图 11. Engine 接口的类结构</h5><p><img src="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image011.png" alt="图 11\. Engine 接口的类结构"></p>
+<p>它的标准实现类是 StandardEngine，这个类注意一点就是 Engine 没有父容器了，如果调用 setParent 方法时将会报错。添加子容器也只能是 Host 类型的，代码如下：</p>
+<h5 id="清单-12-StandardEngine-addChild"><a href="#清单-12-StandardEngine-addChild" class="headerlink" title="清单 12. StandardEngine. addChild"></a>清单 12. StandardEngine. addChild</h5><pre><code>public void addChild(Container child) {
+
+    if (!(child instanceof Host))
+
+        throw new IllegalArgumentException
+
+            (sm.getString(&quot;standardEngine.notHost&quot;));
+
+    super.addChild(child);
+
+}
+
+
+
+public void setParent(Container container) {
+
+    throw new IllegalArgumentException
+
+        (sm.getString(&quot;standardEngine.notParent&quot;));
+
+}</code></pre><p>它的初始化方法也就是初始化和它相关联的组件，以及一些事件的监听。</p>
+<h3 id="Host-容器"><a href="#Host-容器" class="headerlink" title="Host 容器"></a>Host 容器</h3><p>Host 是 Engine 的字容器，一个 Host 在 Engine 中代表一个虚拟主机，这个虚拟主机的作用就是运行多个应用，它负责安装和展开这些应用，并且标识这个应用以便能够区分它们。它的子容器通常是 Context，它除了关联子容器外，还有就是保存一个主机应该有的信息。</p>
+<p>下面是和 Host 相关的类关联图：</p>
+<h5 id="图-12-Host-相关的类图"><a href="#图-12-Host-相关的类图" class="headerlink" title="图 12. Host 相关的类图"></a>图 12. Host 相关的类图</h5><p><img src="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image012.png" alt="图 12\. Host 相关的类图"></p>
+<p>（<a href="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/origin_image012.png" target="_blank" rel="noopener">查看清晰大图</a>）</p>
+<p>从上图中可以看出除了所有容器都继承的 ContainerBase 外，StandardHost 还实现了 Deployer 接口，上图清楚的列出了这个接口的主要方法，这些方法都是安装、展开、启动和结束每个 web application。</p>
+<p>Deployer 接口的实现是 StandardHostDeployer，这个类实现了的最要的几个方法，Host 可以调用这些方法完成应用的部署等。</p>
+<h3 id="Context-容器"><a href="#Context-容器" class="headerlink" title="Context 容器"></a>Context 容器</h3><p>Context 代表 Servlet 的 Context，它具备了 Servlet 运行的基本环境，理论上只要有 Context 就能运行 Servlet 了。简单的 Tomcat 可以没有 Engine 和 Host。</p>
+<p>Context 最重要的功能就是管理它里面的 Servlet 实例，Servlet 实例在 Context 中是以 Wrapper 出现的，还有一点就是 Context 如何才能找到正确的 Servlet 来执行它呢？ Tomcat5 以前是通过一个 Mapper 类来管理的，Tomcat5 以后这个功能被移到了 request 中，在前面的时序图中就可以发现获取子容器都是通过 request 来分配的。</p>
+<p>Context 准备 Servlet 的运行环境是在 Start 方法开始的，这个方法的代码片段如下：</p>
+<h5 id="清单-13-StandardContext-start"><a href="#清单-13-StandardContext-start" class="headerlink" title="清单 13. StandardContext.start"></a>清单 13. StandardContext.start</h5><pre><code>synchronized void start() throws LifecycleException {
+
+    ………
+
+    if( !initialized ) {
+
+        try {
+
+            init();
+
+        } catch( Exception ex ) {
+
+            throw new LifecycleException(&quot;Error initializaing &quot;, ex);
+
+        }
+
+    }
+
+
+
+    ………
+
+    lifecycle.fireLifecycleEvent(BEFORE_START_EVENT, null);
+
+    setAvailable(false);
+
+    setConfigured(false);
+
+    boolean ok = true;
+
+    File configBase = getConfigBase();
+
+    if (configBase != null) {
+
+        if (getConfigFile() == null) {
+
+            File file = new File(configBase, getDefaultConfigFile());
+
+            setConfigFile(file.getPath());
+
+            try {
+
+                File appBaseFile = new File(getAppBase());
+
+                if (!appBaseFile.isAbsolute()) {
+
+                    appBaseFile = new File(engineBase(), getAppBase());
+
+                }
+
+                String appBase = appBaseFile.getCanonicalPath();
+
+                String basePath =
+
+                    (new File(getBasePath())).getCanonicalPath();
+
+                if (!basePath.startsWith(appBase)) {
+
+                    Server server = ServerFactory.getServer();
+
+                    ((StandardServer) server).storeContext(this);
+
+                }
+
+            } catch (Exception e) {
+
+                log.warn(&quot;Error storing config file&quot;, e);
+
+            }
+
+        } else {
+
+            try {
+
+                String canConfigFile =  (new File(getConfigFile())).getCanonicalPath();
+
+                if (!canConfigFile.startsWith (configBase.getCanonicalPath())) {
+
+                    File file = new File(configBase, getDefaultConfigFile());
+
+                    if (copy(new File(canConfigFile), file)) {
+
+                        setConfigFile(file.getPath());
+
+                    }
+
+                }
+
+            } catch (Exception e) {
+
+                log.warn(&quot;Error setting config file&quot;, e);
+
+            }
+
+        }
+
+    }
+
+
+
+    ………
+
+    Container children[] = findChildren();
+
+    for (int i = 0; i &lt; children.length; i++) {
+
+        if (children[i] instanceof Lifecycle)
+
+            ((Lifecycle) children[i]).start();
+
+    }
+
+
+
+    if (pipeline instanceof Lifecycle)
+
+        ((Lifecycle) pipeline).start();
+
+    ………
+
+
+
+}</code></pre><p>它主要是设置各种资源属性和管理组件，还有非常重要的就是启动子容器和 Pipeline。</p>
+<p>我们知道 Context 的配置文件中有个 reloadable 属性，如下面配置：</p>
+<h5 id="清单-14-Server-xml"><a href="#清单-14-Server-xml" class="headerlink" title="清单 14. Server.xml"></a>清单 14. Server.xml</h5><pre><code>&lt;Context
+
+    path=&quot;/library&quot;
+
+    docBase=&quot;D:\projects\library\deploy\target\library.war&quot;
+
+    reloadable=&quot;true&quot;
+
+/&gt;</code></pre><p>当这个 reloadable 设为 true 时，war 被修改后 Tomcat 会自动的重新加载这个应用。如何做到这点的呢 ? 这个功能是在 StandardContext 的 backgroundProcess 方法中实现的，这个方法的代码如下：</p>
+<h5 id="清单-15-StandardContext-backgroundProcess"><a href="#清单-15-StandardContext-backgroundProcess" class="headerlink" title="清单 15. StandardContext. backgroundProcess"></a>清单 15. StandardContext. backgroundProcess</h5><pre><code>public void backgroundProcess() {
+
+    if (!started) return;
+
+    count = (count + 1) % managerChecksFrequency;
+
+    if ((getManager() != null) &amp;&amp; (count == 0)) {
+
+        try {
+
+            getManager().backgroundProcess();
+
+        } catch ( Exception x ) {
+
+            log.warn(&quot;Unable to perform background process on manager&quot;,x);
+
+        }
+
+    }
+
+    if (getLoader() != null) {
+
+        if (reloadable &amp;&amp; (getLoader().modified())) {
+
+            try {
+
+                Thread.currentThread().setContextClassLoader
+
+                    (StandardContext.class.getClassLoader());
+
+                reload();
+
+            } finally {
+
+                if (getLoader() != null) {
+
+                    Thread.currentThread().setContextClassLoader
+
+                        (getLoader().getClassLoader());
+
+                }
+
+            }
+
+        }
+
+        if (getLoader() instanceof WebappLoader) {
+
+            ((WebappLoader) getLoader()).closeJARs(false);
+
+        }
+
+    }
+
+}</code></pre><p>它会调用 reload 方法，而 reload 方法会先调用 stop 方法然后再调用 Start 方法，完成 Context 的一次重新加载。可以看出执行 reload 方法的条件是 reloadable 为 true 和应用被修改，那么这个 backgroundProcess 方法是怎么被调用的呢？</p>
+<p>这个方法是在 ContainerBase 类中定义的内部类 ContainerBackgroundProcessor 被周期调用的，这个类是运行在一个后台线程中，它会周期的执行 run 方法，它的 run 方法会周期调用所有容器的 backgroundProcess 方法，因为所有容器都会继承 ContainerBase 类，所以所有容器都能够在 backgroundProcess 方法中定义周期执行的事件。</p>
+<h3 id="Wrapper-容器"><a href="#Wrapper-容器" class="headerlink" title="Wrapper 容器"></a>Wrapper 容器</h3><p>Wrapper 代表一个 Servlet，它负责管理一个 Servlet，包括的 Servlet 的装载、初始化、执行以及资源回收。Wrapper 是最底层的容器，它没有子容器了，所以调用它的 addChild 将会报错。</p>
+<p>Wrapper 的实现类是 StandardWrapper，StandardWrapper 还实现了拥有一个 Servlet 初始化信息的 ServletConfig，由此看出 StandardWrapper 将直接和 Servlet 的各种信息打交道。</p>
+<p>下面看一下非常重要的一个方法 loadServlet，代码片段如下：</p>
+<h5 id="清单-16-StandardWrapper-loadServlet"><a href="#清单-16-StandardWrapper-loadServlet" class="headerlink" title="清单 16. StandardWrapper.loadServlet"></a>清单 16. StandardWrapper.loadServlet</h5><pre><code>public synchronized Servlet loadServlet() throws ServletException {
+
+    ………
+
+    Servlet servlet;
+
+    try {
+
+        ………
+
+        ClassLoader classLoader = loader.getClassLoader();
+
+        ………
+
+        Class classClass = null;
+
+        ………
+
+        servlet = (Servlet) classClass.newInstance();
+
+        if ((servlet instanceof ContainerServlet) &amp;&amp;
+
+            (isContainerProvidedServlet(actualClass) ||
+
+            ((Context)getParent()).getPrivileged() )) {
+
+                ((ContainerServlet) servlet).setWrapper(this);
+
+        }
+
+        classLoadTime=(int) (System.currentTimeMillis() -t1);
+
+        try {
+
+            instanceSupport.fireInstanceEvent(InstanceEvent.BEFORE_INIT_EVENT,servlet);
+
+            if( System.getSecurityManager() != null) {
+
+                Class[] classType = new Class[]{ServletConfig.class};
+
+                Object[] args = new Object[]{((ServletConfig)facade)};
+
+                SecurityUtil.doAsPrivilege(&quot;init&quot;,servlet,classType,args);
+
+            } else {
+
+                servlet.init(facade);
+
+            }
+
+            if ((loadOnStartup &gt;= 0) &amp;&amp; (jspFile != null)) {
+
+                ………
+
+                if( System.getSecurityManager() != null) {
+
+                    Class[] classType = new Class[]{ServletRequest.class,
+
+                        ServletResponse.class};
+
+                    Object[] args = new Object[]{req, res};
+
+                    SecurityUtil.doAsPrivilege(&quot;service&quot;,servlet,classType,args);
+
+                } else {
+
+                    servlet.service(req, res);
+
+                }
+
+            }
+
+            instanceSupport.fireInstanceEvent(InstanceEvent.AFTER_INIT_EVENT,servlet);
+
+            ………
+
+
+
+    return servlet;
+
+}</code></pre><p>它基本上描述了对 Servlet 的操作，当装载了 Servlet 后就会调用 Servlet 的 init 方法，同时会传一个 StandardWrapperFacade 对象给 Servlet，这个对象包装了 StandardWrapper，ServletConfig 与它们的关系图如下：</p>
+<h5 id="图-13-ServletConfig-与-StandardWrapperFacade、StandardWrapper-的关系"><a href="#图-13-ServletConfig-与-StandardWrapperFacade、StandardWrapper-的关系" class="headerlink" title="图 13. ServletConfig 与 StandardWrapperFacade、StandardWrapper 的关系"></a>图 13. ServletConfig 与 StandardWrapperFacade、StandardWrapper 的关系</h5><p><img src="https://www.ibm.com/developerworks/cn/java/j-lo-tomcat1/image013.png" alt="图 13\. ServletConfig 与 StandardWrapperFacade、StandardWrapper 的关系"></p>
+<p>Servlet 可以获得的信息都在 StandardWrapperFacade 封装，这些信息又是在 StandardWrapper 对象中拿到的。所以 Servlet 可以通过 ServletConfig 拿到有限的容器的信息。</p>
+<p>当 Servlet 被初始化完成后，就等着 StandardWrapperValve 去调用它的 service 方法了，调用 service 方法之前要调用 Servlet 所有的 filter。</p>
+<h2 id="Tomcat-中其它组件"><a href="#Tomcat-中其它组件" class="headerlink" title="Tomcat 中其它组件"></a>Tomcat 中其它组件</h2><p>Tomcat 还有其它重要的组件，如安全组件 security、logger 日志组件、session、mbeans、naming 等其它组件。这些组件共同为 Connector 和 Container 提供必要的服务。</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://www.cnblogs.com/xll1025/p/11366290.html" target="_blank" rel="noopener">https://www.cnblogs.com/xll1025/p/11366290.html</a><br><a href="http://www.imooc.com/article/291184" target="_blank" rel="noopener">http://www.imooc.com/article/291184</a><br><a href="https://blog.csdn.net/jingle1882010/article/details/80557808" target="_blank" rel="noopener">https://blog.csdn.net/jingle1882010/article/details/80557808</a><br><a href="https://www.jianshu.com/p/c5494b63d564" target="_blank" rel="noopener">https://www.jianshu.com/p/c5494b63d564</a><br><a href="https://blog.csdn.net/w1992wishes/article/details/79242797" target="_blank" rel="noopener">https://blog.csdn.net/w1992wishes/article/details/79242797</a></p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h2 id="微信公众号-1"><a href="#微信公众号-1" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Tomcat/" rel="tag"># Tomcat</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/17/走进JavaWeb技术世界/走进JavaWeb技术世界5：初探Tomcat的HTTP请求过程/" rel="next" title="走进JavaWeb技术世界5：初探Tomcat的HTTP请求过程">
+                <i class="fa fa-chevron-left"></i> 走进JavaWeb技术世界5：初探Tomcat的HTTP请求过程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/19/走进JavaWeb技术世界/走进JavaWeb技术世界7：Tomcat和其他WEB容器的区别/" rel="prev" title="走进JavaWeb技术世界7：Tomcat和其他WEB容器的区别">
+                走进JavaWeb技术世界7：Tomcat和其他WEB容器的区别 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tomcat-总体结构"><span class="nav-number">1.</span> <span class="nav-text">Tomcat 总体结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#以-Service-作为“婚姻”"><span class="nav-number">1.1.</span> <span class="nav-text">以 Service 作为“婚姻”</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#图-2-Service-接口"><span class="nav-number">1.1.0.1.</span> <span class="nav-text">图 2. Service 接口</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#图-3-StandardService-的类结构图"><span class="nav-number">1.1.0.2.</span> <span class="nav-text">图 3. StandardService 的类结构图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#清单-1-StandardService-SetContainer"><span class="nav-number">1.1.0.3.</span> <span class="nav-text">清单 1. StandardService. SetContainer</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#清单-2-StandardService-addConnector"><span class="nav-number">1.1.0.4.</span> <span class="nav-text">清单 2. StandardService. addConnector</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以-Server-为“居”"><span class="nav-number">1.2.</span> <span class="nav-text">以 Server 为“居”</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#图-4-Server-的类结构图"><span class="nav-number">1.2.0.1.</span> <span class="nav-text">图 4. Server 的类结构图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#清单-3-StandardServer-addService"><span class="nav-number">1.2.0.2.</span> <span class="nav-text">清单 3. StandardServer.addService</span></a></li></ol></li></ol><li class="nav-item nav-level-3"><a class="nav-link" href="#组件的生命线“Lifecycle”"><span class="nav-number">1.3.</span> <span class="nav-text">组件的生命线“Lifecycle”</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#图-5-Lifecycle-类结构图"><span class="nav-number">1.3.0.1.</span> <span class="nav-text">图 5. Lifecycle 类结构图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#清单-4-StandardServer-Start"><span class="nav-number">1.3.0.2.</span> <span class="nav-text">清单 4. StandardServer.Start</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#清单-5-StandardServer-Stop"><span class="nav-number">1.3.0.3.</span> <span class="nav-text">清单 5. StandardServer.Stop</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Connector-组件"><span class="nav-number">2.</span> <span class="nav-text">Connector 组件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#图-6-Connector-处理一次请求顺序图"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">图 6. Connector 处理一次请求顺序图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#图-7-Connector-的主要类图"><span class="nav-number">2.0.0.2.</span> <span class="nav-text">图 7. Connector 的主要类图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#清单-6-HttpConnector-Start"><span class="nav-number">2.0.0.3.</span> <span class="nav-text">清单 6. HttpConnector.Start</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#清单-7-HttpProcessor-assign"><span class="nav-number">2.0.0.4.</span> <span class="nav-text">清单 7. HttpProcessor.assign</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#清单-8-HttpProcessor-Run"><span class="nav-number">2.0.0.5.</span> <span class="nav-text">清单 8. HttpProcessor.Run</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#清单-9-HttpProcessor-process"><span class="nav-number">2.0.0.6.</span> <span class="nav-text">清单 9. HttpProcessor.process</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Servlet-容器“Container”"><span class="nav-number">3.</span> <span class="nav-text">Servlet 容器“Container”</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#清单-10-Server-xml"><span class="nav-number">3.0.0.1.</span> <span class="nav-text">清单 10. Server.xml</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#容器的总体设计"><span class="nav-number">3.1.</span> <span class="nav-text">容器的总体设计</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#图-8-四个容器的关系图"><span class="nav-number">3.1.0.1.</span> <span class="nav-text">图 8. 四个容器的关系图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#图-9-Engine-和-Host-处理请求的时序图"><span class="nav-number">3.1.0.2.</span> <span class="nav-text">图 9. Engine 和 Host 处理请求的时序图</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#清单-11-Server-xml"><span class="nav-number">3.1.0.3.</span> <span class="nav-text">清单 11. Server.xml</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#图-10-Context-和-wrapper-的处理请求时序图"><span class="nav-number">3.1.0.4.</span> <span class="nav-text">图 10. Context 和 wrapper 的处理请求时序图</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Engine-容器"><span class="nav-number">3.2.</span> <span class="nav-text">Engine 容器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#图-11-Engine-接口的类结构"><span class="nav-number">3.2.0.1.</span> <span class="nav-text">图 11. Engine 接口的类结构</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#清单-12-StandardEngine-addChild"><span class="nav-number">3.2.0.2.</span> <span class="nav-text">清单 12. StandardEngine. addChild</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Host-容器"><span class="nav-number">3.3.</span> <span class="nav-text">Host 容器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#图-12-Host-相关的类图"><span class="nav-number">3.3.0.1.</span> <span class="nav-text">图 12. Host 相关的类图</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Context-容器"><span class="nav-number">3.4.</span> <span class="nav-text">Context 容器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#清单-13-StandardContext-start"><span class="nav-number">3.4.0.1.</span> <span class="nav-text">清单 13. StandardContext.start</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#清单-14-Server-xml"><span class="nav-number">3.4.0.2.</span> <span class="nav-text">清单 14. Server.xml</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#清单-15-StandardContext-backgroundProcess"><span class="nav-number">3.4.0.3.</span> <span class="nav-text">清单 15. StandardContext. backgroundProcess</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Wrapper-容器"><span class="nav-number">3.5.</span> <span class="nav-text">Wrapper 容器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#清单-16-StandardWrapper-loadServlet"><span class="nav-number">3.5.0.1.</span> <span class="nav-text">清单 16. StandardWrapper.loadServlet</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#图-13-ServletConfig-与-StandardWrapperFacade、StandardWrapper-的关系"><span class="nav-number">3.5.0.2.</span> <span class="nav-text">图 13. ServletConfig 与 StandardWrapperFacade、StandardWrapper 的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tomcat-中其它组件"><span class="nav-number">4.</span> <span class="nav-text">Tomcat 中其它组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">5.</span> <span class="nav-text">参考文章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">6.</span> <span class="nav-text">微信公众号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号-1"><span class="nav-number">7.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">7.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">7.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

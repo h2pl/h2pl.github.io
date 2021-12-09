@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content=",">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本文首发于我的个人博客：https://h2pl.github.io/ 欢迎阅览我的CSDN专栏：Java并发指南https://blog.csdn.net/column/details/21961.html 相关代码会放在我的的Github：https://github.com/h2pl/">
+<meta name="keywords" content="Java并发">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Java并发指南15：Fork join并发框架与工作窃取算法剖析">
+<meta property="og:url" content="http://yoursite.com/wait/concurrent15.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本文首发于我的个人博客：https://h2pl.github.io/ 欢迎阅览我的CSDN专栏：Java并发指南https://blog.csdn.net/column/details/21961.html 相关代码会放在我的的Github：https://github.com/h2pl/">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://infoqstatic.com/resource/articles/fork-join-introduction/zh/resources/21.png">
+<meta property="og:image" content="http://ifeve.com/wp-content/uploads/2013/12/fj.png">
+<meta property="og:updated_time" content="2021-11-24T08:03:24.070Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java并发指南15：Fork join并发框架与工作窃取算法剖析">
+<meta name="twitter:description" content="本文首发于我的个人博客：https://h2pl.github.io/ 欢迎阅览我的CSDN专栏：Java并发指南https://blog.csdn.net/column/details/21961.html 相关代码会放在我的的Github：https://github.com/h2pl/">
+<meta name="twitter:image" content="http://infoqstatic.com/resource/articles/fork-join-introduction/zh/resources/21.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/wait/concurrent15.html">
+
+
+
+
+
+  <title>Java并发指南15：Fork join并发框架与工作窃取算法剖析 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline">Java并发指南15：Fork join并发框架与工作窃取算法剖析</h1>
+
+
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <div id="vip-container"><p>本文首发于我的个人博客：<a href="https://h2pl.github.io/" target="_blank" rel="noopener">https://h2pl.github.io/</a></p>
+<p>欢迎阅览我的CSDN专栏：Java并发指南<br><a href="https://blog.csdn.net/column/details/21961.html" target="_blank" rel="noopener">https://blog.csdn.net/column/details/21961.html</a></p>
+<p>相关代码会放在我的的Github：<a href="https://github.com/h2pl/" target="_blank" rel="noopener">https://github.com/h2pl/</a></p>
+<a id="more"></a>
+
+<p>转载自_<a href="http://ifeve.com/" target="_blank" rel="noopener">并发编程网 – ifeve.com</a></p>
+<h2 id="什么是Fork-Join框架"><a href="#什么是Fork-Join框架" class="headerlink" title="什么是Fork/Join框架"></a>什么是Fork/Join框架</h2><p>Fork/Join框架是Java7提供了的一个用于并行执行任务的框架， 是一个把大任务分割成若干个小任务，最终汇总每个小任务结果后得到大任务结果的框架。</p>
+<p>我们再通过Fork和Join这两个单词来理解下Fork/Join框架，Fork就是把一个大任务切分为若干子任务并行的执行，Join就是合并这些子任务的执行结果，最后得到这个大任务的结果。比如计算1+2+。。＋10000，可以分割成10个子任务，每个子任务分别对1000个数进行求和，最终汇总这10个子任务的结果。Fork/Join的运行流程图如下：</p>
+<p><img src="http://infoqstatic.com/resource/articles/fork-join-introduction/zh/resources/21.png" alt></p>
+<h2 id="工作窃取算法"><a href="#工作窃取算法" class="headerlink" title="工作窃取算法"></a>工作窃取算法</h2><p>工作窃取（work-stealing）算法是指某个线程从其他队列里窃取任务来执行。工作窃取的运行流程图如下：</p>
+<p><img src="http://ifeve.com/wp-content/uploads/2013/12/fj.png" alt="fj"></p>
+<p>那么为什么需要使用工作窃取算法呢？假如我们需要做一个比较大的任务，我们可以把这个任务分割为若干互不依赖的子任务，为了减少线程间的竞争，于是把这些子任务分别放到不同的队列里，并为每个队列创建一个单独的线程来执行队列里的任务，线程和队列一一对应，比如A线程负责处理A队列里的任务。但是有的线程会先把自己队列里的任务干完，而其他线程对应的队列里还有任务等待处理。干完活的线程与其等着，不如去帮其他线程干活，于是它就去其他线程的队列里窃取一个任务来执行。而在这时它们会访问同一个队列，所以为了减少窃取任务线程和被窃取任务线程之间的竞争，通常会使用双端队列，被窃取任务线程永远从双端队列的头部拿任务执行，而窃取任务的线程永远从双端队列的尾部拿任务执行。</p>
+<p>工作窃取算法的优点是充分利用线程进行并行计算，并减少了线程间的竞争，其缺点是在某些情况下还是存在竞争，比如双端队列里只有一个任务时。并且消耗了更多的系统资源，比如创建多个线程和多个双端队列。</p>
+<h2 id="Fork-Join框架的介绍"><a href="#Fork-Join框架的介绍" class="headerlink" title="Fork/Join框架的介绍"></a>Fork/Join框架的介绍</h2><p>我们已经很清楚Fork/Join框架的需求了，那么我们可以思考一下，如果让我们来设计一个Fork/Join框架，该如何设计？这个思考有助于你理解Fork/Join框架的设计。</p>
+<p>第一步分割任务。首先我们需要有一个fork类来把大任务分割成子任务，有可能子任务还是很大，所以还需要不停的分割，直到分割出的子任务足够小。</p>
+<p>第二步执行任务并合并结果。分割的子任务分别放在双端队列里，然后几个启动线程分别从双端队列里获取任务执行。子任务执行完的结果都统一放在一个队列里，启动一个线程从队列里拿数据，然后合并这些数据。</p>
+<p>Fork/Join使用两个类来完成以上两件事情：</p>
+<ul>
+<li>ForkJoinTask：我们要使用ForkJoin框架，必须首先创建一个ForkJoin任务。它提供在任务中执行fork()和join()操作的机制，通常情况下我们不需要直接继承ForkJoinTask类，而只需要继承它的子类，Fork/Join框架提供了以下两个子类：<ul>
+<li>RecursiveAction：用于没有返回结果的任务。</li>
+<li>RecursiveTask ：用于有返回结果的任务。</li>
+</ul>
+</li>
+<li>ForkJoinPool ：ForkJoinTask需要通过ForkJoinPool来执行，任务分割出的子任务会添加到当前工作线程所维护的双端队列中，进入队列的头部。当一个工作线程的队列里暂时没有任务时，它会随机从其他工作线程的队列的尾部获取一个任务。</li>
+</ul>
+<h2 id="使用Fork-Join框架"><a href="#使用Fork-Join框架" class="headerlink" title="使用Fork/Join框架"></a>使用Fork/Join框架</h2><p>让我们通过一个简单的需求来使用下Fork／Join框架，需求是：计算1+2+3+4的结果。</p>
+<p>使用Fork／Join框架首先要考虑到的是如何分割任务，如果我们希望每个子任务最多执行两个数的相加，那么我们设置分割的阈值是2，由于是4个数字相加，所以Fork／Join框架会把这个任务fork成两个子任务，子任务一负责计算1+2，子任务二负责计算3+4，然后再join两个子任务的结果。</p>
+<p>因为是有结果的任务，所以必须继承RecursiveTask，实现代码如下：</p>
+<pre><code>001    packagefj;
+002     
+003    importjava.util.concurrent.ExecutionException;
+004     
+005    importjava.util.concurrent.ForkJoinPool;
+006     
+007    importjava.util.concurrent.Future;
+008     
+009    importjava.util.concurrent.RecursiveTask;
+010     
+011    publicclassCountTaskextendsRecursiveTask {
+012     
+013           privatestaticfinalintTHRESHOLD= 2;//阈值
+014     
+015           privateintstart;
+016     
+017           privateintend;
+018     
+019           publicCountTask(intstart,intend) {
+020     
+021                       this.start= start;
+022     
+023                       this.end= end;
+024     
+025            }
+026     
+027           @Override
+028     
+029           protectedInteger compute() {
+030     
+031                       intsum = 0;
+032     
+033                       //如果任务足够小就计算任务
+034     
+035                       booleancanCompute = (end-start) &lt;=THRESHOLD;
+036     
+037                       if(canCompute) {
+038     
+039                                  for(inti =start; i &lt;=end; i++) {
+040     
+041                                               sum += i;
+042     
+043                                   }
+044     
+045                        }else{
+046     
+047                                  //如果任务大于阀值，就分裂成两个子任务计算
+048     
+049                                  intmiddle = (start+end) / 2;
+050     
+051                                   CountTask leftTask =newCountTask(start, middle);
+052     
+053                                   CountTask rightTask =newCountTask(middle + 1,end);
+054     
+055                                  //执行子任务
+056     
+057                                   leftTask.fork();
+058     
+059                                   rightTask.fork();
+060     
+061                                  //等待子任务执行完，并得到其结果
+062     
+063                                  intleftResult=leftTask.join();
+064     
+065                                  intrightResult=rightTask.join();
+066     
+067                                  //合并子任务
+068     
+069                                   sum = leftResult  + rightResult;
+070     
+071                        }
+072     
+073                       returnsum;
+074     
+075            }
+076     
+077           publicstaticvoidmain(String[] args) {
+078     
+079                        ForkJoinPool forkJoinPool =newForkJoinPool();
+080     
+081                       //生成一个计算任务，负责计算1+2+3+4
+082     
+083                        CountTask task =newCountTask(1, 4);
+084     
+085                       //执行一个任务
+086     
+087                        Future result = forkJoinPool.submit(task);
+088     
+089                       try{
+090     
+091                                   System.out.println(result.get());
+092     
+093                        }catch(InterruptedException e) {
+094     
+095                        }catch(ExecutionException e) {
+096     
+097                        }
+098     
+099            }
+100     
+101    }</code></pre><p>通过这个例子让我们再来进一步了解ForkJoinTask，ForkJoinTask与一般的任务的主要区别在于它需要实现compute方法，在这个方法里，首先需要判断任务是否足够小，如果足够小就直接执行任务。如果不足够小，就必须分割成两个子任务，每个子任务在调用fork方法时，又会进入compute方法，看看当前子任务是否需要继续分割成孙任务，如果不需要继续分割，则执行当前子任务并返回结果。使用join方法会等待子任务执行完并得到其结果。</p>
+<h2 id="Fork-Join框架的异常处理"><a href="#Fork-Join框架的异常处理" class="headerlink" title="Fork/Join框架的异常处理"></a>Fork/Join框架的异常处理</h2><p>ForkJoinTask在执行的时候可能会抛出异常，但是我们没办法在主线程里直接捕获异常，所以ForkJoinTask提供了isCompletedAbnormally()方法来检查任务是否已经抛出异常或已经被取消了，并且可以通过ForkJoinTask的getException方法获取异常。使用如下代码：</p>
+<pre>if(task.isCompletedAbnormally())
+{
+    System.out.println(task.getException());
+}</pre>
+
+<p>getException方法返回Throwable对象，如果任务被取消了则返回CancellationException。如果任务没有完成或者没有抛出异常则返回null。</p>
+<h2 id="Fork-Join框架的实现原理"><a href="#Fork-Join框架的实现原理" class="headerlink" title="Fork/Join框架的实现原理"></a>Fork/Join框架的实现原理</h2><p>ForkJoinPool由ForkJoinTask数组和ForkJoinWorkerThread数组组成，ForkJoinTask数组负责存放程序提交给ForkJoinPool的任务，而ForkJoinWorkerThread数组负责执行这些任务。</p>
+<p>ForkJoinTask的fork方法实现原理。当我们调用ForkJoinTask的fork方法时，程序会调用ForkJoinWorkerThread的pushTask方法异步的执行这个任务，然后立即返回结果。代码如下：</p>
+<pre><code>1    public final ForkJoinTask fork() {
+2            ((ForkJoinWorkerThread) Thread.currentThread())
+3                .pushTask(this);
+4            return this;
+5    }</code></pre><p>pushTask方法把当前任务存放在ForkJoinTask 数组queue里。然后再调用ForkJoinPool的signalWork()方法唤醒或创建一个工作线程来执行任务。代码如下：</p>
+<pre><code>01    final void pushTask(ForkJoinTask t) {
+02            ForkJoinTask[] q; int s, m;
+03            if ((q = queue) != null) {    // ignore if queue removed
+04                long u = (((s = queueTop) &amp; (m = q.length - 1)) &lt;&lt; ASHIFT) + ABASE;
+05                UNSAFE.putOrderedObject(q, u, t);
+06                queueTop = s + 1;         // or use putOrderedInt
+07                if ((s -= queueBase) &lt;= 2)
+08                    pool.signalWork();
+09        else if (s == m)
+10                    growQueue();
+11            }
+12        }</code></pre><p>ForkJoinTask的join方法实现原理。Join方法的主要作用是阻塞当前线程并等待获取结果。让我们一起看看ForkJoinTask的join方法的实现，代码如下：</p>
+<pre><code>public final V join() {
+02            if (doJoin() != NORMAL)
+03                return reportResult();
+04            else
+05                return getRawResult();
+06    }
+07    private V reportResult() {
+08            int s; Throwable ex;
+09            if ((s = status) == CANCELLED)
+10                throw new CancellationException();
+11    if (s == EXCEPTIONAL &amp;&amp; (ex = getThrowableException()) != null)
+12                UNSAFE.throwException(ex);
+13            return getRawResult();
+14    }</code></pre><p>首先，它调用了doJoin()方法，通过doJoin()方法得到当前任务的状态来判断返回什么结果，任务状态有四种：已完成（NORMAL），被取消（CANCELLED），信号（SIGNAL）和出现异常（EXCEPTIONAL）。</p>
+<ul>
+<li>如果任务状态是已完成，则直接返回任务结果。</li>
+<li>如果任务状态是被取消，则直接抛出CancellationException。</li>
+<li>如果任务状态是抛出异常，则直接抛出对应的异常。</li>
+</ul>
+<p>让我们再来分析下doJoin()方法的实现代码：</p>
+<p>01    private int doJoin() {<br>02            Thread t; ForkJoinWorkerThread w; int s; booleancompleted;<br>03            if ((t = Thread.currentThread()) instanceofForkJoinWorkerThread) {<br>04                if ((s = status) &lt; 0)<br>05     return s;<br>06                if ((w = (ForkJoinWorkerThread)t).unpushTask(this)) {<br>07                    try {<br>08                        completed = exec();<br>09                    } catch (Throwable rex) {<br>10                        return setExceptionalCompletion(rex);<br>11                    }<br>12                    if (completed)<br>13                        return setCompletion(NORMAL);<br>14                }<br>15                return w.joinTask(this);<br>16            }<br>17            else<br>18                return externalAwaitDone();<br>19        }</p>
+<p>在doJoin()方法里，首先通过查看任务的状态，看任务是否已经执行完了，如果执行完了，则直接返回任务状态，如果没有执行完，则从任务数组里取出任务并执行。如果任务顺利执行完成了，则设置任务状态为NORMAL，如果出现异常，则纪录异常，并将任务状态设置为EXCEPTIONAL。</p>
+<h2 id="Fork-Join源码剖析与算法解析"><a href="#Fork-Join源码剖析与算法解析" class="headerlink" title="Fork/Join源码剖析与算法解析"></a>Fork/Join源码剖析与算法解析</h2><p>我们在大学算法课本上，学过的一种基本算法就是：分治。其基本思路就是：把一个大的任务分成若干个子任务，这些子任务分别计算，最后再Merge出最终结果。这个过程通常都会用到递归。</p>
+<p>而Fork/Join其实就是一种利用多线程来实现“分治算法”的并行框架。</p>
+<p>另外一方面，可以把Fori/Join看作一个单机版的Map/Reduce，只不过这里的并行不是多台机器并行计算，而是多个线程并行计算。</p>
+<p>下面看2个简单例子：</p>
+<p>例子1： 快排<br>我们都知道，快排有2个步骤：<br>第1步，拿数组的第1个元素，把元素划分成2半，左边的比该元素小，右边的比该元素大；<br>第2步，对左右的2个子数组，分别排序。</p>
+<p>可以看出，这里左右2个子数组，可以相互独立的，并行计算。因此可以利用ForkJoin框架， 代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">//定义一个Task，基础自RecursiveAction，实现其compute方法</span><br><span class="line">class SortTask extends RecursiveAction &#123;</span><br><span class="line">    final long[] array;</span><br><span class="line">    final int lo;</span><br><span class="line">    final int hi;</span><br><span class="line">    private int THRESHOLD = 0; //For demo only</span><br><span class="line"></span><br><span class="line">    public SortTask(long[] array) &#123;</span><br><span class="line">        this.array = array;</span><br><span class="line">        this.lo = 0;</span><br><span class="line">        this.hi = array.length - 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public SortTask(long[] array, int lo, int hi) &#123;</span><br><span class="line">        this.array = array;</span><br><span class="line">        this.lo = lo;</span><br><span class="line">        this.hi = hi;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected void compute() &#123;</span><br><span class="line">        if (hi - lo &lt; THRESHOLD)</span><br><span class="line">            sequentiallySort(array, lo, hi);</span><br><span class="line">        else &#123;</span><br><span class="line">            int pivot = partition(array, lo, hi);  //划分</span><br><span class="line">            coInvoke(new SortTask(array, lo, pivot - 1), new SortTask(array,</span><br><span class="line">                    pivot + 1, hi));  //递归调，左右2个子数组</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private int partition(long[] array, int lo, int hi) &#123;</span><br><span class="line">        long x = array[hi];</span><br><span class="line">        int i = lo - 1;</span><br><span class="line">        for (int j = lo; j &lt; hi; j++) &#123;</span><br><span class="line">            if (array[j] &lt;= x) &#123;</span><br><span class="line">                i++;</span><br><span class="line">                swap(array, i, j);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        swap(array, i + 1, hi);</span><br><span class="line">        return i + 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void swap(long[] array, int i, int j) &#123;</span><br><span class="line">        if (i != j) &#123;</span><br><span class="line">            long temp = array[i];</span><br><span class="line">            array[i] = array[j];</span><br><span class="line">            array[j] = temp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void sequentiallySort(long[] array, int lo, int hi) &#123;</span><br><span class="line">        Arrays.sort(array, lo, hi + 1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//测试函数</span><br><span class="line">    public void testSort() throws Exception &#123;</span><br><span class="line">        ForkJoinTask sort = new SortTask(array);   //1个任务</span><br><span class="line">        ForkJoinPool fjpool = new ForkJoinPool();  //1个ForkJoinPool</span><br><span class="line">        fjpool.submit(sort); //提交任务</span><br><span class="line">        fjpool.shutdown(); //结束。ForkJoinPool内部会开多个线程，并行上面的子任务</span><br><span class="line"></span><br><span class="line">        fjpool.awaitTermination(30, TimeUnit.SECONDS);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>例子2： 求1到n个数的和</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">//定义一个Task，基础自RecursiveTask，实现其commpute方法</span><br><span class="line">public class SumTask extends RecursiveTask&lt;Long&gt;&#123;  </span><br><span class="line">    private static final int THRESHOLD = 10;  </span><br><span class="line"></span><br><span class="line">    private long start;  </span><br><span class="line">    private long end;  </span><br><span class="line"></span><br><span class="line">    public SumTask(long n) &#123;  </span><br><span class="line">        this(1,n);  </span><br><span class="line">    &#125;  </span><br><span class="line"></span><br><span class="line">    private SumTask(long start, long end) &#123;  </span><br><span class="line">        this.start = start;  </span><br><span class="line">        this.end = end;  </span><br><span class="line">    &#125;  </span><br><span class="line"></span><br><span class="line">    @Override  //有返回值</span><br><span class="line">    protected Long compute() &#123;  </span><br><span class="line">        long sum = 0;  </span><br><span class="line">        if((end - start) &lt;= THRESHOLD)&#123;  </span><br><span class="line">            for(long l = start; l &lt;= end; l++)&#123;  </span><br><span class="line">                sum += l;  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125;else&#123;  </span><br><span class="line">            long mid = (start + end) &gt;&gt;&gt; 1;  </span><br><span class="line">            SumTask left = new SumTask(start, mid);   //分治，递归</span><br><span class="line">            SumTask right = new SumTask(mid + 1, end);  </span><br><span class="line">            left.fork();  </span><br><span class="line">            right.fork();  </span><br><span class="line">            sum = left.join() + right.join();  </span><br><span class="line">        &#125;  </span><br><span class="line">        return sum;  </span><br><span class="line">    &#125;  </span><br><span class="line">    private static final long serialVersionUID = 1L;  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line">//测试函数</span><br><span class="line">    public void testSum() throws Exception &#123;</span><br><span class="line">        SumTask sum = new SumTask(100);   //1个任务</span><br><span class="line">        ForkJoinPool fjpool = new ForkJoinPool();  //1个ForkJoinPool</span><br><span class="line">        Future&lt;Long&gt; future = fjpool.submit(sum); //提交任务</span><br><span class="line">        Long r = future.get(); //获取返回值</span><br><span class="line">        fjpool.shutdown(); </span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>与ThreadPool的区别</p>
+<p>通过上面例子，我们可以看出，它在使用上，和ThreadPool有共同的地方，也有区别点：<br>（1） ThreadPool只有“外部任务”，也就是调用者放到队列里的任务。 ForkJoinPool有“外部任务”，还有“内部任务”，也就是任务自身在执行过程中，分裂出”子任务“，递归，再次放入队列。<br>（2）ForkJoinPool里面的任务通常有2类，RecusiveAction/RecusiveTask，这2个都是继承自FutureTask。在使用的时候，重写其compute算法。</p>
+<p>工作窃取算法</p>
+<p>上面提到，ForkJoinPool里有”外部任务“，也有“内部任务”。其中外部任务，是放在ForkJoinPool的全局队列里面，而每个Worker线程，也有一个自己的队列，用于存放内部任务。</p>
+<p>窃取的基本思路就是：当worker自己的任务队列里面没有任务时，就去scan别的线程的队列，把别人的任务拿过来执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line">//ForkJoinPool的成员变量</span><br><span class="line">ForkJoinWorkerThread[] workers;  //worker thread集合</span><br><span class="line">private ForkJoinTask&lt;?&gt;[] submissionQueue; //外部任务队列</span><br><span class="line">private final ReentrantLock submissionLock; </span><br><span class="line"></span><br><span class="line">//ForkJoinWorkerThread的成员变量</span><br><span class="line">ForkJoinTask&lt;?&gt;[] queue;   //每个worker线程自己的内部任务队列</span><br><span class="line"></span><br><span class="line">//提交任务</span><br><span class="line">public &lt;T&gt; ForkJoinTask&lt;T&gt; submit(ForkJoinTask&lt;T&gt; task) &#123;  </span><br><span class="line">    if (task == null)  </span><br><span class="line">        throw new NullPointerException();  </span><br><span class="line">    forkOrSubmit(task);  </span><br><span class="line">    return task;  </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">private &lt;T&gt; void forkOrSubmit(ForkJoinTask&lt;T&gt; task) &#123;  </span><br><span class="line">    ForkJoinWorkerThread w;  </span><br><span class="line">    Thread t = Thread.currentThread();  </span><br><span class="line">    if (shutdown)  </span><br><span class="line">        throw new RejectedExecutionException();  </span><br><span class="line">    if ((t instanceof ForkJoinWorkerThread) &amp;&amp;   //如果当前是worker线程提交的任务，也就是worker执行过程中，分裂出来的子任务，放入worker自己的内部任务队列</span><br><span class="line">        (w = (ForkJoinWorkerThread)t).pool == this)  </span><br><span class="line">        w.pushTask(task);  </span><br><span class="line">    else  </span><br><span class="line">        addSubmission(task);  //外部任务，放入pool的全局队列</span><br><span class="line">&#125;   </span><br><span class="line"></span><br><span class="line">//worker的run方法</span><br><span class="line">public void run() &#123;  </span><br><span class="line">    Throwable exception = null;  </span><br><span class="line">    try &#123;  </span><br><span class="line">        onStart();  </span><br><span class="line">        pool.work(this);  </span><br><span class="line">    &#125; catch (Throwable ex) &#123;  </span><br><span class="line">        exception = ex;  </span><br><span class="line">    &#125; finally &#123;  </span><br><span class="line">        onTermination(exception);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line">final void work(ForkJoinWorkerThread w) &#123;  </span><br><span class="line">    boolean swept = false;                // true on empty scans  </span><br><span class="line">    long c;  </span><br><span class="line">    while (!w.terminate &amp;&amp; (int)(c = ctl) &gt;= 0) &#123;  </span><br><span class="line">        int a;                            // active count  </span><br><span class="line">        if (!swept &amp;&amp; (a = (int)(c &gt;&gt; AC_SHIFT)) &lt;= 0)  </span><br><span class="line">            swept = scan(w, a);   //核心代码都在这个scan函数里面</span><br><span class="line">        else if (tryAwaitWork(w, c))  </span><br><span class="line">            swept = false;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line">//scan的基本思路：从别人的任务队列里面抢，没有，再到pool的全局的任务队列里面去取。</span><br><span class="line">private boolean scan(ForkJoinWorkerThread w, int a) &#123;  </span><br><span class="line">    int g = scanGuard;   </span><br><span class="line"></span><br><span class="line">    int m = (parallelism == 1 - a &amp;&amp; blockedCount == 0) ? 0 : g &amp; SMASK;  </span><br><span class="line">    ForkJoinWorkerThread[] ws = workers;  </span><br><span class="line">    if (ws == null || ws.length &lt;= m)         // 过期检测  </span><br><span class="line">        return false;  </span><br><span class="line"></span><br><span class="line">    for (int r = w.seed, k = r, j = -(m + m); j &lt;= m + m; ++j) &#123;  </span><br><span class="line">        ForkJoinTask&lt;?&gt; t; ForkJoinTask&lt;?&gt;[] q; int b, i;  </span><br><span class="line">        //随机选出一个牺牲者(工作线程)。  </span><br><span class="line">        ForkJoinWorkerThread v = ws[k &amp; m];  </span><br><span class="line">        //一系列检查...  </span><br><span class="line">        if (v != null &amp;&amp; (b = v.queueBase) != v.queueTop &amp;&amp;  </span><br><span class="line">            (q = v.queue) != null &amp;&amp; (i = (q.length - 1) &amp; b) &gt;= 0) &#123;  </span><br><span class="line">            //如果这个牺牲者的任务队列中还有任务，尝试窃取这个任务。  </span><br><span class="line">            long u = (i &lt;&lt; ASHIFT) + ABASE;  </span><br><span class="line">            if ((t = q[i]) != null &amp;&amp; v.queueBase == b &amp;&amp;  </span><br><span class="line">                UNSAFE.compareAndSwapObject(q, u, t, null)) &#123;  </span><br><span class="line">                //窃取成功后，调整queueBase  </span><br><span class="line">                int d = (v.queueBase = b + 1) - v.queueTop;  </span><br><span class="line">                //将牺牲者的stealHint设置为当前工作线程在pool中的下标。  </span><br><span class="line">                v.stealHint = w.poolIndex;  </span><br><span class="line">                if (d != 0)  </span><br><span class="line">                    signalWork();             // 如果牺牲者的任务队列还有任务，继续唤醒(或创建)线程。  </span><br><span class="line">                w.execTask(t); //执行窃取的任务。  </span><br><span class="line">            &#125;  </span><br><span class="line">            //计算出下一个随机种子。  </span><br><span class="line">            r ^= r &lt;&lt; 13; r ^= r &gt;&gt;&gt; 17; w.seed = r ^ (r &lt;&lt; 5);  </span><br><span class="line">            return false;                     // 返回false，表示不是一个空扫描。  </span><br><span class="line">        &#125;  </span><br><span class="line">        //前2*m次，随机扫描。  </span><br><span class="line">        else if (j &lt; 0) &#123;                     // xorshift  </span><br><span class="line">            r ^= r &lt;&lt; 13; r ^= r &gt;&gt;&gt; 17; k = r ^= r &lt;&lt; 5;  </span><br><span class="line">        &#125;  </span><br><span class="line">        //后2*m次，顺序扫描。  </span><br><span class="line">        else  </span><br><span class="line">            ++k;  </span><br><span class="line">    &#125;  </span><br><span class="line">    if (scanGuard != g)                       // staleness check  </span><br><span class="line">        return false;  </span><br><span class="line">    else &#123;                                     </span><br><span class="line">        //如果扫描完毕后没找到可窃取的任务，那么从Pool的提交任务队列中取一个任务来执行。  </span><br><span class="line">        ForkJoinTask&lt;?&gt; t; ForkJoinTask&lt;?&gt;[] q; int b, i;  </span><br><span class="line">        if ((b = queueBase) != queueTop &amp;&amp;  </span><br><span class="line">            (q = submissionQueue) != null &amp;&amp;  </span><br><span class="line">            (i = (q.length - 1) &amp; b) &gt;= 0) &#123;  </span><br><span class="line">            long u = (i &lt;&lt; ASHIFT) + ABASE;  </span><br><span class="line">            if ((t = q[i]) != null &amp;&amp; queueBase == b &amp;&amp;  </span><br><span class="line">                UNSAFE.compareAndSwapObject(q, u, t, null)) &#123;  </span><br><span class="line">                queueBase = b + 1;  </span><br><span class="line">                w.execTask(t);  </span><br><span class="line">            &#125;  </span><br><span class="line">            return false;  </span><br><span class="line">        &#125;  </span><br><span class="line">        return true;                         // 如果所有的队列(工作线程的任务队列和pool的任务队列)都是空的，返回true。  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>关于ForkJoinPool/FutureTask，本文只是分析了其基本使用原理。还有很多实现细节，留待读者自己去分析。</p>
+</div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+        
+      </div>
+      
+      
+      
+    </div>
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Fork-Join框架"><span class="nav-number">1.</span> <span class="nav-text">什么是Fork/Join框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#工作窃取算法"><span class="nav-number">2.</span> <span class="nav-text">工作窃取算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fork-Join框架的介绍"><span class="nav-number">3.</span> <span class="nav-text">Fork/Join框架的介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Fork-Join框架"><span class="nav-number">4.</span> <span class="nav-text">使用Fork/Join框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fork-Join框架的异常处理"><span class="nav-number">5.</span> <span class="nav-text">Fork/Join框架的异常处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fork-Join框架的实现原理"><span class="nav-number">6.</span> <span class="nav-text">Fork/Join框架的实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fork-Join源码剖析与算法解析"><span class="nav-number">7.</span> <span class="nav-text">Fork/Join源码剖析与算法解析</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

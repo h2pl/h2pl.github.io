@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="spring,springMVC,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="转自 SpringMVC关于json、xml自动转换的原理研究[附带源码分析] 本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章将同步到我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《S">
+<meta name="keywords" content="spring,springMVC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringMVC源码剖析5：消息转换器HttpMessageConverter与@ResponseBody注解">
+<meta property="og:url" content="http://yoursite.com/2019/09/14/springmvc/SpringMVC源码剖析5：消息转换器HttpMessageConverter与@ResponseBody注解/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="转自 SpringMVC关于json、xml自动转换的原理研究[附带源码分析] 本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章将同步到我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《S">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/101449596675807.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/101510002604230.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/101606162131470.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/101611179016436.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/101630232136603.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/101640298384297.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/101641297132356.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/101643277139672.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/101803027605809.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/101803105889900.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/101809037135949.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/102031439173571.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/101816581047144.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/101830573234896.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/101832284176592.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/101832352929525.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/101838053851073.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/101903141989122.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/101904598389030.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/102222464019898.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/102311480731629.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/102313161827280.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/102319292603758.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/102319412294581.png">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190825151641382-1716038917.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:23.969Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SpringMVC源码剖析5：消息转换器HttpMessageConverter与@ResponseBody注解">
+<meta name="twitter:description" content="转自 SpringMVC关于json、xml自动转换的原理研究[附带源码分析] 本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章将同步到我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《S">
+<meta name="twitter:image" content="https://images0.cnblogs.com/i/411512/201405/101449596675807.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/09/14/springmvc/SpringMVC源码剖析5：消息转换器HttpMessageConverter与@ResponseBody注解/">
+
+
+
+
+
+  <title>SpringMVC源码剖析5：消息转换器HttpMessageConverter与@ResponseBody注解 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/14/springmvc/SpringMVC源码剖析5：消息转换器HttpMessageConverter与@ResponseBody注解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SpringMVC源码剖析5：消息转换器HttpMessageConverter与@ResponseBody注解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-14T23:15:43+08:00">
+                2019-09-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spring/" itemprop="url" rel="index">
+                    <span itemprop="name">spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/09/14/springmvc/SpringMVC源码剖析5：消息转换器HttpMessageConverter与@ResponseBody注解/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/09/14/springmvc/SpringMVC源码剖析5：消息转换器HttpMessageConverter与@ResponseBody注解/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><p>转自 <a href="https://www.cnblogs.com/fangjian0423/p/springMVC-xml-json-convert.html" target="_blank" rel="noopener">SpringMVC关于json、xml自动转换的原理研究[附带源码分析]</a></p>
+<p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章将同步到我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>本文是微信公众号【Java技术江湖】的《Spring和SpringMVC源码分析》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透彻，也整合了很多我认为不错的技术博客内容，引用其中了一些比较好的博客文章，如有侵权，请联系作者。</p>
+<p>该系列博文会告诉你如何从spring基础入手，一步步地学习spring基础和springmvc的框架知识，并上手进行项目实战，spring框架是每一个Java工程师必须要学习和理解的知识点，进一步来说，你还需要掌握spring甚至是springmvc的源码以及实现原理，才能更完整地了解整个spring技术体系，形成自己的知识框架。</p>
+<p>后续还会有springboot和springcloud的技术专题，陆续为大家带来，敬请期待。</p>
+<p>为了更好地总结和检验你的学习成果，本系列文章也会提供部分知识点对应的面试题以及参考答案。</p>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+<a id="more"></a>
+
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><a href="http://www.cnblogs.com/fangjian0423/p/springMVC-xml-json-convert.html#preface" target="_blank" rel="noopener">前言</a></li>
+<li><a href="http://www.cnblogs.com/fangjian0423/p/springMVC-xml-json-convert.html#phenomenon" target="_blank" rel="noopener">现象</a></li>
+<li><a href="http://www.cnblogs.com/fangjian0423/p/springMVC-xml-json-convert.html#analysis" target="_blank" rel="noopener">源码分析</a></li>
+<li><a href="http://www.cnblogs.com/fangjian0423/p/springMVC-xml-json-convert.html#demo" target="_blank" rel="noopener">实例讲解</a></li>
+<li><a href="http://www.cnblogs.com/fangjian0423/p/springMVC-xml-json-convert.html#config" target="_blank" rel="noopener">关于配置</a></li>
+<li><a href="http://www.cnblogs.com/fangjian0423/p/springMVC-xml-json-convert.html#summary" target="_blank" rel="noopener">总结</a></li>
+<li><a href="http://www.cnblogs.com/fangjian0423/p/springMVC-xml-json-convert.html#reference" target="_blank" rel="noopener">参考资料</a></li>
+</ul>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>SpringMVC是目前主流的Web MVC框架之一。 </p>
+<p>如果有同学对它不熟悉，那么请参考它的入门blog：<a href="http://www.cnblogs.com/fangjian0423/p/springMVC-introduction.html" target="_blank" rel="noopener">http://www.cnblogs.com/fangjian0423/p/springMVC-introduction.html</a></p>
+<h2 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h2><p>本文使用的demo基于maven，是根据入门blog的例子继续写下去的。</p>
+<p>我们先来看一看对应的现象。 我们这里的配置文件 *-dispatcher.xml中的关键配置如下(其他常规的配置文件不在讲解，可参考本文一开始提到的入门blog)：</p>
+<p>(视图配置省略)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;mvc:resources location=&quot;/static/&quot; mapping=&quot;/static/**&quot;/&gt;</span><br><span class="line">&lt;mvc:annotation-driven/&gt;</span><br><span class="line">&lt;context:component-scan base-package=&quot;org.format.demo.controller&quot;/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>pom中需要有以下依赖(Spring依赖及其他依赖不显示)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;org.codehaus.jackson&lt;/groupId&gt;</span><br><span class="line">  jackson-core-asl</span><br><span class="line">  &lt;version&gt;1.9.13&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;org.codehaus.jackson&lt;/groupId&gt;</span><br><span class="line">  jackson-mapper-asl</span><br><span class="line">  &lt;version&gt;1.9.13&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这个依赖是json序列化的依赖。</p>
+<p>ok。我们在Controller中添加一个method：</p>
+<pre>@RequestMapping("/xmlOrJson")
+@ResponseBody public Map <string, object>xmlOrJson() {
+    Map <string, object>map = new HashMap<string, object>();
+    map.put("list", employeeService.list()); return map;
+}</string,></string,></string,></pre>
+
+
+<p>直接访问地址：</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/101449596675807.png" alt></p>
+<p>我们看到，短短几行配置。使用@ResponseBody注解之后，Controller返回的对象 自动被转换成对应的json数据，在这里不得不感叹SpringMVC的强大。</p>
+<p>我们好像也没看到具体的配置，唯一看到的就是*-dispatcher.xml中的一句配置：<a href="mvc:annotation-driven" target="_blank" rel="noopener">mvc:annotation-driven</a>。其实就是这个配置，导致了java对象自动转换成json对象的现象。</p>
+<p>那么spring到底是如何实现java对象到json对象的自动转换的呢？ 为什么转换成了json数据，如果想转换成xml数据，那该怎么办？</p>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p><strong>本文使用的spring版本是4.0.2。</strong></p>
+<p>在讲解<a href="mvc:annotation-driven" target="_blank" rel="noopener">mvc:annotation-driven</a>这个配置之前，我们先了解下Spring的消息转换机制。@ResponseBody这个注解就是使用消息转换机制，最终通过json的转换器转换成json数据的。</p>
+<p>HttpMessageConverter接口就是Spring提供的http消息转换接口。有关这方面的知识大家可以参考”参考资料”中的<a href="http://my.oschina.net/lichhao/blog/172562" target="_blank" rel="noopener">第二条链接</a>，里面讲的很清楚。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/101510002604230.png" alt></p>
+<p>下面开始分析<a href="mvc:annotation-driven" target="_blank" rel="noopener">mvc:annotation-driven</a>这句配置:</p>
+<p>这句代码在spring中的解析类是：</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/101606162131470.png" alt></p>
+<p>在AnnotationDrivenBeanDefinitionParser源码的152行parse方法中：</p>
+<p>分别实例化了RequestMappingHandlerMapping，ConfigurableWebBindingInitializer，RequestMappingHandlerAdapter等诸多类。</p>
+<p>其中<strong>RequestMappingHandlerMapping和RequestMappingHandlerAdapter</strong>这两个类比较重要。</p>
+<p>RequestMappingHandlerMapping处理请求映射的，处理@RequestMapping跟请求地址之间的关系。</p>
+<p>RequestMappingHandlerAdapter是请求处理的适配器，也就是请求之后处理具体逻辑的执行，关系到哪个类的哪个方法以及转换器等工作，这个类是我们讲的重点，其中它的属性messageConverters是本文要讲的重点。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/101611179016436.png" alt></p>
+<p>私有方法:getMessageConverters</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/101630232136603.png" alt></p>
+<p>从代码中我们可以，RequestMappingHandlerAdapter设置messageConverters的逻辑：</p>
+<p>1.如果<a href="mvc:annotation-driven" target="_blank" rel="noopener">mvc:annotation-driven</a>节点有子节点message-converters，那么它的转换器属性messageConverters也由这些子节点组成。</p>
+<p>message-converters的子节点配置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;mvc:annotation-driven&gt;</span><br><span class="line">  &lt;mvc:message-converters&gt;</span><br><span class="line">    &lt;bean class=&quot;org.example.MyHttpMessageConverter&quot;/&gt;</span><br><span class="line">    &lt;bean class=&quot;org.example.MyOtherHttpMessageConverter&quot;/&gt;</span><br><span class="line">  &lt;/mvc:message-converters&gt;</span><br><span class="line">&lt;/mvc:annotation-driven&gt;</span><br></pre></td></tr></table></figure>
+
+<p>2.message-converters子节点不存在或它的属性register-defaults为true的话，加入其他的转换器：ByteArrayHttpMessageConverter、StringHttpMessageConverter、ResourceHttpMessageConverter等。</p>
+<p>我们看到这么一段：</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/101640298384297.png" alt></p>
+<p>这些boolean属性是哪里来的呢，它们是AnnotationDrivenBeanDefinitionParser的静态变量。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/101641297132356.png" alt></p>
+<p> 其中ClassUtils中的isPresent方法如下：</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/101643277139672.png" alt></p>
+<p>看到这里，读者应该明白了为什么本文一开始在pom文件中需要加入对应的jackson依赖，为了让json转换器jackson成为默认转换器之一。</p>
+<p><a href="mvc:annotation-driven" target="_blank" rel="noopener">mvc:annotation-driven</a>的作用读者也明白了。</p>
+<p>下面我们看如何通过消息转换器将java对象进行转换的。</p>
+<p>RequestMappingHandlerAdapter在进行handle的时候，会委托给HandlerMethod（具体由子类ServletInvocableHandlerMethod处理）的invokeAndHandle方法进行处理，这个方法又转接给HandlerMethodReturnValueHandlerComposite处理。</p>
+<p>HandlerMethodReturnValueHandlerComposite维护了一个HandlerMethodReturnValueHandler列表。<strong>HandlerMethodReturnValueHandler是一个对返回值进行处理的策略接口，这个接口非常重要。关于这个接口的细节，请参考楼主的另外一篇博客：</strong><a href="http://www.cnblogs.com/fangjian0423/p/springMVC-request-param-analysis.html" target="_blank" rel="noopener">http://www.cnblogs.com/fangjian0423/p/springMVC-request-param-analysis.html</a>。然后找到对应的HandlerMethodReturnValueHandler对结果值进行处理。</p>
+<p>最终找到RequestResponseBodyMethodProcessor这个Handler（由于使用了@ResponseBody注解）。</p>
+<p>RequestResponseBodyMethodProcessor的supportsReturnType方法：</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/101803027605809.png" alt></p>
+<p>然后使用handleReturnValue方法进行处理：</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/101803105889900.png" alt></p>
+<p>我们看到，这里使用了转换器。　　</p>
+<p>具体的转换方法：</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/101809037135949.png" alt></p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/102031439173571.png" alt></p>
+<p>至于为何是请求头部的<strong>Accept</strong>数据，读者可以进去debug这个<strong>getAcceptableMediaTypes</strong>方法看看。 我就不罗嗦了～～～</p>
+<p> ok。至此，我们走遍了所有的流程。</p>
+<p>现在，回过头来看。为什么一开始的demo输出了json数据？</p>
+<p>我们来分析吧。</p>
+<p>由于我们只配置了<a href="mvc:annotation-driven" target="_blank" rel="noopener">mvc:annotation-driven</a>，因此使用spring默认的那些转换器。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/101816581047144.png" alt></p>
+<p>很明显，我们看到了2个xml和1个json转换器。 <strong>要看能不能转换，得看HttpMessageConverter接口的public boolean canWrite(Class&lt;?&gt; clazz, MediaType mediaType)方法是否返回true来决定的。</strong></p>
+<p>我们先分析SourceHttpMessageConverter：</p>
+<p>它的canWrite方法被父类AbstractHttpMessageConverter重写了。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/101830573234896.png" alt></p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/101832284176592.png" alt></p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/101832352929525.png" alt></p>
+<p>发现SUPPORTED_CLASSES中没有Map类(本文demo返回的是Map类)，因此不支持。</p>
+<p>下面看Jaxb2RootElementHttpMessageConverter：</p>
+<p>这个类直接重写了canWrite方法。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/101838053851073.png" alt></p>
+<p>需要有XmlRootElement注解。 很明显，Map类当然没有。</p>
+<p>最终MappingJackson2HttpMessageConverter匹配，进行json转换。（为何匹配，请读者自行查看源码）</p>
+<h2 id="实例讲解"><a href="#实例讲解" class="headerlink" title="实例讲解"></a>实例讲解</h2><p> 我们分析了转换器的转换过程之后，下面就通过实例来验证我们的结论吧。</p>
+<p>首先，我们先把xml转换器实现。</p>
+<p>之前已经分析，默认的转换器中是支持xml的。下面我们加上注解试试吧。</p>
+<p>由于Map是jdk源码中的部分，因此我们用Employee来做demo。</p>
+<p>因此，Controller加上一个方法：</p>
+<pre>@RequestMapping("/xmlOrJsonSimple")
+@ResponseBody public Employee xmlOrJsonSimple() { return employeeService.getById(1);
+}</pre>
+
+<p>实体中加上@XmlRootElement注解</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/101903141989122.png" alt></p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/101904598389030.png" alt></p>
+<p>我们发现，解析成了xml。</p>
+<p>这里为什么解析成xml，而不解析成json呢？</p>
+<p>之前分析过，消息转换器是根据class和mediaType决定的。</p>
+<p>我们使用firebug看到：</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/102222464019898.png" alt></p>
+<p>我们发现Accept有xml，没有json。因此解析成xml了。</p>
+<p>我们再来验证，同一地址，HTTP头部不同Accept。看是否正确。</p>
+<pre>$.ajax({
+    url: "${request.contextPath}/employee/xmlOrJsonSimple",
+    success: function(res) {
+        console.log(res);
+    },
+    headers: { "Accept": "application/xml" }
+});</pre>
+
+<pre>$.ajax({
+    url: "${request.contextPath}/employee/xmlOrJsonSimple",
+    success: function(res) {
+        console.log(res);
+    },
+    headers: { "Accept": "application/json" }
+});</pre>
+
+
+<p>验证成功。</p>
+<h2 id="关于配置"><a href="#关于配置" class="headerlink" title="关于配置"></a>关于配置</h2><p>如果不想使用<a href="mvc:annotation-driven" target="_blank" rel="noopener">mvc:annotation-driven</a>中默认的RequestMappingHandlerAdapter的话，我们可以在重新定义这个bean，spring会覆盖掉默认的RequestMappingHandlerAdapter。</p>
+<p>为何会覆盖，请参考楼主的另外一篇博客：<a href="http://www.cnblogs.com/fangjian0423/p/spring-Ordered-interface.html" target="_blank" rel="noopener">http://www.cnblogs.com/fangjian0423/p/spring-Ordered-interface.html</a></p>
+<pre>    ` <bean><property name="messageConverters"><list><bean><bean><bean></bean></bean></bean></list></property></bean> ` </pre>
+
+<p>或者如果只想换messageConverters的话。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;mvc:annotation-driven&gt;</span><br><span class="line">  &lt;mvc:message-converters&gt;</span><br><span class="line">    &lt;bean class=&quot;org.example.MyHttpMessageConverter&quot;/&gt;</span><br><span class="line">    &lt;bean class=&quot;org.example.MyOtherHttpMessageConverter&quot;/&gt;</span><br><span class="line">  &lt;/mvc:message-converters&gt;</span><br><span class="line">&lt;/mvc:annotation-driven&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果还想用其他converters的话。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/102311480731629.png" alt></p>
+<p>以上是spring-mvc jar包中的converters。</p>
+<p>这里我们使用转换xml的MarshallingHttpMessageConverter。</p>
+<p>这个converter里面使用了marshaller进行转换</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/102313161827280.png" alt></p>
+<p>我们这里使用XStreamMarshaller。　　</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/102319292603758.png" alt></p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/102319412294581.png" alt></p>
+<p>json没有转换器，返回406.</p>
+<p>至于xml格式的问题，大家自行解决吧。 这里用的是XStream～。</p>
+<p>使用这种方式，pom别忘记了加入xstream的依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;com.thoughtworks.xstream&lt;/groupId&gt;</span><br><span class="line">  xstream</span><br><span class="line">  &lt;version&gt;1.4.7&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p> 写了这么多，可能读者觉得有点罗嗦。 毕竟这也是自己的一些心得，希望都能说出来与读者共享。</p>
+<p>刚接触SpringMVC的时候，发现这种自动转换机制很牛逼，但是一直没有研究它的原理，目前，算是了了一个小小心愿吧，SpringMVC还有很多内容，以后自己研究其他内容的时候还会与大家一起共享的。</p>
+<p>文章难免会出现一些错误，希望读者们能指明出来。</p>
+<h2 id="详解RequestBody和-ResponseBody注解"><a href="#详解RequestBody和-ResponseBody注解" class="headerlink" title="详解RequestBody和@ResponseBody注解"></a>详解RequestBody和@ResponseBody注解</h2><p>概述 在SpringMVC中，可以使用@RequestBody和@ResponseBody两个注解，分别完成请求报文到对象和对象到响应报文的转换，底层这种灵活的消息转换机制，就是Spring3.x中新引入的HttpMessageConverter即消息转换器机制。</p>
+<p>Http请求的抽象 还是回到请求-响应，也就是解析请求体，然后返回响应报文这个最基本的Http请求过程中来。我们知道，在servlet标准中，可以用javax.servlet.ServletRequest接口中的以下方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public ServletInputStream getInputStream() throws IOException;</span><br></pre></td></tr></table></figure>
+
+<p>来得到一个ServletInputStream。这个ServletInputStream中，可以读取到一个原始请求报文的所有内容。同样的，在javax.servlet.ServletResponse接口中，可以用以下方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public ServletOutputStream getOutputStream() throws IOException;</span><br></pre></td></tr></table></figure>
+
+<p>来得到一个ServletOutputStream，这个ServletOutputSteam，继承自java中的OutputStream，可以让你输出Http的响应报文内容。</p>
+<p>让我们尝试着像SpringMVC的设计者一样来思考一下。我们知道，Http请求和响应报文本质上都是一串字符串，当请求报文来到java世界，它会被封装成为一个ServletInputStream的输入流，供我们读取报文。响应报文则是通过一个ServletOutputStream的输出流，来输出响应报文。</p>
+<p>我们从流中，只能读取到原始的字符串报文，同样，我们往输出流中，也只能写原始的字符。而在java世界中，处理业务逻辑，都是以一个个有业务意义的<strong>对象</strong>为处理维度的，那么在报文到达SpringMVC和从SpringMVC出去，都存在一个字符串到java对象的阻抗问题。这一过程，不可能由开发者手工转换。我们知道，在Struts2中，采用了OGNL来应对这个问题，而在SpringMVC中，它是HttpMessageConverter机制。我们先来看两个接口。</p>
+<p>HttpInputMessage 这个类是SpringMVC内部对一次Http请求报文的抽象，在HttpMessageConverter的read()方法中，有一个HttpInputMessage的形参，它正是SpringMVC的消息转换器所作用的受体“请求消息”的内部抽象，消息转换器从“请求消息”中按照规则提取消息，转换为方法形参中声明的对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package org.springframework.http;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.io.InputStream;</span><br><span class="line"></span><br><span class="line">public interface HttpInputMessage extends HttpMessage &#123;</span><br><span class="line"></span><br><span class="line">    InputStream getBody() throws IOException;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>HttpOutputMessage 这个类是SpringMVC内部对一次Http响应报文的抽象，在HttpMessageConverter的write()方法中，有一个HttpOutputMessage的形参，它正是SpringMVC的消息转换器所作用的受体“响应消息”的内部抽象，消息转换器将“响应消息”按照一定的规则写到响应报文中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package org.springframework.http;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.io.OutputStream;</span><br><span class="line"></span><br><span class="line">public interface HttpOutputMessage extends HttpMessage &#123;</span><br><span class="line"></span><br><span class="line">    OutputStream getBody() throws IOException;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>HttpMessageConverter 对消息转换器最高层次的接口抽象，描述了一个消息转换器的一般特征，我们可以从这个接口中定义的方法，来领悟Spring3.x的设计者对这一机制的思考过程。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">package org.springframework.http.converter;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">import org.springframework.http.HttpInputMessage;</span><br><span class="line">import org.springframework.http.HttpOutputMessage;</span><br><span class="line">import org.springframework.http.MediaType;</span><br><span class="line"></span><br><span class="line">public interface HttpMessageConverter&lt;T&gt; &#123;</span><br><span class="line"></span><br><span class="line">    boolean canRead(Class&lt;?&gt; clazz, MediaType mediaType);</span><br><span class="line"></span><br><span class="line">    boolean canWrite(Class&lt;?&gt; clazz, MediaType mediaType);</span><br><span class="line"></span><br><span class="line">    List&lt;MediaType&gt; getSupportedMediaTypes();</span><br><span class="line"></span><br><span class="line">    T read(Class&lt;? extends T&gt; clazz, HttpInputMessage inputMessage)</span><br><span class="line">            throws IOException, HttpMessageNotReadableException;</span><br><span class="line"></span><br><span class="line">    void write(T t, MediaType contentType, HttpOutputMessage outputMessage)</span><br><span class="line">            throws IOException, HttpMessageNotWritableException;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>HttpMessageConverter接口的定义出现了成对的canRead()，read()和canWrite()，write()方法，MediaType是对请求的Media Type属性的封装。举个例子，当我们声明了下面这个处理方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(value=&quot;/string&quot;, method=RequestMethod.POST)</span><br><span class="line">public @ResponseBody String readString(@RequestBody String string) &#123;</span><br><span class="line">    return &quot;Read string &apos;&quot; + string + &quot;&apos;&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在SpringMVC进入readString方法前，会根据@RequestBody注解选择适当的HttpMessageConverter实现类来将请求参数解析到string变量中，具体来说是使用了StringHttpMessageConverter类，它的canRead()方法返回true，然后它的read()方法会从请求中读出请求参数，绑定到readString()方法的string变量中。</p>
+<p>当SpringMVC执行readString方法后，由于返回值标识了@ResponseBody，SpringMVC将使用StringHttpMessageConverter的write()方法，将结果作为String值写入响应报文，当然，此时canWrite()方法返回true。</p>
+<p>我们可以用下面的图，简单描述一下这个过程。</p>
+<p><img src="https://img2018.cnblogs.com/blog/1092007/201908/1092007-20190825151641382-1716038917.png" alt="消息转换图"></p>
+<p>RequestResponseBodyMethodProcessor 将上述过程集中描述的一个类是org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor，这个类同时实现了HandlerMethodArgumentResolver和HandlerMethodReturnValueHandler两个接口。前者是将请求报文绑定到处理方法形参的策略接口，后者则是对处理方法返回值进行处理的策略接口。两个接口的源码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">package org.springframework.web.method.support;</span><br><span class="line"></span><br><span class="line">import org.springframework.core.MethodParameter;</span><br><span class="line">import org.springframework.web.bind.WebDataBinder;</span><br><span class="line">import org.springframework.web.bind.support.WebDataBinderFactory;</span><br><span class="line">import org.springframework.web.context.request.NativeWebRequest;</span><br><span class="line"></span><br><span class="line">public interface HandlerMethodArgumentResolver &#123;</span><br><span class="line"></span><br><span class="line">    boolean supportsParameter(MethodParameter parameter);</span><br><span class="line"></span><br><span class="line">    Object resolveArgument(MethodParameter parameter,</span><br><span class="line">                           ModelAndViewContainer mavContainer,</span><br><span class="line">                           NativeWebRequest webRequest,</span><br><span class="line">                           WebDataBinderFactory binderFactory) throws Exception;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">package org.springframework.web.method.support;</span><br><span class="line"></span><br><span class="line">import org.springframework.core.MethodParameter;</span><br><span class="line">import org.springframework.web.context.request.NativeWebRequest;</span><br><span class="line"></span><br><span class="line">public interface HandlerMethodReturnValueHandler &#123;</span><br><span class="line"></span><br><span class="line">    boolean supportsReturnType(MethodParameter returnType);</span><br><span class="line"></span><br><span class="line">    void handleReturnValue(Object returnValue,</span><br><span class="line">                           MethodParameter returnType,</span><br><span class="line">                           ModelAndViewContainer mavContainer,</span><br><span class="line">                           NativeWebRequest webRequest) throws Exception;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>RequestResponseBodyMethodProcessor这个类，同时充当了方法参数解析和返回值处理两种角色。我们从它的源码中，可以找到上面两个接口的方法实现。</p>
+<p>对HandlerMethodArgumentResolver接口的实现：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public boolean supportsParameter(MethodParameter parameter) &#123;</span><br><span class="line">    return parameter.hasParameterAnnotation(RequestBody.class);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,</span><br><span class="line">        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception &#123;</span><br><span class="line"></span><br><span class="line">    Object argument = readWithMessageConverters(webRequest, parameter, parameter.getGenericParameterType());</span><br><span class="line"></span><br><span class="line">    String name = Conventions.getVariableNameForParameter(parameter);</span><br><span class="line">    WebDataBinder binder = binderFactory.createBinder(webRequest, argument, name);</span><br><span class="line"></span><br><span class="line">    if (argument != null) &#123;</span><br><span class="line">        validate(binder, parameter);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mavContainer.addAttribute(BindingResult.MODEL_KEY_PREFIX + name, binder.getBindingResult());</span><br><span class="line"></span><br><span class="line">    return argument;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对HandlerMethodReturnValueHandler接口的实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public boolean supportsReturnType(MethodParameter returnType) &#123;</span><br><span class="line">    return returnType.getMethodAnnotation(ResponseBody.class) != null;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">    public void handleReturnValue(Object returnValue, MethodParameter returnType,</span><br><span class="line">        ModelAndViewContainer mavContainer, NativeWebRequest webRequest)</span><br><span class="line">        throws IOException, HttpMediaTypeNotAcceptableException &#123;</span><br><span class="line"></span><br><span class="line">    mavContainer.setRequestHandled(true);</span><br><span class="line">    if (returnValue != null) &#123;</span><br><span class="line">        writeWithMessageConverters(returnValue, returnType, webRequest);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看完上面的代码，整个HttpMessageConverter消息转换的脉络已经非常清晰。因为两个接口的实现，分别是以是否有@RequestBody和@ResponseBody为条件，然后分别调用HttpMessageConverter来进行消息的读写。</p>
+<p>如果你想问，怎么样跟踪到RequestResponseBodyMethodProcessor中，请你按照前面几篇博文的思路，然后到这里<a href="https://github.com/spring-projects/spring-mvc-showcase" target="_blank" rel="noopener">spring-mvc-showcase</a>下载源码回来，对其中HttpMessageConverter相关的例子进行debug，只要你肯下功夫，相信你一定会有属于自己的收获的。</p>
+<p>思考 张小龙在谈微信的本质时候说：“微信只是个平台，消息在其中流转”。在我们对SpringMVC源码分析的过程中，我们可以从HttpMessageConverter机制中领悟到类似的道理。在SpringMVC的设计者眼中，一次请求报文和一次响应报文，分别被抽象为一个请求消息HttpInputMessage和一个响应消息HttpOutputMessage。</p>
+<p>处理请求时，由合适的消息转换器将请求报文绑定为方法中的形参对象，在这里，同一个对象就有可能出现多种不同的消息形式，比如json和xml。同样，当响应请求时，方法的返回值也同样可能被返回为不同的消息形式，比如json和xml。</p>
+<p>在SpringMVC中，针对不同的消息形式，我们有不同的HttpMessageConverter实现类来处理各种消息形式。但是，只要这些消息所蕴含的“有效信息”是一致的，那么各种不同的消息转换器，都会生成同样的转换结果。至于各种消息间解析细节的不同，就被屏蔽在不同的HttpMessageConverter实现类中了。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="http://my.oschina.net/HeliosFly/blog/205343" target="_blank" rel="noopener">http://my.oschina.net/HeliosFly/blog/205343</a></p>
+<p><a href="http://my.oschina.net/lichhao/blog/172562" target="_blank" rel="noopener">http://my.oschina.net/lichhao/blog/172562</a></p>
+<p><a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html" target="_blank" rel="noopener">http://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html</a></p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spring/" rel="tag"># spring</a>
+          
+            <a href="/tags/springMVC/" rel="tag"># springMVC</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/14/springmvc/SpringMVC源码分析4：DispatcherServlet如何找到正确的Controller/" rel="next" title="SpringMVC源码分析4：DispatcherServlet如何找到正确的Controller">
+                <i class="fa fa-chevron-left"></i> SpringMVC源码分析4：DispatcherServlet如何找到正确的Controller
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/14/springmvc/SpringMVC源码分析6：SpringMVC的视图解析原理/" rel="prev" title="SpringMVC源码分析6：SpringMVC的视图解析原理">
+                SpringMVC源码分析6：SpringMVC的视图解析原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">2.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#现象"><span class="nav-number">3.</span> <span class="nav-text">现象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源码分析"><span class="nav-number">4.</span> <span class="nav-text">源码分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实例讲解"><span class="nav-number">5.</span> <span class="nav-text">实例讲解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于配置"><span class="nav-number">6.</span> <span class="nav-text">关于配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#详解RequestBody和-ResponseBody注解"><span class="nav-number">8.</span> <span class="nav-text">详解RequestBody和@ResponseBody注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">9.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">10.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">10.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">10.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

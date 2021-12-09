@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="大后端,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本文作者：顿炖链接：https://www.zhihu.com/question/19937854/answer/98791215来源：知乎 写在前面 Max Grigorev最近写了一篇文章，题目是《What every software engineer should know about search》，这篇文章里指出了现在一些软件工程师的问题，他们认为开发一个搜索引擎功能就是搭建一个Ela">
+<meta name="keywords" content="大后端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="后端技术杂谈2：搜索引擎工作原理">
+<meta property="og:url" content="http://yoursite.com/2019/10/13/后端技术杂谈/后端技术杂谈2：搜索引擎工作原理/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本文作者：顿炖链接：https://www.zhihu.com/question/19937854/answer/98791215来源：知乎 写在前面 Max Grigorev最近写了一篇文章，题目是《What every software engineer should know about search》，这篇文章里指出了现在一些软件工程师的问题，他们认为开发一个搜索引擎功能就是搭建一个Ela">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/006tKfTcly1fkrzrfk7trj30pl0grjt9.jpg">
+<meta property="og:image" content="https://ww2.sinaimg.cn/large/006tKfTcly1fkrzrpvzm1j30f40db755.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/006tKfTcly1fkrzrz05rqj30f4049gmb.jpg">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/006tKfTcly1fkrzs6lbs1j31hm10x466.jpg">
+<meta property="og:image" content="https://ww1.sinaimg.cn/large/006tKfTcly1fkrzshq4cbj30ga05874m.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/5b981a1b36b15a5a82c8f4e65a718afa_b.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/80/5b981a1b36b15a5a82c8f4e65a718afa_hd.jpg">
+<meta property="og:image" content="https://pic4.zhimg.com/6e7fd609f7de41c35f5587a1ceb42523_b.jpg">
+<meta property="og:image" content="https://pic4.zhimg.com/80/6e7fd609f7de41c35f5587a1ceb42523_hd.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:23.972Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="后端技术杂谈2：搜索引擎工作原理">
+<meta name="twitter:description" content="本文作者：顿炖链接：https://www.zhihu.com/question/19937854/answer/98791215来源：知乎 写在前面 Max Grigorev最近写了一篇文章，题目是《What every software engineer should know about search》，这篇文章里指出了现在一些软件工程师的问题，他们认为开发一个搜索引擎功能就是搭建一个Ela">
+<meta name="twitter:image" content="https://ww2.sinaimg.cn/large/006tKfTcly1fkrzrfk7trj30pl0grjt9.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/13/后端技术杂谈/后端技术杂谈2：搜索引擎工作原理/">
+
+
+
+
+
+  <title>后端技术杂谈2：搜索引擎工作原理 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/13/后端技术杂谈/后端技术杂谈2：搜索引擎工作原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">后端技术杂谈2：搜索引擎工作原理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-13T15:02:26+08:00">
+                2019-10-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/后端技术/" itemprop="url" rel="index">
+                    <span itemprop="name">后端技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/13/后端技术杂谈/后端技术杂谈2：搜索引擎工作原理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/13/后端技术杂谈/后端技术杂谈2：搜索引擎工作原理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><p>本文作者：顿炖<br>链接：<a href="https://www.zhihu.com/question/19937854/answer/98791215" target="_blank" rel="noopener">https://www.zhihu.com/question/19937854/answer/98791215</a><br>来源：知乎</p>
+<p>写在前面</p>
+<p>Max Grigorev最近写了一篇文章，题目是<a href="https://link.juejin.im/?target=https%3A%2F%2Fmedium.com%2Fstartup-grind%2Fwhat-every-software-engineer-should-know-about-search-27d1df99f80d" target="_blank" rel="noopener">《What every software engineer should know about search》</a>，这篇文章里指出了现在一些软件工程师的问题，他们认为开发一个搜索引擎功能就是搭建一个ElasticSearch集群，而没有深究背后的技术，以及技术发展趋势。Max认为，除了搜索引擎自身的搜索问题解决、人类使用方式等之外，也需要解决索引、分词、权限控制、国际化等等的技术点，看了他的文章，勾起了我多年前的想法。</p>
+<p>很多年前，我曾经想过自己实现一个搜索引擎，作为自己的研究生论文课题，后来琢磨半天没有想出新的技术突破点（相较于已发表的文章），所以切换到了大数据相关的技术点。当时没有写出来，心中有点小遗憾，毕竟凭借搜索引擎崛起的谷歌是我内心渴望的公司。今天我就想结合自己的一些积累，聊聊作为一名软件工程师，您需要了解的搜索引擎知识。</p>
+<p>搜索引擎发展过程</p>
+<p>现代意义上的搜索引擎的祖先，是1990年由蒙特利尔大学学生Alan Emtage发明的Archie。即便没有英特网，网络中文件传输还是相当频繁的，而且由于大量的文件散布在各个分散的FTP主机中，查询起来非常不便，因此Alan Emtage想到了开发一个可以以文件名查找文件的系统，于是便有了Archie。Archie工作原理与现在的搜索引擎已经很接近，它依靠脚本程序自动搜索网上的文件，然后对有关信息进行索引，供使用者以一定的表达式查询。</p>
+<p>互联网兴起后，需要能够监控的工具。世界上第一个用于监测互联网发展规模的“机器人”程序是Matthew Gray开发的World wide Web Wanderer，刚开始它只用来统计互联网上的服务器数量，后来则发展为能够检索网站域名。</p>
+<p>随着互联网的迅速发展，每天都会新增大量的网站、网页，检索所有新出现的网页变得越来越困难，因此，在Matthew Gray的Wanderer基础上，一些编程者将传统的“蜘蛛”程序工作原理作了些改进。现代搜索引擎都是以此为基础发展的。</p>
+<p>搜索引擎分类</p>
+<ul>
+<li>全文搜索引擎</li>
+</ul>
+<p>当前主流的是全文搜索引擎，较为典型的代表是Google、百度。全文搜索引擎是指通过从互联网上提取的各个网站的信息（以网页文字为主），保存在自己建立的数据库中。用户发起检索请求后，系统检索与用户查询条件匹配的相关记录，然后按一定的排列顺序将结果返回给用户。从搜索结果来源的角度，全文搜索引擎又可细分为两种，一种是拥有自己的检索程序（Indexer），俗称“蜘蛛”（Spider）程序或“机器人”（Robot）程序，并自建网页数据库，搜索结果直接从自身的数据存储层中调用；另一种则是租用其他引擎的数据库，并按自定的格式排列搜索结果，如Lycos引擎。</p>
+<ul>
+<li>目录索引类搜索引擎</li>
+</ul>
+<p>虽然有搜索功能，但严格意义上不能称为真正的搜索引擎，只是按目录分类的网站链接列表而已。用户完全可以按照分类目录找到所需要的信息，不依靠关键词（Keywords）进行查询。目录索引中最具代表性的莫过于大名鼎鼎的Yahoo、新浪分类目录搜索。</p>
+<ul>
+<li><p>元搜索引擎</p>
+<p>元搜索引擎在接受用户查询请求时，同时在其他多个引擎上进行搜索，并将结果返回给用户。著名的元搜索引擎有InfoSpace、Dogpile、Vivisimo等，中文元搜索引擎中具代表性的有搜星搜索引擎。在搜索结果排列方面，有的直接按来源引擎排列搜索结果，如Dogpile，有的则按自定的规则将结果重新排列组合，如Vivisimo。</p>
+</li>
+</ul>
+<p>相关实现技术</p>
+<p>搜索引擎产品虽然一般都只有一个输入框，但是对于所提供的服务，背后有很多不同业务引擎支撑，每个业务引擎又有很多不同的策略，每个策略又有很多模块协同处理，及其复杂。</p>
+<p>搜索引擎本身包含网页抓取、网页评价、反作弊、建库、倒排索引、索引压缩、在线检索、ranking排序策略等等知识。</p>
+<ul>
+<li>网络爬虫技术</li>
+</ul>
+<p>网络爬虫技术指的是针对网络数据的抓取。因为在网络中抓取数据是具有关联性的抓取，它就像是一只蜘蛛一样在互联网中爬来爬去，所以我们很形象地将其称为是网络爬虫技术。网络爬虫也被称为是网络机器人或者是网络追逐者。</p>
+<p>网络爬虫获取网页信息的方式和我们平时使用浏览器访问网页的工作原理是完全一样的，都是根据HTTP协议来获取，其流程主要包括如下步骤：</p>
+<p>1）连接DNS域名服务器，将待抓取的URL进行域名解析（URL——&gt;IP）；</p>
+<p>2）根据HTTP协议，发送HTTP请求来获取网页内容。</p>
+<p>一个完整的网络爬虫基础框架如下图所示：</p>
+<p><img src="https://ww2.sinaimg.cn/large/006tKfTcly1fkrzrfk7trj30pl0grjt9.jpg" alt></p>
+<p>整个架构共有如下几个过程：</p>
+<p>1）需求方提供需要抓取的种子URL列表，根据提供的URL列表和相应的优先级，建立待抓取URL队列（先来先抓）；</p>
+<p>2）根据待抓取URL队列的排序进行网页抓取；</p>
+<p>3）将获取的网页内容和信息下载到本地的网页库，并建立已抓取URL列表（用于去重和判断抓取的进程）；</p>
+<p>4）将已抓取的网页放入到待抓取的URL队列中，进行循环抓取操作；</p>
+<ul>
+<li>索引</li>
+</ul>
+<p>从用户的角度来看，搜索的过程是通过关键字在某种资源中寻找特定的内容的过程。而从计算机的角度来看，实现这个过程可以有两种办法。一是对所有资源逐个与关键字匹配，返回所有满足匹配的内容；二是如同字典一样事先建立一个对应表，把关键字与资源的内容对应起来，搜索时直接查找这个表即可。显而易见，第二个办法效率要高得多。建立这个对应表事实上就是建立逆向索引（inverted index）的过程。</p>
+<ul>
+<li>Lucene</li>
+</ul>
+<p>Lucene是一个高性能的java全文检索工具包，它使用的是倒排文件索引结构。</p>
+<p>全文检索大体分两个过程，索引创建 (Indexing) 和搜索索引 (Search) 。</p>
+<p>索引创建：将现实世界中所有的结构化和非结构化数据提取信息，创建索引的过程。<br>搜索索引：就是得到用户的查询请求，搜索创建的索引，然后返回结果的过程。</p>
+<p><img src="https://ww2.sinaimg.cn/large/006tKfTcly1fkrzrpvzm1j30f40db755.jpg" alt></p>
+<p>非结构化数据中所存储的信息是每个文件包含哪些字符串，也即已知文件，欲求字符串相对容易，也即是从文件到字符串的映射。而我们想搜索的信息是哪些文件包含此字符串，也即已知字符串，欲求文件，也即从字符串到文件的映射。两者恰恰相反。于是如果索引总能够保存从字符串到文件的映射，则会大大提高搜索速度。</p>
+<p>由于从字符串到文件的映射是文件到字符串映射的反向过程，于是保存这种信息的索引称为反向索引 。</p>
+<p>反向索引的所保存的信息一般如下：</p>
+<p>假设我的文档集合里面有100篇文档，为了方便表示，我们为文档编号从1到100，得到下面的结构</p>
+<p><img src="https://ww1.sinaimg.cn/large/006tKfTcly1fkrzrz05rqj30f4049gmb.jpg" alt></p>
+<p>每个字符串都指向包含此字符串的文档(Document)链表，此文档链表称为倒排表 (Posting List)。</p>
+<ul>
+<li>ElasticSearch</li>
+</ul>
+<p>Elasticsearch是一个实时的分布式搜索和分析引擎，可以用于全文搜索，结构化搜索以及分析，当然你也可以将这三者进行组合。Elasticsearch是一个建立在全文搜索引擎 Apache Lucene™ 基础上的搜索引擎，但是Lucene只是一个框架，要充分利用它的功能，需要使用JAVA，并且在程序中集成Lucene。Elasticsearch使用Lucene作为内部引擎，但是在使用它做全文搜索时，只需要使用统一开发好的API即可，而不需要了解其背后复杂的Lucene的运行原理。</p>
+<ul>
+<li>Solr</li>
+</ul>
+<p>Solr是一个基于Lucene的搜索引擎服务器。Solr 提供了层面搜索、命中醒目显示并且支持多种输出格式（包括 XML/XSLT 和 JSON 格式）。它易于安装和配置，而且附带了一个基于 HTTP 的管理界面。Solr已经在众多大型的网站中使用，较为成熟和稳定。Solr 包装并扩展了 Lucene，所以Solr的基本上沿用了Lucene的相关术语。更重要的是，Solr 创建的索引与 Lucene 搜索引擎库完全兼容。通过对Solr 进行适当的配置，某些情况下可能需要进行编码，Solr 可以阅读和使用构建到其他 Lucene 应用程序中的索引。此外，很多 Lucene 工具（如Nutch、 Luke）也可以使用Solr 创建的索引。</p>
+<ul>
+<li>Hadoop</li>
+</ul>
+<p>谷歌公司发布的一系列技术白皮书导致了Hadoop的诞生。Hadoop是一系列大数据处理工具，可以被用在大规模集群里。Hadoop目前已经发展为一个生态体系，包括了很多组件，如图所示。</p>
+<p><img src="https://ww4.sinaimg.cn/large/006tKfTcly1fkrzs6lbs1j31hm10x466.jpg" alt></p>
+<p>Cloudera是一家将Hadoop技术用于搜索引擎的公司，用户可以采用全文搜索方式检索存储在HDFS（Hadoop分布式文件系统）和Apache HBase里面的数据，再加上开源的搜索引擎Apache Solr，Cloudera提供了搜索功能，并结合Apache ZooKeeper进行分布式处理的管理、索引切分以及高性能检索。</p>
+<ul>
+<li>PageRank</li>
+</ul>
+<p>谷歌Pagerank算法基于随机冲浪模型，基本思想是基于网站之间的相互投票，即我们常说的网站之间互相指向。如果判断一个网站是高质量站点时，那么该网站应该是被很多高质量的网站引用又或者是该网站引用了大量的高质量权威的站点。</p>
+<ul>
+<li>国际化</li>
+</ul>
+<p>坦白说，Google虽然做得非常好，无论是技术还是产品设计，都很好。但是国际化确实是非常难做的，很多时候在细分领域还是会有其他搜索引擎的生存余地。例如在韩国，Naver是用户的首选，它本身基于Yahoo的Overture系统，广告系统则是自己开发的。在捷克，我们则更多会使用Seznam。在瑞典，用户更多选择Eniro，它最初是瑞典的黄页开发公司。</p>
+<p>国际化、个性化搜索、匿名搜索，这些都是Google这样的产品所不能完全覆盖到的，事实上，也没有任何一款产品可以适用于所有需求。</p>
+<p>自己实现搜索引擎</p>
+<p>如果我们想要实现搜索引擎，最重要的是索引模块和搜索模块。索引模块在不同的机器上各自进行对资源的索引，并把索引文件统一传输到同一个地方（可以是在远程服务器上，也可以是在本地）。搜索模块则利用这些从多个索引模块收集到的数据完成用户的搜索请求。因此，我们可以理解两个模块之间相对是独立的，它们之间的关联不是通过代码，而是通过索引和元数据，如下图所示。</p>
+<p><img src="https://ww1.sinaimg.cn/large/006tKfTcly1fkrzshq4cbj30ga05874m.jpg" alt></p>
+<p>对于索引的建立，我们需要注意性能问题。当需要进行索引的资源数目不多时，隔一定的时间进行一次完全索引，不会占用很长时间。但在大型应用中，资源的容量是巨大的，如果每次都进行完整的索引，耗费的时间会很惊人。我们可以通过跳过已经索引的资源内容，删除已不存在的资源内容的索引，并进行增量索引来解决这个问题。这可能会涉及文件校验和索引删除等。另一方面，框架可以提供查询缓存功能，提高查询效率。框架可以在内存中建立一级缓存，并使用如 OSCache或 EHCache缓存框架，实现磁盘上的二级缓存。当索引的内容变化不频繁时，使用查询缓存更会明显地提高查询速度、降低资源消耗。</p>
+<p>搜索引擎解决方案</p>
+<ul>
+<li>Sphinx</li>
+</ul>
+<p>俄罗斯一家公司开源的全文搜索引擎软件Sphinx，单一索引最大可包含1亿条记录，在1千万条记录情况下的查询速度为0.x秒（毫秒级）。Sphinx创建索引的速度很快，根据网上的资料，Sphinx创建100万条记录的索引只需3～4分钟，创建1000万条记录的索引可以在50分钟内完成，而只包含最新10万条记录的增量索引，重建一次只需几十秒。</p>
+<ul>
+<li>OmniFind</li>
+</ul>
+<p>OmniFind 是 IBM 公司推出的企业级搜索解决方案。基于 UIMA (Unstructured Information Management Architecture) 技术，它提供了强大的索引和获取信息功能，支持巨大数量、多种类型的文档资源（无论是结构化还是非结构化），并为 Lotus®Domino®和 WebSphere®Portal 专门进行了优化。<br>下一代搜索引擎</p>
+<p>从技术和产品层面来看，接下来的几年，甚至于更长时间，应该没有哪一家搜索引擎可以撼动谷歌的技术领先优势和产品地位。但是我们也可以发现一些现象，例如搜索假期租房的时候，人们更喜欢使用Airbub，而不是Google，这就是针对匿名/个性化搜索需求，这些需求是谷歌所不能完全覆盖到的，毕竟原始数据并不在谷歌。我们可以看一个例子：DuckDuckGo。这是一款有别于大众理解的搜索引擎，DuckDuckGo强调的是最佳答案，而不是更多的结果，所以每个人搜索相同关键词时，返回的结果是不一样的。</p>
+<p>另一个方面技术趋势是引入人工智能技术。在搜索体验上，通过大量算法的引入，对用户搜索的内容和访问偏好进行分析，将标题摘要进行一定程度的优化，以更容易理解的方式呈现给用户。谷歌在搜索引擎AI化的步骤领先于其他厂商，2016年，随着Amit Singhal被退休，John Giannandrea上位的交接班过程后，正式开启了自身的革命。Giannandrea是深度神经网络、近似人脑中的神经元网络研究方面的顶级专家，通过分析海量级的数字数据，这些神经网络可以学习排列方式，例如对图片进行分类、识别智能手机的语音控制等等，对应也可以应用在搜索引擎。因此，Singhal向Giannandrea的过渡，也意味着传统人为干预的规则设置的搜索引擎向AI技术的过渡。引入深度学习技术之后的搜索引擎，通过不断的模型训练，它会深层次地理解内容，并为客户提供更贴近实际需求的服务，这才是它的有用，或者可怕之处。</p>
+<p><strong>Google搜索引擎的工作流程</strong></p>
+<p>贴个图，自己感受下。</p>
+<p><img src="https://pic3.zhimg.com/5b981a1b36b15a5a82c8f4e65a718afa_b.jpg" alt><img src="https://pic3.zhimg.com/80/5b981a1b36b15a5a82c8f4e65a718afa_hd.jpg" alt></p>
+<p><strong>详细点的 ：</strong><br><img src="https://pic4.zhimg.com/6e7fd609f7de41c35f5587a1ceb42523_b.jpg" alt><img src="https://pic4.zhimg.com/80/6e7fd609f7de41c35f5587a1ceb42523_hd.jpg" alt></p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/大后端/" rel="tag"># 大后端</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/13/后端技术杂谈/后端技术杂谈11：十分钟理解Kubernetes核心概念/" rel="next" title="后端技术杂谈11：十分钟理解Kubernetes核心概念">
+                <i class="fa fa-chevron-left"></i> 后端技术杂谈11：十分钟理解Kubernetes核心概念
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/13/后端技术杂谈/后端技术杂谈3：Lucene基础原理与实践/" rel="prev" title="后端技术杂谈3：Lucene基础原理与实践">
+                后端技术杂谈3：Lucene基础原理与实践 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">1.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">1.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">1.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,3238 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="程序员黄小斜">
+<meta property="og:url" content="http://yoursite.com/page/5/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="程序员黄小斜">
+<meta name="twitter:description" content="本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/page/5/">
+
+
+
+
+
+  <title>程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left 
+  page-home">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/13/后端技术杂谈/后端技术杂谈2：搜索引擎工作原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/13/后端技术杂谈/后端技术杂谈2：搜索引擎工作原理/" itemprop="url">后端技术杂谈2：搜索引擎工作原理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-13T15:02:26+08:00">
+                2019-10-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/后端技术/" itemprop="url" rel="index">
+                    <span itemprop="name">后端技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/13/后端技术杂谈/后端技术杂谈2：搜索引擎工作原理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/13/后端技术杂谈/后端技术杂谈2：搜索引擎工作原理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <div id="vip-container"><p>本文作者：顿炖<br>链接：<a href="https://www.zhihu.com/question/19937854/answer/98791215" target="_blank" rel="noopener">https://www.zhihu.com/question/19937854/answer/98791215</a><br>来源：知乎</p>
+<p>写在前面</p>
+<p>Max Grigorev最近写了一篇文章，题目是<a href="https://link.juejin.im/?target=https%3A%2F%2Fmedium.com%2Fstartup-grind%2Fwhat-every-software-engineer-should-know-about-search-27d1df99f80d" target="_blank" rel="noopener">《What every software engineer should know about search》</a>，这篇文章里指出了现在一些软件工程师的问题，他们认为开发一个搜索引擎功能就是搭建一个ElasticSearch集群，而没有深究背后的技术，以及技术发展趋势。Max认为，除了搜索引擎自身的搜索问题解决、人类使用方式等之外，也需要解决索引、分词、权限控制、国际化等等的技术点，看了他的文章，勾起了我多年前的想法。</p>
+<p>很多年前，我曾经想过自己实现一个搜索引擎，作为自己的研究生论文课题，后来琢磨半天没有想出新的技术突破点（相较于已发表的文章），所以切换到了大数据相关的技术点。当时没有写出来，心中有点小遗憾，毕竟凭借搜索引擎崛起的谷歌是我内心渴望的公司。今天我就想结合自己的一些积累，聊聊作为一名软件工程师，您需要了解的搜索引擎知识。</p>
+<p>搜索引擎发展过程</p>
+<p>现代意义上的搜索引擎的祖先，是1990年由蒙特利尔大学学生Alan Emtage发明的Archie。即便没有英特网，网络中文件传输还是相当频繁的，而且由于大量的文件散布在各个分散的FTP主机中，查询起来非常不便，因此Alan Emtage想到了开发一个可以以文件名查找文件的系统，于是便有了Archie。Archie工作原理与现在的搜索引擎已经很接近，它依靠脚本程序自动搜索网上的文件，然后对有关信息进行索引，供使用者以一定的表达式查询。</p>
+<p>互联网兴起后，需要能够监控的工具。世界上第一个用于监测互联网发展规模的“机器人”程序是Matthew Gray开发的World wide Web Wanderer，刚开始它只用来统计互联网上的服务器数量，后来则发展为能够检索网站域名。</p>
+<p>随着互联网的迅速发展，每天都会新增大量的网站、网页，检索所有新出现的网页变得越来越困难，因此，在Matthew Gray的Wanderer基础上，一些编程者将传统的“蜘蛛”程序工作原理作了些改进。现代搜索引擎都是以此为基础发展的。</p>
+<p>搜索引擎分类</p>
+<ul>
+<li>全文搜索引擎</li>
+</ul>
+<p>当前主流的是全文搜索引擎，较为典型的代表是Google、百度。全文搜索引擎是指通过从互联网上提取的各个网站的信息（以网页文字为主），保存在自己建立的数据库中。用户发起检索请求后，系统检索与用户查询条件匹配的相关记录，然后按一定的排列顺序将结果返回给用户。从搜索结果来源的角度，全文搜索引擎又可细分为两种，一种是拥有自己的检索程序（Indexer），俗称“蜘蛛”（Spider）程序或“机器人”（Robot）程序，并自建网页数据库，搜索结果直接从自身的数据存储层中调用；另一种则是租用其他引擎的数据库，并按自定的格式排列搜索结果，如Lycos引擎。</p>
+<ul>
+<li>目录索引类搜索引擎</li>
+</ul>
+<p>虽然有搜索功能，但严格意义上不能称为真正的搜索引擎，只是按目录分类的网站链接列表而已。用户完全可以按照分类目录找到所需要的信息，不依靠关键词（Keywords）进行查询。目录索引中最具代表性的莫过于大名鼎鼎的Yahoo、新浪分类目录搜索。</p>
+<ul>
+<li><p>元搜索引擎</p>
+<p>元搜索引擎在接受用户查询请求时，同时在其他多个引擎上进行搜索，并将结果返回给用户。著名的元搜索引擎有InfoSpace、Dogpile、Vivisimo等，中文元搜索引擎中具代表性的有搜星搜索引擎。在搜索结果排列方面，有的直接按来源引擎排列搜索结果，如Dogpile，有的则按自定的规则将结果重新排列组合，如Vivisimo。</p>
+</li>
+</ul>
+<p>相关实现技术</p>
+<p>搜索引擎产品虽然一般都只有一个输入框，但是对于所提供的服务，背后有很多不同业务引擎支撑，每个业务引擎又有很多不同的策略，每个策略又有很多模块协同处理，及其复杂。</p>
+<p>搜索引擎本身包含网页抓取、网页评价、反作弊、建库、倒排索引、索引压缩、在线检索、ranking排序策略等等知识。</p>
+<ul>
+<li>网络爬虫技术</li>
+</ul>
+<p>网络爬虫技术指的是针对网络数据的抓取。因为在网络中抓取数据是具有关联性的抓取，它就像是一只蜘蛛一样在互联网中爬来爬去，所以我们很形象地将其称为是网络爬虫技术。网络爬虫也被称为是网络机器人或者是网络追逐者。</p>
+<p>网络爬虫获取网页信息的方式和我们平时使用浏览器访问网页的工作原理是完全一样的，都是根据HTTP协议来获取，其流程主要包括如下步骤：</p>
+<p>1）连接DNS域名服务器，将待抓取的URL进行域名解析（URL——&gt;IP）；</p>
+<p>2）根据HTTP协议，发送HTTP请求来获取网页内容。</p>
+<p>一个完整的网络爬虫基础框架如下图所示：</p>
+<p><img src="https://ww2.sinaimg.cn/large/006tKfTcly1fkrzrfk7trj30pl0grjt9.jpg" alt></p>
+<p>整个架构共有如下几个过程：</p>
+<p>1）需求方提供需要抓取的种子URL列表，根据提供的URL列表和相应的优先级，建立待抓取URL队列（先来先抓）；</p>
+<p>2）根据待抓取URL队列的排序进行网页抓取；</p>
+<p>3）将获取的网页内容和信息下载到本地的网页库，并建立已抓取URL列表（用于去重和判断抓取的进程）；</p>
+<p>4）将已抓取的网页放入到待抓取的URL队列中，进行循环抓取操作；</p>
+<ul>
+<li>索引</li>
+</ul>
+<p>从用户的角度来看，搜索的过程是通过关键字在某种资源中寻找特定的内容的过程。而从计算机的角度来看，实现这个过程可以有两种办法。一是对所有资源逐个与关键字匹配，返回所有满足匹配的内容；二是如同字典一样事先建立一个对应表，把关键字与资源的内容对应起来，搜索时直接查找这个表即可。显而易见，第二个办法效率要高得多。建立这个对应表事实上就是建立逆向索引（inverted index）的过程。</p>
+<ul>
+<li>Lucene</li>
+</ul>
+<p>Lucene是一个高性能的java全文检索工具包，它使用的是倒排文件索引结构。</p>
+<p>全文检索大体分两个过程，索引创建 (Indexing) 和搜索索引 (Search) 。</p>
+<p>索引创建：将现实世界中所有的结构化和非结构化数据提取信息，创建索引的过程。<br>搜索索引：就是得到用户的查询请求，搜索创建的索引，然后返回结果的过程。</p>
+<p><img src="https://ww2.sinaimg.cn/large/006tKfTcly1fkrzrpvzm1j30f40db755.jpg" alt></p>
+<p>非结构化数据中所存储的信息是每个文件包含哪些字符串，也即已知文件，欲求字符串相对容易，也即是从文件到字符串的映射。而我们想搜索的信息是哪些文件包含此字符串，也即已知字符串，欲求文件，也即从字符串到文件的映射。两者恰恰相反。于是如果索引总能够保存从字符串到文件的映射，则会大大提高搜索速度。</p>
+<p>由于从字符串到文件的映射是文件到字符串映射的反向过程，于是保存这种信息的索引称为反向索引 。</p>
+<p>反向索引的所保存的信息一般如下：</p>
+<p>假设我的文档集合里面有100篇文档，为了方便表示，我们为文档编号从1到100，得到下面的结构</p>
+<p><img src="https://ww1.sinaimg.cn/large/006tKfTcly1fkrzrz05rqj30f4049gmb.jpg" alt></p>
+<p>每个字符串都指向包含此字符串的文档(Document)链表，此文档链表称为倒排表 (Posting List)。</p>
+<ul>
+<li>ElasticSearch</li>
+</ul>
+<p>Elasticsearch是一个实时的分布式搜索和分析引擎，可以用于全文搜索，结构化搜索以及分析，当然你也可以将这三者进行组合。Elasticsearch是一个建立在全文搜索引擎 Apache Lucene™ 基础上的搜索引擎，但是Lucene只是一个框架，要充分利用它的功能，需要使用JAVA，并且在程序中集成Lucene。Elasticsearch使用Lucene作为内部引擎，但是在使用它做全文搜索时，只需要使用统一开发好的API即可，而不需要了解其背后复杂的Lucene的运行原理。</p>
+<ul>
+<li>Solr</li>
+</ul>
+<p>Solr是一个基于Lucene的搜索引擎服务器。Solr 提供了层面搜索、命中醒目显示并且支持多种输出格式（包括 XML/XSLT 和 JSON 格式）。它易于安装和配置，而且附带了一个基于 HTTP 的管理界面。Solr已经在众多大型的网站中使用，较为成熟和稳定。Solr 包装并扩展了 Lucene，所以Solr的基本上沿用了Lucene的相关术语。更重要的是，Solr 创建的索引与 Lucene 搜索引擎库完全兼容。通过对Solr 进行适当的配置，某些情况下可能需要进行编码，Solr 可以阅读和使用构建到其他 Lucene 应用程序中的索引。此外，很多 Lucene 工具（如Nutch、 Luke）也可以使用Solr 创建的索引。</p>
+<ul>
+<li>Hadoop</li>
+</ul>
+<p>谷歌公司发布的一系列技术白皮书导致了Hadoop的诞生。Hadoop是一系列大数据处理工具，可以被用在大规模集群里。Hadoop目前已经发展为一个生态体系，包括了很多组件，如图所示。</p>
+<p><img src="https://ww4.sinaimg.cn/large/006tKfTcly1fkrzs6lbs1j31hm10x466.jpg" alt></p>
+<p>Cloudera是一家将Hadoop技术用于搜索引擎的公司，用户可以采用全文搜索方式检索存储在HDFS（Hadoop分布式文件系统）和Apache HBase里面的数据，再加上开源的搜索引擎Apache Solr，Cloudera提供了搜索功能，并结合Apache ZooKeeper进行分布式处理的管理、索引切分以及高性能检索。</p>
+<ul>
+<li>PageRank</li>
+</ul>
+<p>谷歌Pagerank算法基于随机冲浪模型，基本思想是基于网站之间的相互投票，即我们常说的网站之间互相指向。如果判断一个网站是高质量站点时，那么该网站应该是被很多高质量的网站引用又或者是该网站引用了大量的高质量权威的站点。</p>
+<ul>
+<li>国际化</li>
+</ul>
+<p>坦白说，Google虽然做得非常好，无论是技术还是产品设计，都很好。但是国际化确实是非常难做的，很多时候在细分领域还是会有其他搜索引擎的生存余地。例如在韩国，Naver是用户的首选，它本身基于Yahoo的Overture系统，广告系统则是自己开发的。在捷克，我们则更多会使用Seznam。在瑞典，用户更多选择Eniro，它最初是瑞典的黄页开发公司。</p>
+<p>国际化、个性化搜索、匿名搜索，这些都是Google这样的产品所不能完全覆盖到的，事实上，也没有任何一款产品可以适用于所有需求。</p>
+<p>自己实现搜索引擎</p>
+<p>如果我们想要实现搜索引擎，最重要的是索引模块和搜索模块。索引模块在不同的机器上各自进行对资源的索引，并把索引文件统一传输到同一个地方（可以是在远程服务器上，也可以是在本地）。搜索模块则利用这些从多个索引模块收集到的数据完成用户的搜索请求。因此，我们可以理解两个模块之间相对是独立的，它们之间的关联不是通过代码，而是通过索引和元数据，如下图所示。</p>
+<p><img src="https://ww1.sinaimg.cn/large/006tKfTcly1fkrzshq4cbj30ga05874m.jpg" alt></p>
+<p>对于索引的建立，我们需要注意性能问题。当需要进行索引的资源数目不多时，隔一定的时间进行一次完全索引，不会占用很长时间。但在大型应用中，资源的容量是巨大的，如果每次都进行完整的索引，耗费的时间会很惊人。我们可以通过跳过已经索引的资源内容，删除已不存在的资源内容的索引，并进行增量索引来解决这个问题。这可能会涉及文件校验和索引删除等。另一方面，框架可以提供查询缓存功能，提高查询效率。框架可以在内存中建立一级缓存，并使用如 OSCache或 EHCache缓存框架，实现磁盘上的二级缓存。当索引的内容变化不频繁时，使用查询缓存更会明显地提高查询速度、降低资源消耗。</p>
+<p>搜索引擎解决方案</p>
+<ul>
+<li>Sphinx</li>
+</ul>
+<p>俄罗斯一家公司开源的全文搜索引擎软件Sphinx，单一索引最大可包含1亿条记录，在1千万条记录情况下的查询速度为0.x秒（毫秒级）。Sphinx创建索引的速度很快，根据网上的资料，Sphinx创建100万条记录的索引只需3～4分钟，创建1000万条记录的索引可以在50分钟内完成，而只包含最新10万条记录的增量索引，重建一次只需几十秒。</p>
+<ul>
+<li>OmniFind</li>
+</ul>
+<p>OmniFind 是 IBM 公司推出的企业级搜索解决方案。基于 UIMA (Unstructured Information Management Architecture) 技术，它提供了强大的索引和获取信息功能，支持巨大数量、多种类型的文档资源（无论是结构化还是非结构化），并为 Lotus®Domino®和 WebSphere®Portal 专门进行了优化。<br>下一代搜索引擎</p>
+<p>从技术和产品层面来看，接下来的几年，甚至于更长时间，应该没有哪一家搜索引擎可以撼动谷歌的技术领先优势和产品地位。但是我们也可以发现一些现象，例如搜索假期租房的时候，人们更喜欢使用Airbub，而不是Google，这就是针对匿名/个性化搜索需求，这些需求是谷歌所不能完全覆盖到的，毕竟原始数据并不在谷歌。我们可以看一个例子：DuckDuckGo。这是一款有别于大众理解的搜索引擎，DuckDuckGo强调的是最佳答案，而不是更多的结果，所以每个人搜索相同关键词时，返回的结果是不一样的。</p>
+<p>另一个方面技术趋势是引入人工智能技术。在搜索体验上，通过大量算法的引入，对用户搜索的内容和访问偏好进行分析，将标题摘要进行一定程度的优化，以更容易理解的方式呈现给用户。谷歌在搜索引擎AI化的步骤领先于其他厂商，2016年，随着Amit Singhal被退休，John Giannandrea上位的交接班过程后，正式开启了自身的革命。Giannandrea是深度神经网络、近似人脑中的神经元网络研究方面的顶级专家，通过分析海量级的数字数据，这些神经网络可以学习排列方式，例如对图片进行分类、识别智能手机的语音控制等等，对应也可以应用在搜索引擎。因此，Singhal向Giannandrea的过渡，也意味着传统人为干预的规则设置的搜索引擎向AI技术的过渡。引入深度学习技术之后的搜索引擎，通过不断的模型训练，它会深层次地理解内容，并为客户提供更贴近实际需求的服务，这才是它的有用，或者可怕之处。</p>
+<p><strong>Google搜索引擎的工作流程</strong></p>
+<p>贴个图，自己感受下。</p>
+<p><img src="https://pic3.zhimg.com/5b981a1b36b15a5a82c8f4e65a718afa_b.jpg" alt><img src="https://pic3.zhimg.com/80/5b981a1b36b15a5a82c8f4e65a718afa_hd.jpg" alt></p>
+<p><strong>详细点的 ：</strong><br><img src="https://pic4.zhimg.com/6e7fd609f7de41c35f5587a1ceb42523_b.jpg" alt><img src="https://pic4.zhimg.com/80/6e7fd609f7de41c35f5587a1ceb42523_hd.jpg" alt></p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/13/后端技术杂谈/后端技术杂谈11：十分钟理解Kubernetes核心概念/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/13/后端技术杂谈/后端技术杂谈11：十分钟理解Kubernetes核心概念/" itemprop="url">后端技术杂谈11：十分钟理解Kubernetes核心概念</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-13T15:01:26+08:00">
+                2019-10-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/后端技术/" itemprop="url" rel="index">
+                    <span itemprop="name">后端技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/13/后端技术杂谈/后端技术杂谈11：十分钟理解Kubernetes核心概念/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/13/后端技术杂谈/后端技术杂谈11：十分钟理解Kubernetes核心概念/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <div id="vip-container"><h1 id="十分钟带你理解Kubernetes核心概念"><a href="#十分钟带你理解Kubernetes核心概念" class="headerlink" title="十分钟带你理解Kubernetes核心概念"></a>十分钟带你理解Kubernetes核心概念</h1><p>本文将会简单介绍<a href="http://kubernetes.io/v1.1/docs/whatisk8s.html" target="_blank" rel="noopener">Kubernetes</a>的核心概念。因为这些定义可以在Kubernetes的文档中找到，所以文章也会避免用大段的枯燥的文字介绍。相反，我们会使用一些图表（其中一些是动画）和示例来解释这些概念。我们发现一些概念（比如Service）如果没有图表的辅助就很难全面地理解。在合适的地方我们也会提供Kubernetes文档的链接以便读者深入学习。</p>
+<blockquote>
+<p>容器特性、镜像、网络；Kubernetes架构、核心组件、基本功能；Kubernetes设计理念、架构设计、基本功能、常用对象、设计原则；Kubernetes的数据库、运行时、网络、插件已经落地经验；微服务架构、组件、监控方案等。</p>
+</blockquote>
+<p>这就开始吧。</p>
+<h3 id="什么是Kubernetes？"><a href="#什么是Kubernetes？" class="headerlink" title="什么是Kubernetes？"></a>什么是Kubernetes？</h3><p>Kubernetes（k8s）是自动化容器操作的开源平台，这些操作包括部署，调度和节点集群间扩展。如果你曾经用过Docker容器技术部署容器，那么可以将Docker看成Kubernetes内部使用的低级别组件。Kubernetes不仅仅支持Docker，还支持Rocket，这是另一种容器技术。<br>使用Kubernetes可以：</p>
+<ul>
+<li>自动化容器的部署和复制</li>
+<li>随时扩展或收缩容器规模</li>
+<li>将容器组织成组，并且提供容器间的负载均衡</li>
+<li>很容易地升级应用程序容器的新版本</li>
+<li>提供容器弹性，如果容器失效就替换它，等等…</li>
+</ul>
+<p>实际上，使用Kubernetes只需一个<a href="https://github.com/kubernetes/kubernetes/blob/master/examples/guestbook/all-in-one/guestbook-all-in-one.yaml" target="_blank" rel="noopener">部署文件</a>，使用一条命令就可以部署多层容器（前端，后台等）的完整集群：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create -f single-config-file.yaml</span><br></pre></td></tr></table></figure>
+
+<p>kubectl是和Kubernetes API交互的命令行程序。现在介绍一些核心概念。</p>
+<h3 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h3><p>集群是一组节点，这些节点可以是物理服务器或者虚拟机，之上安装了Kubernetes平台。下图展示这样的集群。注意该图为了强调核心概念有所简化。<a href="http://kubernetes.io/v1.1/docs/design/architecture.html" target="_blank" rel="noopener">这里</a>可以看到一个典型的Kubernetes架构图。</p>
+<p><a href="http://dockone.io/uploads/article/20151230/d56441427680948fb56a00af57bda690.png" target="_blank" rel="noopener"></a></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1233356-838c13e9241040b4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/803/format/webp" alt></p>
+<p> <a href="http://dockone.io/uploads/article/20151230/d56441427680948fb56a00af57bda690.png" target="_blank" rel="noopener">1.png</a> </p>
+<p>上图可以看到如下组件，使用特别的图标表示Service和Label：</p>
+<ul>
+<li>Pod</li>
+<li>Container（容器）</li>
+<li>Label（标签）</li>
+<li>Replication Controller（复制控制器）</li>
+<li>Service（服务）</li>
+<li>Node（节点）</li>
+<li>Kubernetes Master（Kubernetes主节点）</li>
+</ul>
+<h3 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h3><p><a href="http://kubernetes.io/v1.1/docs/user-guide/pods.html" target="_blank" rel="noopener">Pod</a>（上图绿色方框）安排在节点上，包含一组容器和卷。同一个Pod里的容器共享同一个网络命名空间，可以使用localhost互相通信。Pod是短暂的，不是持续性实体。你可能会有这些问题：</p>
+<ul>
+<li>如果Pod是短暂的，那么我怎么才能持久化容器数据使其能够跨重启而存在呢？ 是的，Kubernetes支持<a href="http://kubernetes.io/v1.1/docs/user-guide/volumes.html" target="_blank" rel="noopener">卷</a>的概念，因此可以使用持久化的卷类型。</li>
+<li>是否手动创建Pod，如果想要创建同一个容器的多份拷贝，需要一个个分别创建出来么？可以手动创建单个Pod，但是也可以使用Replication Controller使用Pod模板创建出多份拷贝，下文会详细介绍。</li>
+<li>如果Pod是短暂的，那么重启时IP地址可能会改变，那么怎么才能从前端容器正确可靠地指向后台容器呢？这时可以使用Service，下文会详细介绍。</li>
+</ul>
+<h3 id="Lable"><a href="#Lable" class="headerlink" title="Lable"></a>Lable</h3><p>正如图所示，一些Pod有Label。一个Label是attach到Pod的一对键/值对，用来传递用户定义的属性。比如，你可能创建了一个”tier”和“app”标签，通过Label（<strong>tier=frontend, app=myapp</strong>）来标记前端Pod容器，使用Label（<strong>tier=backend, app=myapp</strong>）标记后台Pod。然后可以使用<a href="http://kubernetes.io/v1.1/docs/user-guide/labels.html#label-selectors" target="_blank" rel="noopener">Selectors</a>选择带有特定Label的Pod，并且将Service或者Replication Controller应用到上面。</p>
+<h3 id="Replication-Controller"><a href="#Replication-Controller" class="headerlink" title="Replication Controller"></a>Replication Controller</h3><p><em>是否手动创建Pod，如果想要创建同一个容器的多份拷贝，需要一个个分别创建出来么，能否将Pods划到逻辑组里？</em></p>
+<p>Replication Controller确保任意时间都有指定数量的Pod“副本”在运行。如果为某个Pod创建了Replication Controller并且指定3个副本，它会创建3个Pod，并且持续监控它们。如果某个Pod不响应，那么Replication Controller会替换它，保持总数为3.如下面的动画所示：</p>
+<p><a href="http://dockone.io/uploads/article/20151230/5e2bad1a25e33e2d155da81da1d3a54b.gif" target="_blank" rel="noopener"></a></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1233356-5f5b425bb2705525.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/797/format/webp" alt></p>
+<p> <a href="http://dockone.io/uploads/article/20151230/5e2bad1a25e33e2d155da81da1d3a54b.gif" target="_blank" rel="noopener">2.gif</a> </p>
+<p>如果之前不响应的Pod恢复了，现在就有4个Pod了，那么Replication Controller会将其中一个终止保持总数为3。如果在运行中将副本总数改为5，Replication Controller会立刻启动2个新Pod，保证总数为5。还可以按照这样的方式缩小Pod，这个特性在执行滚动<a href="https://cloud.google.com/container-engine/docs/replicationcontrollers/#rolling_updates" target="_blank" rel="noopener">升级</a>时很有用。</p>
+<p>当创建Replication Controller时，需要指定两个东西：</p>
+<ol>
+<li><a href="http://kubernetes.io/v1.1/docs/user-guide/replication-controller.html#pod-template" target="_blank" rel="noopener">Pod模板</a>：用来创建Pod副本的模板</li>
+<li><a href="http://kubernetes.io/v1.1/docs/user-guide/replication-controller.html#labels" target="_blank" rel="noopener">Label</a>：Replication Controller需要监控的Pod的标签。</li>
+</ol>
+<p>现在已经创建了Pod的一些副本，那么在这些副本上如何均衡负载呢？我们需要的是Service。</p>
+<h3 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h3><p><em>如果Pods是短暂的，那么重启时IP地址可能会改变，怎么才能从前端容器正确可靠地指向后台容器呢？</em></p>
+<p><a href="http://kubernetes.io/v1.1/docs/user-guide/services.html" target="_blank" rel="noopener">Service</a>是定义一系列Pod以及访问这些Pod的策略的一层<strong>抽象</strong>。Service通过Label找到Pod组。因为Service是抽象的，所以在图表里通常看不到它们的存在，这也就让这一概念更难以理解。</p>
+<p>现在，假定有2个后台Pod，并且定义后台Service的名称为‘backend-service’，lable选择器为（<strong>tier=backend, app=myapp</strong>）。<em>backend-service</em> 的Service会完成如下两件重要的事情：</p>
+<ul>
+<li>会为Service创建一个本地集群的DNS入口，因此前端Pod只需要DNS查找主机名为 ‘backend-service’，就能够解析出前端应用程序可用的IP地址。</li>
+<li>现在前端已经得到了后台服务的IP地址，但是它应该访问2个后台Pod的哪一个呢？Service在这2个后台Pod之间提供透明的负载均衡，会将请求分发给其中的任意一个（如下面的动画所示）。通过每个Node上运行的代理（kube-proxy）完成。<a href="http://kubernetes.io/v1.1/docs/user-guide/services.html#virtual-ips-and-service-proxies" target="_blank" rel="noopener">这里</a>有更多技术细节。</li>
+</ul>
+<p>下述动画展示了Service的功能。注意该图作了很多简化。如果不进入网络配置，那么达到透明的负载均衡目标所涉及的底层网络和路由相对先进。如果有兴趣，<a href="http://www.dasblinkenlichten.com/kubernetes-101-networking/" target="_blank" rel="noopener">这里</a>有更深入的介绍。</p>
+<p><a href="http://dockone.io/uploads/article/20151230/125bbccce0b3bbf42abab0e520d9250b.gif" target="_blank" rel="noopener"></a></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1233356-d12e172a195f74cd.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/797/format/webp" alt></p>
+<p> <a href="http://dockone.io/uploads/article/20151230/125bbccce0b3bbf42abab0e520d9250b.gif" target="_blank" rel="noopener">3.gif</a> </p>
+<p>有一个特别类型的Kubernetes Service，称为’<a href="http://kubernetes.io/v1.1/docs/user-guide/services.html#type-loadbalancer" target="_blank" rel="noopener">LoadBalancer</a>‘，作为外部负载均衡器使用，在一定数量的Pod之间均衡流量。比如，对于负载均衡Web流量很有用。</p>
+<h3 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h3><p>节点（上图橘色方框）是物理或者虚拟机器，作为Kubernetes worker，通常称为Minion。每个节点都运行如下Kubernetes关键组件：</p>
+<ul>
+<li>Kubelet：是主节点代理。</li>
+<li>Kube-proxy：Service使用其将链接路由到Pod，如上文所述。</li>
+<li>Docker或Rocket：Kubernetes使用的容器技术来创建容器。</li>
+</ul>
+<h3 id="Kubernetes-Master"><a href="#Kubernetes-Master" class="headerlink" title="Kubernetes Master"></a>Kubernetes Master</h3><p>集群拥有一个Kubernetes Master（紫色方框）。Kubernetes Master提供集群的独特视角，并且拥有一系列组件，比如Kubernetes API Server。API Server提供可以用来和集群交互的REST端点。master节点包括用来创建和复制Pod的Replication Controller。</p>
+<h3 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h3><p>现在我们已经了解了Kubernetes核心概念的基本知识，你可以进一步阅读Kubernetes <a href="http://kubernetes.io/v1.1/docs/user-guide/README.html" target="_blank" rel="noopener">用户手册</a>。用户手册提供了快速并且完备的学习文档。<br>如果迫不及待想要试试Kubernetes，可以使用<a href="https://cloud.google.com/container-engine/docs/" target="_blank" rel="noopener">Google Container Engine</a>。Google Container Engine是托管的Kubernetes容器环境。简单注册/登录之后就可以在上面尝试示例了。</p>
+<p><strong>原文链接：<a href="http://omerio.com/2015/12/18/learn-the-kubernetes-key-concepts-in-10-minutes/" target="_blank" rel="noopener">Learn the Kubernetes Key Concepts in 10 Minutes</a>（翻译：崔婧雯）</strong><br>＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝<br>译者介绍<br>崔婧雯，现就职于IBM，高级软件工程师，负责IBM WebSphere业务流程管理软件的系统测试工作。曾就职于VMware从事桌面虚拟化产品的质量保证工作。对虚拟化，中间件技术，业务流程管理有浓厚的兴趣。</p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/13/后端技术杂谈/后端技术杂谈1：搜索引擎基础倒排索引/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/13/后端技术杂谈/后端技术杂谈1：搜索引擎基础倒排索引/" itemprop="url">后端技术杂谈1：搜索引擎基础倒排索引</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-13T15:01:26+08:00">
+                2019-10-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/后端技术/" itemprop="url" rel="index">
+                    <span itemprop="name">后端技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/13/后端技术杂谈/后端技术杂谈1：搜索引擎基础倒排索引/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/13/后端技术杂谈/后端技术杂谈1：搜索引擎基础倒排索引/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <div id="vip-container"><h1 id="什么是倒排索引？"><a href="#什么是倒排索引？" class="headerlink" title="什么是倒排索引？"></a><a href="https://www.cnblogs.com/zlslch/p/6440114.html" target="_blank" rel="noopener">什么是倒排索引？</a></h1><p>　　见其名知其意，有倒排索引，对应肯定，有正向索引。</p>
+<pre><code>正向索引（forward index），反向索引（inverted index）更熟悉的名字是倒排索引。
+
+在搜索引擎中每个文件都对应一个文件ID，文件内容被表示为一系列关键词的集合（实际上在搜索引擎索引库中，关键词也已经转换为关键词ID）。例如“文档1”经过分词，提取了20个关键词，每个关键词都会记录它在文档中的出现次数和出现位置。
+
+得到正向索引的结构如下：
+
+  “文档1”的ID &gt; 单词1：出现次数，出现位置列表；单词2：出现次数，出现位置列表；…………。
+
+  “文档2”的ID &gt; 此文档出现的关键词列表。</code></pre><p> <img src="https://images2015.cnblogs.com/blog/855959/201707/855959-20170706154309815-1724421988.png" alt></p>
+<p>　　一般是通过key，去找value。</p>
+<pre><code>当用户在主页上搜索关键词“华为手机”时，假设只存在正向索引（forward index），那么就需要扫描索引库中的所有文档，找出所有包含关键词“华为手机”的文档，再根据打分模型进行打分，排出名次后呈现给用户。因为互联网上收录在搜索引擎中的文档的数目是个天文数字，这样的索引结构根本无法满足实时返回排名结果的要求。
+
+ 所以，搜索引擎会将正向索引重新构建为倒排索引，即把文件ID对应到关键词的映射转换为关键词到文件ID的映射，每个关键词都对应着一系列的文件，这些文件中都出现这个关键词。
+
+ 得到倒排索引的结构如下：
+
+ “关键词1”：“文档1”的ID，“文档2”的ID，…………。
+
+ “关键词2”：带有此关键词的文档ID列表。</code></pre><p> <img src="https://images2015.cnblogs.com/blog/855959/201707/855959-20170706154505378-610589524.png" alt></p>
+<p>　　从词的关键字，去找文档。</p>
+<h2 id="1-单词——文档矩阵"><a href="#1-单词——文档矩阵" class="headerlink" title="1.单词——文档矩阵"></a>1.单词——文档矩阵</h2><pre><code>单词-文档矩阵是表达两者之间所具有的一种包含关系的概念模型，图1展示了其含义。图3-1的每列代表一个文档，每行代表一个单词，打对勾的位置代表包含关系。</code></pre><p>　　　　　　　　　　　　<img src="https://images2015.cnblogs.com/blog/855959/201702/855959-20170224195649726-238255448.png" alt></p>
+<p>　　　　　　　　  　　　　　　　　　　　　　　　　图1 单词-文档矩阵</p>
+<pre><code> 从纵向即文档这个维度来看，每列代表文档包含了哪些单词，比如文档1包含了词汇1和词汇4，而不包含其它单词。从横向即单词这个维度来看，每行代表了哪些文档包含了某个单词。比如对于词汇1来说，文档1和文档4中出现过单词1，而其它文档不包含词汇1。矩阵中其它的行列也可作此种解读。
+
+搜索引擎的索引其实就是实现“单词-文档矩阵”的具体[数据结构](http://lib.csdn.net/base/datastructure &quot;算法与数据结构知识库&quot;)。可以有不同的方式来实现上述概念模型，比如“倒排索引”、“签名文件”、“后缀树”等方式。但是各项实验数据表明，“倒排索引”是实现单词到文档映射关系的最佳实现方式，所以本博文主要介绍“倒排索引”的技术细节。</code></pre><h2 id="2-倒排索引基本概念"><a href="#2-倒排索引基本概念" class="headerlink" title="2.倒排索引基本概念"></a>2.倒排索引基本概念</h2><pre><code>  文档(Document)：一般搜索引擎的处理对象是互联网网页，而文档这个概念要更宽泛些，代表以文本形式存在的存储对象，相比网页来说，涵盖更多种形式，比如Word，PDF，html，XML等不同格式的文件都可以称之为文档。再比如一封邮件，一条短信，一条微博也可以称之为文档。在本书后续内容，很多情况下会使用文档来表征文本信息。
+
+  文档集合(Document Collection)：由若干文档构成的集合称之为文档集合。比如海量的互联网网页或者说大量的电子邮件都是文档集合的具体例子。
+
+  文档编号(Document ID)：在搜索引擎内部，会将文档集合内每个文档赋予一个唯一的内部编号，以此编号来作为这个文档的唯一标识，这样方便内部处理，每个文档的内部编号即称之为“文档编号”，后文有时会用DocID来便捷地代表文档编号。
+
+  单词编号(Word ID)：与文档编号类似，搜索引擎内部以唯一的编号来表征某个单词，单词编号可以作为某个单词的唯一表征。
+
+  倒排索引(Inverted Index)：倒排索引是实现“单词-文档矩阵”的一种具体存储形式，通过倒排索引，可以根据单词快速获取包含这个单词的文档列表。倒排索引主要由两个部分组成：“单词词典”和“倒排文件”。
+
+  单词词典(Lexicon)：搜索引擎的通常索引单位是单词，单词词典是由文档集合中出现过的所有单词构成的字符串集合，单词词典内每条索引项记载单词本身的一些信息以及指向“倒排列表”的指针。
+
+  倒排列表(PostingList)：倒排列表记载了出现过某个单词的所有文档的文档列表及单词在该文档中出现的位置信息，每条记录称为一个倒排项(Posting)。根据倒排列表，即可获知哪些文档包含某个单词。
+
+  倒排文件(Inverted File)：所有单词的倒排列表往往顺序地存储在磁盘的某个文件里，这个文件即被称之为倒排文件，倒排文件是存储倒排索引的物理文件。
+
+关于这些概念之间的关系，通过图2可以比较清晰的看出来。</code></pre><p>　　　　　　　　　　　　　　<img src="https://images2015.cnblogs.com/blog/855959/201702/855959-20170224200237991-592489046.png" alt></p>
+<h2 id="3-倒排索引简单实例"><a href="#3-倒排索引简单实例" class="headerlink" title="3.倒排索引简单实例"></a>3.倒排索引简单实例</h2><pre><code>倒排索引从逻辑结构和基本思路上来讲非常简单。下面我们通过具体实例来进行说明，使得读者能够对倒排索引有一个宏观而直接的感受。
+
+假设文档集合包含五个文档，每个文档内容如图3所示，在图中最左端一栏是每个文档对应的文档编号。我们的任务就是对这个文档集合建立倒排索引。</code></pre><p>　　　　　　　　　　　　　　<img src="https://images2015.cnblogs.com/blog/855959/201702/855959-20170224200300601-1967186316.png" alt></p>
+<p> 　　　　　　　　　　　　　　　　　　　　　　　　　　图3   文档集合</p>
+<p>　　中文和英文等语言不同，单词之间没有明确分隔符号，所以首先要用分词系统将文档自动切分成单词序列。这样每个文档就转换为由单词序列构成的数据流，为了系统后续处理方便，需要对每个不同的单词赋予唯一的单词编号，同时记录下哪些文档包含这个单词，在如此处理结束后，我们可以得到最简单的倒排索引（参考图3-4）。在图4中，“单词ID”一栏记录了每个单词的单词编号，第二栏是对应的单词，第三栏即每个单词对应的倒排列表。比如单词“谷歌”，其单词编号为1，倒排列表为{1,2,3,4,5}，说明文档集合中每个文档都包含了这个单词。</p>
+<p>　　　　　　　　　　　　　　<img src="https://images2015.cnblogs.com/blog/855959/201702/855959-20170224200334195-2052728227.png" alt></p>
+<p>　　　　　　　　　　　　　　　　　　　　　　　　　　　　图4   简单的倒排索引</p>
+<p>　　之所以说图4所示倒排索引是最简单的，是因为这个索引系统只记载了哪些文档包含某个单词，而事实上，索引系统还可以记录除此之外的更多信息。图5是一个相对复杂些的倒排索引，与图4的基本索引系统比，在单词对应的倒排列表中不仅记录了文档编号，还记载了单词频率信息（TF），即这个单词在某个文档中的出现次数，之所以要记录这个信息，是因为词频信息在搜索结果排序时，计算查询和文档相似度是很重要的一个计算因子，所以将其记录在倒排列表中，以方便后续排序时进行分值计算。在图5的例子里，单词“创始人”的单词编号为7，对应的倒排列表内容为：（3:1），其中的3代表文档编号为3的文档包含这个单词，数字1代表词频信息，即这个单词在3号文档中只出现过1次，其它单词对应的倒排列表所代表含义与此相同。</p>
+<p>　　　　　　　　　　　　　　<img src="https://images2015.cnblogs.com/blog/855959/201702/855959-20170224200417070-899412746.png" alt></p>
+<p>　　　　　　　　　　　　　　　　　　　　　　　　　　　　图 5 带有单词频率信息的倒排索引</p>
+<p> 　　实用的倒排索引还可以记载更多的信息，图6所示索引系统除了记录文档编号和单词频率信息外，额外记载了两类信息，即每个单词对应的“文档频率信息”（对应图6的第三栏）以及在倒排列表中记录单词在某个文档出现的位置信息。</p>
+<p>　　　　　　　　　　　　　　　　　　<img src="https://images2015.cnblogs.com/blog/855959/201702/855959-20170224200448148-924219280.png" alt></p>
+<p> 　　　　　　　　　　　　　　　　　　　　　　图6   带有单词频率、文档频率和出现位置信息的倒排索引</p>
+<p>   “文档频率信息”代表了在文档集合中有多少个文档包含某个单词，之所以要记录这个信息，其原因与单词频率信息一样，这个信息在搜索结果排序计算中是非常重要的一个因子。而单词在某个文档中出现的位置信息并非索引系统一定要记录的，在实际的索引系统里可以包含，也可以选择不包含这个信息，之所以如此，因为这个信息对于搜索系统来说并非必需的，位置信息只有在支持“短语查询”的时候才能够派上用场。</p>
+<pre><code>以单词“拉斯”为例，其单词编号为8，文档频率为2，代表整个文档集合中有两个文档包含这个单词，对应的倒排列表为：{(3;1;&lt;4&gt;)，(5;1;&lt;4&gt;)},其含义为在文档3和文档5出现过这个单词，单词频率都为1，单词“拉斯”在两个文档中的出现位置都是4，即文档中第四个单词是“拉斯”。
+
+图6所示倒排索引已经是一个非常完备的索引系统，实际搜索系统的索引结构基本如此，区别无非是采取哪些具体的数据结构来实现上述逻辑结构。
+
+有了这个索引系统，搜索引擎可以很方便地响应用户的查询，比如用户输入查询词“Facebook”，搜索系统查找倒排索引，从中可以读出包含这个单词的文档，这些文档就是提供给用户的搜索结果，而利用单词频率信息、文档频率信息即可以对这些候选搜索结果进行排序，计算文档和查询的相似性，按照相似性得分由高到低排序输出，此即为搜索系统的部分内部流程，具体实现方案本书第五章会做详细描述。</code></pre><h2 id="4-单词词典"><a href="#4-单词词典" class="headerlink" title="4. 单词词典"></a>4. 单词词典</h2><p>　　单词词典是倒排索引中非常重要的组成部分，它用来维护文档集合中出现过的所有单词的相关信息，同时用来记载某个单词对应的倒排列表在倒排文件中的位置信息。在支持搜索时，根据用户的查询词，去单词词典里查询，就能够获得相应的倒排列表，并以此作为后续排序的基础。<br>       对于一个规模很大的文档集合来说，可能包含几十万甚至上百万的不同单词，能否快速定位某个单词，这直接影响搜索时的响应速度，所以需要高效的数据结构来对单词词典进行构建和查找，常用的数据结构包括哈希加链表结构和树形词典结构。<br>4.1   哈希加链表<br>       图7是这种词典结构的示意图。这种词典结构主要由两个部分构成：</p>
+<pre><code>主体部分是哈希表，每个哈希表项保存一个指针，指针指向冲突链表，在冲突链表里，相同哈希值的单词形成链表结构。之所以会有冲突链表，是因为两个不同单词获得相同的哈希值，如果是这样，在哈希方法里被称做是一次冲突，可以将相同哈希值的单词存储在链表里，以供后续查找。</code></pre><p>　　　　　　　　　　　　　　　　　　　　　　<img src="https://images2015.cnblogs.com/blog/855959/201702/855959-20170224200556085-1266490265.png" alt></p>
+<p>　　在建立索引的过程中，词典结构也会相应地被构建出来。比如在解析一个新文档的时候，对于某个在文档中出现的单词T，首先利用哈希函数获得其哈希值，之后根据哈希值对应的哈希表项读取其中保存的指针，就找到了对应的冲突链表。如果冲突链表里已经存在这个单词，说明单词在之前解析的文档里已经出现过。如果在冲突链表里没有发现这个单词，说明该单词是首次碰到，则将其加入冲突链表里。通过这种方式，当文档集合内所有文档解析完毕时，相应的词典结构也就建立起来了。</p>
+<pre><code>在响应用户查询请求时，其过程与建立词典类似，不同点在于即使词典里没出现过某个单词，也不会添加到词典内。以图7为例，假设用户输入的查询请求为单词3，对这个单词进行哈希，定位到哈希表内的2号槽，从其保留的指针可以获得冲突链表，依次将单词3和冲突链表内的单词比较，发现单词3在冲突链表内，于是找到这个单词，之后可以读出这个单词对应的倒排列表来进行后续的工作，如果没有找到这个单词，说明文档集合内没有任何文档包含单词，则搜索结果为空。</code></pre><p>4.2   树形结构<br>       B树（或者B+树）是另外一种高效查找结构，图8是一个 B树结构示意图。B树与哈希方式查找不同，需要字典项能够按照大小排序（数字或者字符序），而哈希方式则无须数据满足此项要求。<br>       B树形成了层级查找结构，中间节点用于指出一定顺序范围的词典项目存储在哪个子树中，起到根据词典项比较大小进行导航的作用，最底层的叶子节点存储单词的地址信息，根据这个地址就可以提取出单词字符串。</p>
+<p>　　　　　　　　　　　　　　　　<img src="https://images2015.cnblogs.com/blog/855959/201702/855959-20170224200636976-342112863.png" alt></p>
+<p> 　　　　　　　　　　　　　　　　　　　　　　　　　　图8   B树查找结构 </p>
+<p>总结</p>
+<p><img src="https://images2015.cnblogs.com/blog/855959/201702/855959-20170224200716070-76147588.png" alt></p>
+<p><img src="https://images2015.cnblogs.com/blog/855959/201702/855959-20170224200724179-596243521.png" alt></p>
+<p>单词ID：记录每个单词的单词编号；<br>单词：对应的单词；<br>文档频率：代表文档集合中有多少个文档包含某个单词<br>倒排列表：包含单词ID及其他必要信息<br>DocId：单词出现的文档id<br>TF：单词在某个文档中出现的次数<br>POS：单词在文档中出现的位置<br>     以单词“加盟”为例，其单词编号为6，文档频率为3，代表整个文档集合中有三个文档包含这个单词，对应的倒排列表为{(2;1;&lt;4&gt;),(3;1;&lt;7&gt;),(5;1;&lt;5&gt;)}，含义是在文档2，3，5出现过这个单词，在每个文档的出现过1次，单词“加盟”在第一个文档的POS是4，即文档的第四个单词是“加盟”，其他的类似。<br>这个倒排索引已经是一个非常完备的索引系统，实际搜索系统的索引结构基本如此。</p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/13/后端技术杂谈/后端技术杂谈开篇：云计算，大数据与AI的故事/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/13/后端技术杂谈/后端技术杂谈开篇：云计算，大数据与AI的故事/" itemprop="url">后端技术杂谈开篇：云计算，大数据与AI的故事</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-13T15:01:26+08:00">
+                2019-10-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/后端技术/" itemprop="url" rel="index">
+                    <span itemprop="name">后端技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/13/后端技术杂谈/后端技术杂谈开篇：云计算，大数据与AI的故事/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/13/后端技术杂谈/后端技术杂谈开篇：云计算，大数据与AI的故事/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <div id="vip-container"><h1 id="快速看懂云计算，大数据，人工智能"><a href="#快速看懂云计算，大数据，人工智能" class="headerlink" title="快速看懂云计算，大数据，人工智能"></a><a href="https://www.cnblogs.com/popsuper1982/p/8505203.html" target="_blank" rel="noopener">快速看懂云计算，大数据，人工智能</a></h1><p>我今天要讲这三个话题，一个是云计算，一个大数据，一个人工智能，我为什么要讲这三个东西呢？因为这三个东西现在非常非常的火，它们之间好像互相有关系，一般谈云计算的时候也会提到大数据，谈人工智能的时候也会提大数据，谈人工智能的时候也会提云计算。所以说感觉他们又相辅相成不可分割，如果是非技术的人员来讲可能比较难理解说这三个之间的相互关系，所以有必要解释一下。</p>
+<p>一、云计算最初是实现资源管理的灵活性</p>
+<p>我们首先来说云计算，云计算最初的目标是对资源的管理，管理的主要是计算资源，网络资源，存储资源三个方面。</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304165200175-1916661625.png" alt></p>
+<p>1.1 管数据中心就像配电脑</p>
+<p>什么叫计算，网络，存储资源呢？就说你要买台笔记本电脑吧，你是不是要关心这台电脑什么样的CPU啊？多大的内存啊？这两个我们称为计算资源。</p>
+<p>这台电脑要能上网吧，需要有个网口可以插网线，或者有无线网卡可以连接我们家的路由器，您家也需要到运营商比如联通，移动，电信开通一个网络，比如100M的带宽，然后会有师傅弄一根网线到您家来，师傅可能会帮您将您的路由器和他们公司的网络连接配置好，这样您家的所有的电脑，手机，平板就都可以通过您的路由器上网了。这就是网络。</p>
+<p>您可能还会问硬盘多大啊？原来硬盘都很小，10G之类的，后来500G，1T，2T的硬盘也不新鲜了。(1T是1000G)，这就是存储。</p>
+<p>对于一台电脑是这个样子的，对于一个数据中心也是同样的。想象你有一个非常非常大的机房，里面堆了很多的服务器，这些服务器也是有CPU，内存，硬盘的，也是通过类似路由器的设备上网的。这个时候的一个问题就是，运营数据中心的人是怎么把这些设备统一的管理起来的呢？</p>
+<p>1.2 灵活就是想啥时要都有，想要多少都行</p>
+<p>管理的目标就是要达到两个方面的灵活性。哪两个方面呢？比如有个人需要一台很小很小的电脑，只有一个CPU，1G内存，10G的硬盘，一兆的带宽，你能给他吗？像这种这么小规格的电脑，现在随便一个笔记本电脑都比这个配置强了，家里随便拉一个宽带都要100M。然而如果去一个云计算的平台上，他要想要这个资源的时候，只要一点就有了。</p>
+<p>所以说它就能达到两个方面灵活性。</p>
+<ul>
+<li><p>第一个方面就是想什么时候要就什么时候要，比如需要的时候一点就出来了，这个叫做时间灵活性。</p>
+</li>
+<li><p>第二个方面就是想要多少呢就有多少，比如需要一个很小很小的电脑，可以满足，比如需要一个特别大的空间，以云盘为例，似乎云盘给每个人分配的空间动不动就就很大很大，随时上传随时有空间，永远用不完，这个叫做空间灵活性。</p>
+</li>
+</ul>
+<p>空间灵活性和时间灵活性，也即我们常说的云计算的弹性。</p>
+<p>为了解决这个弹性的问题，经历了漫长时间的发展。</p>
+<p>1.3 物理设备不灵活</p>
+<p>首先第一个阶段就是物理机，或者说物理设备时期。这个时期相当于客户需要一台电脑，我们就买一台放在数据中心里。物理设备当然是越来越牛，例如服务器，内存动不动就是百G内存，例如网络设备，一个端口的带宽就能有几十G甚至上百G，例如存储，在数据中心至少是PB级别的(一个P是1000个T，一个T是1000个G)。</p>
+<p>然而物理设备不能做到很好的灵活性。首先它不能够达到想什么时候要就什么时候要、比如买台服务器，哪怕买个电脑，都有采购的时间。突然用户告诉某个云厂商，说想要开台电脑，如果使用物理服务器，当时去采购啊就很难，如果说供应商啊关系一般，可能采购一个月，供应商关系好的话也需要一个星期。用户等了一个星期后，这时候电脑才到位，用户还要登录上去开始慢慢部署自己的应用，时间灵活性非常差。第二是空间灵活性也不行，例如上述的用户，要一个很小很小的电脑，现在哪还有这么小型号的电脑啊。不能为了满足用户只要一个G的内存是80G硬盘的，就去买一个这么小的机器。但是如果买一个大的呢，因为电脑大，就向用户多收钱，用户说他只用这么小的一点，如果让用户多付钱就很冤。</p>
+<p>1.4 虚拟化灵活多了</p>
+<p>有人就想办法了。第一个办法就是虚拟化。用户不是只要一个很小的电脑么？数据中心的物理设备都很强大，我可以从物理的CPU，内存，硬盘中虚拟出一小块来给客户，同时也可以虚拟出一小块来给其他客户，每个客户都只能看到自己虚的那一小块，其实每个客户用的是整个大的设备上其中的一小块。虚拟化的技术能使得不同的客户的电脑看起来是隔离的，我看着好像这块盘就是我的，你看这呢这块盘就是你的，实际情况可能我这个10G和您这个10G是落在同样一个很大很大的这个存储上的。</p>
+<p>而且如果事先物理设备都准备好，虚拟化软件虚拟出一个电脑是非常快的，基本上几分钟就能解决。所以在任何一个云上要创建一台电脑，一点几分钟就出来了，就是这个道理。</p>
+<p>这个空间灵活性和时间灵活性就基本解决了。</p>
+<p>1.5 虚拟世界的赚钱与情怀</p>
+<p>在虚拟化阶段，最牛的公司是Vmware，是实现虚拟化技术比较早的一家公司，可以实现计算，网络，存储的虚拟化，这家公司很牛，性能也做得非常好，然后虚拟化软件卖的也非常好，赚了好多的钱，后来让EMC(世界五百强，存储厂商第一品牌)给收购了。</p>
+<p>但是这个世界上还是有很多有情怀的人的，尤其是程序员里面，有情怀的人喜欢做一件什么事情呢？开源。这个世界上很多软件都是有闭源就有开源，源就是源代码。就是说某个软件做的好，所有人都爱用，这个软件的代码呢，我封闭起来只有我公司知道，其他人不知道，如果其他人想用这个软件，就要付我钱，这就叫闭源。但是世界上总有一些大牛看不惯钱都让一家赚了去。大牛们觉得，这个技术你会我也会，你能开发出来，我也能，我开发出来就是不收钱，把代码拿出来分享给大家，全世界谁用都可以，所有的人都可以享受到好处，这个叫做开源。</p>
+<p>比如最近蒂姆·伯纳斯·李就是个非常有情怀的人，2017年，他因“发明万维网、第一个浏览器和使万维网得以扩展的基本协议和算法”而获得2016年度的图灵奖。图灵奖就是计算机界的诺贝尔奖。然而他最令人敬佩的是，他将万维网，也就是我们常见的www的技术无偿贡献给全世界免费使用。我们现在在网上的所有行为都应该感谢他的功劳，如果他将这个技术拿来收钱，应该和比尔盖茨差不多有钱。</p>
+<p>例如在闭源的世界里有windows，大家用windows都得给微软付钱，开源的世界里面就出现了Linux。比尔盖茨靠windows，Office这些闭源的软件赚了很多钱，称为世界首富，就有大牛开发了另外一种操作系统Linux。很多人可能没有听说过Linux，很多后台的服务器上跑的程序都是Linux上的，比如大家享受双十一，支撑双十一抢购的系统，无论是淘宝，京东，考拉，都是跑在Linux上的。</p>
+<p>再如有apple就有安卓。apple市值很高，但是苹果系统的代码我们是看不到的。于是就有大牛写了安卓手机操作系统。所以大家可以看到几乎所有的其他手机厂商，里面都装安卓系统，因为苹果系统不开源，而安卓系统大家都可以用。</p>
+<p>在虚拟化软件也一样，有了Vmware，这个软件非常非常的贵。那就有大牛写了两个开源的虚拟化软件，一个叫做Xen，一个叫做KVM，如果不做技术的，可以不用管这两个名字，但是后面还是会提到。</p>
+<p>1.6 虚拟化的半自动和云计算的全自动</p>
+<p>虚拟化软件似乎解决了灵活性问题，其实不全对。因为虚拟化软件一般创建一台虚拟的电脑，是需要人工指定这台虚拟电脑放在哪台物理机上的，可能还需要比较复杂的人工配置，所以使用Vmware的虚拟化软件，需要考一个很牛的证书，能拿到这个证书的人，薪资是相当的高，也可见复杂程度。所以仅仅凭虚拟化软件所能管理的物理机的集群规模都不是特别的大，一般在十几台，几十台，最多百台这么一个规模。这一方面会影响时间灵活性，虽然虚拟出一台电脑的时间很短，但是随着集群规模的扩大，人工配置的过程越来越复杂，越来越耗时。另一方面也影响空间灵活性，当用户数量多的时候，这点集群规模，还远达不到想要多少要多少的程度，很可能这点资源很快就用完了，还得去采购。所以随着集群的规模越来越大，基本都是千台起步，动辄上万台，甚至几十上百万台，如果去查一下BAT，包括网易，包括谷歌，亚马逊，服务器数目都大的吓人。这么多机器要靠人去选一个位置放这台虚拟化的电脑并做相应的配置，几乎是不可能的事情，还是需要机器去做这个事情。</p>
+<p>人们发明了各种各样的算法来做这个事情，算法的名字叫做调度(Scheduler)。通俗一点的说，就是有一个调度中心，几千台机器都在一个池子里面，无论用户需要多少CPU，内存，硬盘的虚拟电脑，调度中心会自动在大池子里面找一个能够满足用户需求的地方，把虚拟电脑启动起来做好配置，用户就直接能用了。这个阶段，我们称为池化，或者云化，到了这个阶段，才可以称为云计算，在这之前都只能叫虚拟化。</p>
+<p>1.7 云计算的私有与公有</p>
+<p>云计算大致分两种，一个是私有云，一个是公有云，还有人把私有云和公有云连接起来称为混合云，我们暂且不说这个。私有云就是把虚拟化和云化的这套软件部署在别人的数据中心里面，使用私有云的用户往往很有钱，自己买地建机房，自己买服务器，然后让云厂商部署在自己这里，Vmware后来除了虚拟化，也推出了云计算的产品，并且在私有云市场赚的盆满钵满。所谓公有云就是虚拟化和云化软件部署在云厂商自己数据中心里面的，用户不需要很大的投入，只要注册一个账号，就能在一个网页上点一下创建一台虚拟电脑，例如AWS也即亚马逊的公有云，例如国内的阿里云，腾讯云，网易云等。</p>
+<p>亚马逊呢为什么要做公有云呢？我们知道亚马逊原来是国外比较大的一个电商，它做电商的时候也肯定会遇到类似双11的场景，在某一个时刻大家都冲上来买东西。当大家都冲上买东西的时候，就特别需要云的时间灵活性和空间灵活性。因为它不能时刻准备好所有的资源，那样太浪费了。但也不能什么都不准备，看着双十一这么多用户想买东西登不上去。所以需要双十一的时候，创建一大批虚拟电脑来支撑电商应用，过了双十一再把这些资源都释放掉去干别的。所以亚马逊是需要一个云平台的。</p>
+<p>然而商用的虚拟化软件实在是太贵了，亚马逊总不能把自己在电商赚的钱全部给了虚拟化厂商吧。于是亚马逊基于开源的虚拟化技术，如上所述的Xen或者KVM，开发了一套自己的云化软件。没想到亚马逊后来电商越做越牛，云平台也越做越牛。而且由于他的云平台需要支撑自己的电商应用，而传统的云计算厂商多为IT厂商出身，几乎没有自己的应用，因而亚马逊的云平台对应用更加的友好，迅速发展成为云计算的第一品牌，赚了很多钱。在亚马逊公布其云计算平台财报之前，人们都猜测，亚马逊电商赚钱，云也赚钱吗？后来一公布财报，发现不是一般的赚钱，仅仅去年，亚马逊AWS年营收达122亿美元，运营利润31亿美元。</p>
+<p>1.8 云计算的赚钱与情怀</p>
+<p>公有云的第一名亚马逊过得很爽，第二名Rackspace过的就一般了。没办法，这就是互联网行业的残酷性，多是赢者通吃的模式。所以第二名如果不是云计算行业的，很多人可能都没听过了。第二名就想，我干不过老大怎么办呢？开源吧。如上所述，亚马逊虽然使用了开源的虚拟化技术，但是云化的代码是闭源的，很多想做又做不了云化平台的公司，只能眼巴巴的看着亚马逊挣大钱。Rackspace把源代码一公开，整个行业就可以一起把这个平台越做越好，兄弟们大家一起上，和老大拼了。</p>
+<p>于是Rackspace和美国航空航天局合作创办了开源软件OpenStack，如图所示OpenStack的架构图，不是云计算行业的不用弄懂这个图，但是能够看到三个关键字，Compute计算，Networking网络，Storage存储。还是一个计算，网络，存储的云化管理平台。</p>
+<p>当然第二名的技术也是非常棒的，有了OpenStack之后，果真像Rackspace想象的一样，所有想做云的大企业都疯了，你能想象到的所有如雷贯耳的大型IT企业，IBM，惠普，戴尔，华为，联想等等，都疯了。原来云平台大家都想做，看着亚马逊和Vmware赚了这么多钱，眼巴巴看着没办法，想自己做一个好像难度还挺大。现在好了，有了这样一个开源的云平台OpenStack，所有的IT厂商都加入到这个社区中来，对这个云平台进行贡献，包装成自己的产品，连同自己的硬件设备一起卖。有的做了私有云，有的做了公有云，OpenStack已经成为开源云平台的事实标准。</p>
+<p>1.9 IaaS, 资源层面的灵活性</p>
+<p>随着OpenStack的技术越来越成熟，可以管理的规模也越来越大，并且可以有多个OpenStack集群部署多套，比如北京部署一套，杭州部署两套，广州部署一套，然后进行统一的管理。这样整个规模就更大了。在这个规模下，对于普通用户的感知来讲，基本能够做到想什么时候要就什么什么药，想要多少就要多少。还是拿云盘举例子，每个用户云盘都分配了5T甚至更大的空间，如果有1亿人，那加起来空间多大啊。其实背后的机制是这样的，分配你的空间，你可能只用了其中很少一点，比如说它分配给你了5个T，这么大的空间仅仅是你看到的，而不是真的就给你了，你其实只用了50个G，则真实给你的就是50个G，随着你文件的不断上传，分给你的空间会越来越多。当大家都上传，云平台发现快满了的时候(例如用了70%)，会采购更多的服务器，扩充背后的资源，这个对用户是透明的，看不到的，从感觉上来讲，就实现了云计算的弹性。其实有点像银行，给储户的感觉是什么时候取钱都有，只要不同时挤兑，银行就不会垮。</p>
+<p>这里做一个简单的总结，到了这个阶段，云计算基本上实现了时间灵活性和空间灵活性，实现了计算，网络，存储资源的弹性。计算，网络，存储我们常称为基础设施Infranstracture, 因而这个阶段的弹性称为资源层面的弹性，管理资源的云平台，我们称为基础设施服务，就是我们常听到的IaaS，Infranstracture As A Service。</p>
+<p>二、云计算不光管资源，也要管应用</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304165352365-1674249597.png" alt></p>
+<p>有了IaaS，实现了资源层面的弹性就够了吗？显然不是。还有应用层面的弹性。这里举个例子，比如说实现一个电商的应用，平时十台机器就够了，双十一需要一百台。你可能觉得很好办啊，有了IaaS，新创建九十台机器就可以了啊。但是90台机器创建出来是空的啊，电商应用并没有放上去啊，只能你公司的运维人员一台一台的弄，还是需要很长时间才能安装好的。虽然资源层面实现了弹性，但是没有应用层的弹性，依然灵活性是不够的。</p>
+<p>有没有方法解决这个问题呢？于是人们在IaaS平台之上又加了一层，用于管理资源以上的应用弹性的问题，这一层通常称为PaaS（Platform As A Service）。这一层往往比较难理解，其实大致分两部分，一部分我称为你自己的应用自动安装，一部分我称为通用的应用不用安装。</p>
+<p>我们先来说第一部分，自己的应用自动安装。比如电商应用是你自己开发的，除了你自己，其他人是不知道怎么安装的，比如电商应用，安装的时候需要配置支付宝或者微信的账号，才能别人在你的电商上买东西的时候，付的钱是打到你的账户里面的，除了你，谁也不知道，所以安装的过程平台帮不了忙，但是能够帮你做的自动化，你需要做一些工作，将自己的配置信息融入到自动化的安装过程中方可。比如上面的例子，双十一新创建出来的90台机器是空的，如果能够提供一个工具，能够自动在这新的90台机器上将电商应用安装好，就能够实现应用层面的真正弹性。例如Puppet, Chef, Ansible, Cloud Foundary都可以干这件事情，最新的容器技术Docker能更好的干这件事情，不做技术的可以不用管这些词。</p>
+<p>第二部分，通用的应用不用安装。所谓通用的应用，一般指一些复杂性比较高，但是大家都在用的，例如数据库。几乎所有的应用都会用数据库，但是数据库软件是标准的，虽然安装和维护比较复杂，但是无论谁安装都是一样。这样的应用可以变成标准的PaaS层的应用放在云平台的界面上。当用户需要一个数据库的时候，一点就出来了，用户就可以直接用了。有人问，既然谁安装都一个样，那我自己来好了，不需要花钱在云平台上买。当然不是，数据库是一个非常难的东西，光Oracle这家公司，靠数据库就能赚这么多钱。买Oracle也是要花很多很多钱的。然而大多数云平台会提供Mysql这样的开源数据库，又是开源，钱不需要花这么多了，但是维护这个数据库，却需要专门招一个很大的团队，如果这个数据库能够优化到能够支撑双十一，也不是一年两年能够搞定的。比如您是一个做单车的，当然没必要招一个非常大的数据库团队来干这件事情，成本太高了，应该交给云平台来做这件事情，专业的事情专业的人来自，云平台专门养了几百人维护这套系统，您只要专注于您的单车应用就可以了。</p>
+<p>要么是自动部署，要么是不用部署，总的来说就是应用层你也要少操心，这就是PaaS层的重要作用。</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304171116823-2125176837.png" alt></p>
+<p> 虽说脚本的方式能够解决自己的应用的部署问题，然而不同的环境千差万别，一个脚本往往在一个环境上运行正确，到另一个环境就不正确了。</p>
+<p>而容器是能更好的解决这个问题的。</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304171549380-884329721.png" alt></p>
+<p>容器是 Container，Container另一个意思是集装箱，其实容器的思想就是要变成软件交付的集装箱。集装箱的特点，一是封装，二是标准。</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304174029819-460006657.png" alt></p>
+<p>在没有集装箱的时代，假设将货物从 A运到 B，中间要经过三个码头、换三次船。每次都要将货物卸下船来，摆的七零八落，然后搬上船重新整齐摆好。因此在没有集装箱的时候，每次换船，船员们都要在岸上待几天才能走。</p>
+<p> <img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304174049081-1911645088.png" alt></p>
+<p>有了集装箱以后，所有的货物都打包在一起了，并且集装箱的尺寸全部一致，所以每次换船的时候，一个箱子整体搬过去就行了，小时级别就能完成，船员再也不用上岸长时间耽搁了。</p>
+<p>这是集装箱“封装”、“标准”两大特点在生活中的应用。</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304174111204-554853341.png" alt></p>
+<p>那么容器如何对应用打包呢？还是要学习集装箱，首先要有个封闭的环境，将货物封装起来，让货物之间互不干扰，互相隔离，这样装货卸货才方便。好在 Ubuntu中的LXC技术早就能做到这一点。</p>
+<p>封闭的环境主要使用了两种技术，一种是看起来是隔离的技术，称为 Namespace，也即每个 Namespace中的应用看到的是不同的 IP地址、用户空间、程号等。另一种是用起来是隔离的技术，称为 Cgroups，也即明明整台机器有很多的 CPU、内存，而一个应用只能用其中的一部分。</p>
+<p>所谓的镜像，就是将你焊好集装箱的那一刻，将集装箱的状态保存下来，就像孙悟空说：“定”，集装箱里面就定在了那一刻，然后将这一刻的状态保存成一系列文件。这些文件的格式是标准的，谁看到这些文件都能还原当时定住的那个时刻。将镜像还原成运行时的过程（就是读取镜像文件，还原那个时刻的过程）就是容器运行的过程。</p>
+<p>有了容器，使得 PaaS层对于用户自身应用的自动部署变得快速而优雅。</p>
+<p>三、大数据拥抱云计算</p>
+<p>在PaaS层中一个复杂的通用应用就是大数据平台。大数据是如何一步一步融入云计算的呢？</p>
+<p>3.1 数据不大也包含智慧</p>
+<p>一开始这个大数据并不大，你想象原来才有多少数据？现在大家都去看电子书，上网看新闻了，在我们80后小时候，信息量没有那么大，也就看看书，看看报，一个星期的报纸加起来才有多少字啊，如果你不在一个大城市，一个普通的学校的图书馆加起来也没几个书架，是后来随着信息化的到来，信息才会越来越多。</p>
+<p>首先我们来看一下大数据里面的数据，就分三种类型，一种叫结构化的数据，一种叫非结构化的数据，还有一种叫半结构化的数据。什么叫结构化的数据呢？叫有固定格式和有限长度的数据。例如填的表格就是结构化的数据，国籍：中华人民共和国，民族：汉，性别：男，这都叫结构化数据。现在越来越多的就是非结构化的数据，就是不定长，无固定格式的数据，例如网页，有时候非常长，有时候几句话就没了，例如语音，视频都是非结构化的数据。半结构化数据是一些xml或者html的格式的，不从事技术的可能不了解，但也没有关系。</p>
+<p>数据怎么样才能对人有用呢？其实数据本身不是有用的，必须要经过一定的处理。例如你每天跑步带个手环收集的也是数据，网上这么多网页也是数据，我们称为Data，数据本身没有什么用处，但是数据里面包含一个很重要的东西，叫做信息Information，数据十分杂乱，经过梳理和清洗，才能够称为信息。信息会包含很多规律，我们需要从信息中将规律总结出来，称为知识knowledge，知识改变命运。信息是很多的，但是有人看到了信息相当于白看，但是有人就从信息中看到了电商的未来，有人看到了直播的未来，所以人家就牛了，你如果没有从信息中提取出知识，天天看朋友圈，也只能在互联网滚滚大潮中做个看客。有了知识，然后利用这些知识去应用于实战，有的人会做得非常好，这个东西叫做智慧intelligence。有知识并不一定有智慧，例如好多学者很有知识，已经发生的事情可以从各个角度分析的头头是道，但一到实干就歇菜，并不能转化成为智慧。而很多的创业家之所以伟大，就是通过获得的知识应用于实践，最后做了很大的生意。</p>
+<p>所以数据的应用分这四个步骤：数据，信息，知识，智慧。这是很多商家都想要的，你看我收集了这么多的数据，能不能基于这些数据来帮我做下一步的决策，改善我的产品，例如让用户看视频的时候旁边弹出广告，正好是他想买的东西，再如让用户听音乐的时候，另外推荐一些他非常想听的其他音乐。用户在我的应用或者网站上随便点点鼠标，输入文字对我来说都是数据，我就是要将其中某些东西提取出来，指导实践，形成智慧，让用户陷入到我的应用里面不可自拔，上了我的网就不想离开，手不停的点，不停的买，很多人说双十一我都想断网了，我老婆在上面不断的买买买，买了A又推荐B，老婆大人说，“哎呀，B也是我喜欢的啊，老公我要买”。你说这个程序怎么这么牛，这么有智慧，比我还了解我老婆，这件事情是怎么做到的呢？</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304172910727-1535815123.png" alt></p>
+<p>3.2 数据如何升华为智慧</p>
+<p>数据的处理分几个步骤，完成了才最后会有智慧。</p>
+<p>第一个步骤叫数据的收集。首先得有数据，数据的收集有两个方式，第一个方式是拿，专业点的说法叫抓取或者爬取，例如搜索引擎就是这么做的，它把网上的所有的信息都下载到它的数据中心，然后你一搜才能搜出来。比如你去搜索的时候，结果会是一个列表，这个列表为什么会在搜索引擎的公司里面呢，就是因为他把这个数据啊都拿下来了，但是你一点链接，点出来这个网站就不在搜索引擎它们公司了。比如说新浪有个新闻，你拿百度搜出来，你不点的时候，那一页在百度数据中心，一点出来的网页就是在新浪的数据中心了。另外一个方式就是推送，有很多终端可以帮我收集数据，比如说小米手环，可以将你每天跑步的数据，心跳的数据，睡眠的数据都上传到数据中心里面。</p>
+<p>第二个步骤是数据的传输。一般会通过队列方式进行，因为数据量实在是太大了，数据必须经过处理才会有用，可是系统处理不过来，只好排好队，慢慢的处理。</p>
+<p>第三个步骤是数据的存储。现在数据就是金钱，掌握了数据就相当于掌握了钱。要不然网站怎么知道你想买什么呢？就是因为它有你历史的交易的数据，这个信息可不能给别人，十分宝贵，所以需要存储下来。</p>
+<p>第四个步骤是数据的处理和分析。上面存储的数据是原始数据，原始数据多是杂乱无章的，有很多垃圾数据在里面，因而需要清洗和过滤，得到一些高质量的数据。对于高质量的数据，就可以进行分析，从而对数据进行分类，或者发现数据之间的相互关系，得到知识。比如盛传的沃尔玛超市的啤酒和尿布的故事，就是通过对人们的购买数据进行分析，发现了男人一般买尿布的时候，会同时购买啤酒，这样就发现了啤酒和尿布之间的相互关系，获得知识，然后应用到实践中，将啤酒和尿布的柜台弄的很近，就获得了智慧。</p>
+<p>第五个步骤就是对于数据的检索和挖掘。检索就是搜索，所谓外事不决问google，内事不决问百度。内外两大搜索引擎都是讲分析后的数据放入搜索引擎，从而人们想寻找信息的时候，一搜就有了。另外就是挖掘，仅仅搜索出来已经不能满足人们的要求了，还需要从信息中挖掘出相互的关系。比如财经搜索，当搜索某个公司股票的时候，该公司的高管是不是也应该被挖掘出来呢？如果仅仅搜索出这个公司的股票发现涨的特别好，于是你就去买了，其实其高管发了一个声明，对股票十分不利，第二天就跌了，这不坑害广大股民么？所以通过各种算法挖掘数据中的关系，形成知识库，十分重要。</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304173120622-1040592225.png" alt></p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304173217309-1598751514.png" alt></p>
+<p>3.3 大数据时代，众人拾柴火焰高</p>
+<p>当数据量很小的时候，很少的几台机器就能解决。慢慢的当数据量越来越大，最牛的服务器都解决不了问题的时候，就想怎么办呢？要聚合多台机器的力量，大家齐心协力一起把这个事搞定，众人拾柴火焰高。</p>
+<p>对于数据的收集，对于IoT来讲，外面部署这成千上万的检测设备，将大量的温度，适度，监控，电力等等数据统统收集上来，对于互联网网页的搜索引擎来讲，需要将整个互联网所有的网页都下载下来，这显然一台机器做不到，需要多台机器组成网络爬虫系统，每台机器下载一部分，同时工作，才能在有限的时间内，将海量的网页下载完毕。</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304173243017-953751892.png" alt></p>
+<p>对于数据的传输，一个内存里面的队列肯定会被大量的数据挤爆掉，于是就产生了基于硬盘的分布式队列，这样队列可以多台机器同时传输，随你数据量多大，只要我的队列足够多，管道足够粗，就能够撑得住。</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304173256198-1194238978.png" alt></p>
+<p>对于数据的存储，一台机器的文件系统肯定是放不下了，所以需要一个很大的分布式文件系统来做这件事情，把多台机器的硬盘打成一块大的文件系统。</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304173309193-29645192.png" alt></p>
+<p>再如数据的分析，可能需要对大量的数据做分解，统计，汇总，一台机器肯定搞不定，处理到猴年马月也分析不完，于是就有分布式计算的方法，将大量的数据分成小份，每台机器处理一小份，多台机器并行处理，很快就能算完。例如著名的Terasort对1个TB的数据排序，相当于1000G，如果单机处理，怎么也要几个小时，但是并行处理209秒就完成了。</p>
+<p> <img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304173340325-454046253.png" alt></p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304173407555-1514738312.png" alt></p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304173430982-1156642033.png" alt></p>
+<p>所以说大数据平台，什么叫做大数据，说白了就是一台机器干不完，大家一起干。随着数据量越来越大，很多不大的公司都需要处理相当多的数据，这些小公司没有这么多机器可怎么办呢？</p>
+<p>3.4 大数据需要云计算，云计算需要大数据</p>
+<p>说到这里，大家想起云计算了吧。当想要干这些活的时候，需要好多好多的机器一块做，真的是想什么时候要，想要多少就要多少。例如大数据分析公司的财务情况，可能一周分析一次，如果要把这一百台机器或者一千台机器都在那放着，一周用一次对吧，非常浪费。那能不能需要计算的时候，把这一千台机器拿出来，然后不算的时候，这一千台机器可以去干别的事情。谁能做这个事儿呢？只有云计算，可以为大数据的运算提供资源层的灵活性。而云计算也会部署大数据放到它的PaaS平台上，作为一个非常非常重要的通用应用。因为大数据平台能够使得多台机器一起干一个事儿，这个东西不是一般人能开发出来的，也不是一般人玩得转的，怎么也得雇个几十上百号人才能把这个玩起来，所以说就像数据库一样，其实还是需要有一帮专业的人来玩这个东西。现在公有云上基本上都会有大数据的解决方案了，一个小公司我需要大数据平台的时候，不需要采购一千台机器，只要到公有云上一点，这一千台机器都出来了，并且上面已经部署好了的大数据平台，只要把数据放进去算就可以了。</p>
+<p>云计算需要大数据，大数据需要云计算，两个人就这样结合了。</p>
+<p>四、人工智能拥抱大数据</p>
+<p>4.1 机器什么时候才能懂人心</p>
+<p>虽说有了大数据，人的欲望总是这个不能够满足。虽说在大数据平台里面有搜索引擎这个东西，想要什么东西我一搜就出来了。但是也存在这样的情况，我想要的东西不会搜，表达不出来，搜索出来的又不是我想要的。例如音乐软件里面推荐一首歌，这首歌我没听过，当然不知道名字，也没法搜，但是软件推荐给我，我的确喜欢，这就是搜索做不到的事情。当人们使用这种应用的时候，会发现机器知道我想要什么，而不是说当我想要的时候，去机器里面搜索。这个机器真像我的朋友一样懂我，这就有点人工智能的意思了。</p>
+<p>人们很早就在想这个事情了。最早的时候，人们想象，如果要是有一堵墙，墙后面是个机器，我给它说话，它就给我回应，我如果感觉不出它那边是人还是机器，那它就真的是一个人工智能的东西了。</p>
+<p>4.2 让机器学会推理</p>
+<p>怎么才能做到这一点呢？人们就想：我首先要告诉计算机人类的推理的能力。你看人重要的是什么呀，人和动物的区别在什么呀，就是能推理。我要是把我这个推理的能力啊告诉机器，机器就能根据你的提问，推理出相应的回答，真能这样多好。推理其实人们慢慢的让机器能够做到一些了，例如证明数学公式。这是一个非常让人惊喜的一个过程，机器竟然能够证明数学公式。但是慢慢发现其实这个结果，也没有那么令人惊喜，因为大家发现了一个问题，数学公式非常严谨，推理过程也非常严谨，而且数学公式很容易拿机器来进行表达，程序也相对容易表达。然而人类的语言就没这么简单了，比如今天晚上，你和你女朋友约会，你女朋友说：如果你早来，我没来，你等着，如果我早来，你没来，你等着。这个机器就比比较难理解了，但是人都懂，所以你和女朋友约会，你是不敢迟到的。</p>
+<p>4.3 教给机器知识</p>
+<p>所以仅仅告诉机器严格的推理是不够的，还要告诉机器一些知识。但是知识这个事儿，一般人可能就做不来了，可能专家可以，比如语言领域的专家，或者财经领域的专家。语言领域和财经领域知识能不能表示成像数学公式一样稍微严格点呢？例如语言专家可能会总结出主谓宾定状补这些语法规则，主语后面一定是谓语，谓语后面一定是宾语，将这些总结出来，并严格表达出来不久行了吗？后来发现这个不行，太难总结了，语言表达千变万化。就拿主谓宾的例子，很多时候在口语里面就省略了谓语，别人问：你谁啊？我回答：我刘超。但是你不能规定在语音语义识别的时候，要求对着机器说标准的书面语，这样还是不够智能，就像罗永浩在一次演讲中说的那样，每次对着手机，用书面语说：请帮我呼叫某某某，这是一件很尴尬的事情。</p>
+<p>人工智能这个阶段叫做专家系统。专家系统不易成功，一方面是知识比较难总结，另一方面总结出来的知识难以教给计算机。因为你自己还迷迷糊糊，似乎觉得有规律，就是说不出来，就怎么能够通过编程教给计算机呢？</p>
+<p>4.4 算了，教不会你自己学吧</p>
+<p>于是人们想到，看来机器是和人完全不一样的物种，干脆让机器自己学习好了。机器怎么学习呢？既然机器的统计能力这么强，基于统计学习，一定能从大量的数字中发现一定的规律。</p>
+<p>其实在娱乐圈有很好的一个例子，可见一斑</p>
+<p>有一位网友统计了知名歌手在大陆发行的 9 张专辑中 117 首歌曲的歌词，同一词语在一首歌出现只算一次，形容词、名词和动词的前十名如下表所示（词语后面的数字是出现的次数）：</p>
+<colgroup><col><col><col><col><col><col></colgroup>
+| a | 形容词 | b | 名词 | c | 动词 |
+| 0 | 孤独:34 | 0 | 生命:50 | 0 | 爱:54 |
+| 1 | 自由:17 | 1 | 路:37 | 1 | 碎:37 |
+| 2 | 迷惘:16 | 2 | 夜:29 | 2 | 哭:35 |
+| 3 | 坚强:13 | 3 | 天空:24 | 3 | 死:27 |
+| 4 | 绝望:8 | 4 | 孩子:23 | 4 | 飞:26 |
+| 5 | 青春:7 | 5 | 雨:21 | 5 | 梦想:14 |
+| 6 | 迷茫:6 | 6 | 石头:9 | 6 | 祈祷:10 |
+| 7 | 光明:6 | 7 | 鸟:9 | 7 | 离去:10 |
+
+
+
+
+
+<p>如果我们随便写一串数字，然后按照数位依次在形容词、名词和动词中取出一个词，连在一起会怎么样呢？</p>
+<p>例如取圆周率 3.1415926，对应的词语是：坚强，路，飞，自由，雨，埋，迷惘。稍微连接和润色一下：</p>
+<p>坚强的孩子，</p>
+<p>依然前行在路上，</p>
+<p>张开翅膀飞向自由，</p>
+<p>让雨水埋葬他的迷惘。</p>
+<p>是不是有点感觉了？当然真正基于统计的学习算法比这个简单的统计复杂的多。</p>
+<p>然而统计学习比较容易理解简单的相关性，例如一个词和另一个词总是一起出现，两个词应该有关系，而无法表达复杂的相关性，并且统计方法的公式往往非常复杂，为了简化计算，常常做出各种独立性的假设，来降低公式的计算难度，然而现实生活中，具有独立性的事件是相对较少的。</p>
+<p>4.5 模拟大脑的工作方式</p>
+<p>于是人类开始从机器的世界，反思人类的世界是怎么工作的。</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304173542876-248664847.png" alt></p>
+<p>人类的脑子里面不是存储着大量的规则，也不是记录着大量的统计数据，而是通过神经元的触发实现的，每个神经元有从其他神经元的输入，当接收到输入的时候，会产生一个输出来刺激其他的神经元，于是大量的神经元相互反应，最终形成各种输出的结果。例如当人们看到美女瞳孔放大，绝不是大脑根据身材比例进行规则判断，也不是将人生中看过的所有的美女都统计一遍，而是神经元从视网膜触发到大脑再回到瞳孔。在这个过程中，其实很难总结出每个神经元对最终的结果起到了哪些作用，反正就是起作用了。</p>
+<p>于是人们开始用一个数学单元模拟神经元</p>
+<p>这个神经元有输入，有输出，输入和输出之间通过一个公式来表示，输入根据重要程度不同(权重)，影响着输出。</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304173608115-399984901.png" alt></p>
+<p>于是将n个神经元通过像一张神经网络一样连接在一起，n这个数字可以很大很大，所有的神经元可以分成很多列，每一列很多个排列起来，每个神经元的对于输入的权重可以都不相同，从而每个神经元的公式也不相同。当人们从这张网络中输入一个东西的时候，希望输出一个对人类来讲正确的结果。例如上面的例子，输入一个写着2的图片，输出的列表里面第二个数字最大，其实从机器来讲，它既不知道输入的这个图片写的是2，也不知道输出的这一系列数字的意义，没关系，人知道意义就可以了。正如对于神经元来说，他们既不知道视网膜看到的是美女，也不知道瞳孔放大是为了看的清楚，反正看到美女，瞳孔放大了，就可以了。</p>
+<p>对于任何一张神经网络，谁也不敢保证输入是2，输出一定是第二个数字最大，要保证这个结果，需要训练和学习。毕竟看到美女而瞳孔放大也是人类很多年进化的结果。学习的过程就是，输入大量的图片，如果结果不是想要的结果，则进行调整。如何调整呢，就是每个神经元的每个权重都向目标进行微调，由于神经元和权重实在是太多了，所以整张网络产生的结果很难表现出非此即彼的结果，而是向着结果微微的进步，最终能够达到目标结果。当然这些调整的策略还是非常有技巧的，需要算法的高手来仔细的调整。正如人类见到美女，瞳孔一开始没有放大到能看清楚，于是美女跟别人跑了，下次学习的结果是瞳孔放大一点点，而不是放大鼻孔。</p>
+<p>4.6 没道理但做得到</p>
+<p>听起来也没有那么有道理，但是的确能做到，就是这么任性。</p>
+<p>神经网络的普遍性定理是这样说的，假设某个人给你某种复杂奇特的函数，f(x)：</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304173627213-1028735538.png" alt></p>
+<p>不管这个函数是什么样的，总会确保有个神经网络能够对任何可能的输入x，其值f(x)（或者某个能够准确的近似）是神经网络的输出。</p>
+<p>如果在函数代表着规律，也意味着这个规律无论多么奇妙，多么不能理解，都是能通过大量的神经元，通过大量权重的调整，表示出来的。</p>
+<p>4.7 人工智能的经济学解释</p>
+<p>这让我想到了经济学，于是比较容易理解了。</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180304173647419-351927988.png" alt></p>
+<p>我们把每个神经元当成社会中从事经济活动的个体。于是神经网络相当于整个经济社会，每个神经元对于社会的输入，都有权重的调整，做出相应的输出，比如工资涨了，菜价也涨了，股票跌了，我应该怎么办，怎么花自己的钱。这里面没有规律么？肯定有，但是具体什么规律呢？却很难说清楚。</p>
+<p>基于专家系统的经济属于计划经济，整个经济规律的表示不希望通过每个经济个体的独立决策表现出来，而是希望通过专家的高屋建瓴和远见卓识总结出来。专家永远不可能知道哪个城市的哪个街道缺少一个卖甜豆腐脑的。于是专家说应该产多少钢铁，产多少馒头，往往距离人民生活的真正需求有较大的差距，就算整个计划书写个几百页，也无法表达隐藏在人民生活中的小规律。</p>
+<p>基于统计的宏观调控就靠谱的多了，每年统计局都会统计整个社会的就业率，通胀率，GDP等等指标，这些指标往往代表着很多的内在规律，虽然不能够精确表达，但是相对靠谱。然而基于统计的规律总结表达相对比较粗糙，比如经济学家看到这些统计数据可以总结出长期来看房价是涨还是跌，股票长期来看是涨还是跌，如果经济总体上扬，房价和股票应该都是涨的。但是基于统计数据，无法总结出股票，物价的微小波动规律。</p>
+<p>基于神经网络的微观经济学才是对整个经济规律最最准确的表达，每个人对于从社会中的输入，进行各自的调整，并且调整同样会作为输入反馈到社会中。想象一下股市行情细微的波动曲线，正是每个独立的个体各自不断交易的结果，没有统一的规律可循。而每个人根据整个社会的输入进行独立决策，当某些因素经过多次训练，也会形成宏观上的统计性的规律，这也就是宏观经济学所能看到的。例如每次货币大量发行，最后房价都会上涨，多次训练后，人们也就都学会了。</p>
+<p>4.8 人工智能需要大数据</p>
+<p>然而神经网络包含这么多的节点，每个节点包含非常多的参数，整个参数量实在是太大了，需要的计算量实在太大，但是没有关系啊，我们有大数据平台，可以汇聚多台机器的力量一起来计算，才能在有限的时间内得到想要的结果。</p>
+<p>人工智能可以做的事情非常多，例如可以鉴别垃圾邮件，鉴别黄色暴力文字和图片等。这也是经历了三个阶段的。第一个阶段依赖于关键词黑白名单和过滤技术，包含哪些词就是黄色或者暴力的文字。随着这个网络语言越来越多，词也不断的变化，不断的更新这个词库就有点顾不过来。第二个阶段时，基于一些新的算法，比如说贝叶斯过滤等，你不用管贝叶斯算法是什么，但是这个名字你应该听过，这个一个基于概率的算法。第三个阶段就是基于大数据和人工智能，进行更加精准的用户画像和文本理解和图像理解。</p>
+<p>由于人工智能算法多是依赖于大量的数据的，这些数据往往需要面向某个特定的领域(例如电商，邮箱)进行长期的积累，如果没有数据，就算有人工智能算法也白搭，所以人工智能程序很少像前面的IaaS和PaaS一样，将人工智能程序给某个客户安装一套让客户去用，因为给某个客户单独安装一套，客户没有相关的数据做训练，结果往往是很差的。但是云计算厂商往往是积累了大量数据的，于是就在云计算厂商里面安装一套，暴露一个服务接口，比如您想鉴别一个文本是不是涉及黄色和暴力，直接用这个在线服务就可以了。这种形势的服务，在云计算里面称为软件即服务，SaaS (Software AS A Service)</p>
+<p>于是工智能程序作为SaaS平台进入了云计算。</p>
+<p>五、云计算，大数据，人工智能过上了美好的生活</p>
+<p>终于云计算的三兄弟凑齐了，分别是IaaS，PaaS和SaaS，所以一般在一个云计算平台上，云，大数据，人工智能都能找得到。对一个大数据公司，积累了大量的数据，也会使用一些人工智能的算法提供一些服务。对于一个人工智能公司，也不可能没有大数据平台支撑。所以云计算，大数据，人工智能就这样整合起来，完成了相遇，相识，相知。</p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script>
+
+</div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/12/并发编程/Java并发指南12：深度解读 java 线程池设计思想及源码实现/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/12/并发编程/Java并发指南12：深度解读 java 线程池设计思想及源码实现/" itemprop="url">Java并发指南12：深度解读 java 线程池设计思想及源码实现</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-12T21:03:44+08:00">
+                2019-10-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/" itemprop="url" rel="index">
+                    <span itemprop="name">Java技术江湖</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/Java并发编程/" itemprop="url" rel="index">
+                    <span itemprop="name">Java并发编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/12/并发编程/Java并发指南12：深度解读 java 线程池设计思想及源码实现/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/12/并发编程/Java并发指南12：深度解读 java 线程池设计思想及源码实现/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>本文转自：<a href="https://www.javadoop.com/" target="_blank" rel="noopener">https://www.javadoop.com/</a></p>
+<p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章同步发于我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>本文是微信公众号【Java技术江湖】的《Java并发指南》其中一篇，本文大部分内容来源于网络，为了把本文主题讲得清晰透彻，也整合了很多我认为不错的技术博客内容，引用其中了一些比较好的博客文章，如有侵权，请联系作者。</p>
+<p>该系列博文会告诉你如何全面深入地学习Java并发技术，从Java多线程基础，再到并发编程的基础知识，从Java并发包的入门和实战，再到JUC的源码剖析，一步步地学习Java并发编程，并上手进行实战，以便让你更完整地了解整个Java并发编程知识体系，形成自己的知识框架。</p>
+<p>为了更好地总结和检验你的学习成果，本系列文章也会提供一些对应的面试题以及参考答案。</p>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/10/12/并发编程/Java并发指南12：深度解读 java 线程池设计思想及源码实现/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/12/黄小斜/你不可错过的Java学习资源清单/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/12/黄小斜/你不可错过的Java学习资源清单/" itemprop="url">你不可错过的 Java 学习资源清单</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-12T15:56:26+08:00">
+                2019-10-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/黄小斜原创系列/" itemprop="url" rel="index">
+                    <span itemprop="name">黄小斜原创系列</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/黄小斜原创系列/Java学习/" itemprop="url" rel="index">
+                    <span itemprop="name">Java学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/12/黄小斜/你不可错过的Java学习资源清单/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/12/黄小斜/你不可错过的Java学习资源清单/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章首发于我的微信公众号【黄小斜】，也会同步到我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/10/12/黄小斜/你不可错过的Java学习资源清单/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/11/并发编程/Java并发指南11：解读 Java 阻塞队列 BlockingQueue/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/11/并发编程/Java并发指南11：解读 Java 阻塞队列 BlockingQueue/" itemprop="url">Java并发指南11：解读 Java 阻塞队列 BlockingQueue</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-11T21:03:44+08:00">
+                2019-10-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/" itemprop="url" rel="index">
+                    <span itemprop="name">Java技术江湖</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/Java并发编程/" itemprop="url" rel="index">
+                    <span itemprop="name">Java并发编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/11/并发编程/Java并发指南11：解读 Java 阻塞队列 BlockingQueue/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/11/并发编程/Java并发指南11：解读 Java 阻塞队列 BlockingQueue/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>本文转自：<a href="https://www.javadoop.com/" target="_blank" rel="noopener">https://www.javadoop.com/</a></p>
+<p><strong>本文转载自互联网，侵删</strong></p>
+<p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章同步发于我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>本文是微信公众号【Java技术江湖】的《Java并发指南》其中一篇，本文大部分内容来源于网络，为了把本文主题讲得清晰透彻，也整合了很多我认为不错的技术博客内容，引用其中了一些比较好的博客文章，如有侵权，请联系作者。</p>
+<p>该系列博文会告诉你如何全面深入地学习Java并发技术，从Java多线程基础，再到并发编程的基础知识，从Java并发包的入门和实战，再到JUC的源码剖析，一步步地学习Java并发编程，并上手进行实战，以便让你更完整地了解整个Java并发编程知识体系，形成自己的知识框架。</p>
+<p>为了更好地总结和检验你的学习成果，本系列文章也会提供一些对应的面试题以及参考答案。</p>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/10/11/并发编程/Java并发指南11：解读 Java 阻塞队列 BlockingQueue/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/11/黄小斜/为什么我会选择走 Java 这条路？/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/11/黄小斜/为什么我会选择走 Java 这条路？/" itemprop="url">为什么我会选择走 Java 这条路</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-11T15:56:26+08:00">
+                2019-10-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/黄小斜原创系列/" itemprop="url" rel="index">
+                    <span itemprop="name">黄小斜原创系列</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/黄小斜原创系列/Java学习/" itemprop="url" rel="index">
+                    <span itemprop="name">Java学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/11/黄小斜/为什么我会选择走 Java 这条路？/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/11/黄小斜/为什么我会选择走 Java 这条路？/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章首发于我的微信公众号【黄小斜】，也会同步到我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/10/11/黄小斜/为什么我会选择走 Java 这条路？/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/10/并发编程/Java并发指南10：Java 读写锁 ReentrantReadWriteLock 源码分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/10/并发编程/Java并发指南10：Java 读写锁 ReentrantReadWriteLock 源码分析/" itemprop="url">Java并发指南10：Java 读写锁 ReentrantReadWriteLock 源码分析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-10T21:03:44+08:00">
+                2019-10-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/" itemprop="url" rel="index">
+                    <span itemprop="name">Java技术江湖</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/Java并发编程/" itemprop="url" rel="index">
+                    <span itemprop="name">Java并发编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/10/并发编程/Java并发指南10：Java 读写锁 ReentrantReadWriteLock 源码分析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/10/并发编程/Java并发指南10：Java 读写锁 ReentrantReadWriteLock 源码分析/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>本文转自：<a href="https://www.javadoop.com/" target="_blank" rel="noopener">https://www.javadoop.com/</a></p>
+<p><strong>本文转载自互联网，侵删</strong></p>
+<p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>文章同步发于我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>本文是微信公众号【Java技术江湖】的《Java并发指南》其中一篇，本文大部分内容来源于网络，为了把本文主题讲得清晰透彻，也整合了很多我认为不错的技术博客内容，引用其中了一些比较好的博客文章，如有侵权，请联系作者。</p>
+<p>该系列博文会告诉你如何全面深入地学习Java并发技术，从Java多线程基础，再到并发编程的基础知识，从Java并发包的入门和实战，再到JUC的源码剖析，一步步地学习Java并发编程，并上手进行实战，以便让你更完整地了解整个Java并发编程知识体系，形成自己的知识框架。</p>
+<p>为了更好地总结和检验你的学习成果，本系列文章也会提供一些对应的面试题以及参考答案。</p>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/10/10/并发编程/Java并发指南10：Java 读写锁 ReentrantReadWriteLock 源码分析/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/10/黄小斜/Java后端工程师必备书单（从Java基础到分布式）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/10/黄小斜/Java后端工程师必备书单（从Java基础到分布式）/" itemprop="url">Java后端工程师必备书单（从Java基础到分布式）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-10T15:56:26+08:00">
+                2019-10-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/黄小斜原创系列/" itemprop="url" rel="index">
+                    <span itemprop="name">黄小斜原创系列</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/黄小斜原创系列/Java学习/" itemprop="url" rel="index">
+                    <span itemprop="name">Java学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/10/黄小斜/Java后端工程师必备书单（从Java基础到分布式）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/10/黄小斜/Java后端工程师必备书单（从Java基础到分布式）/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章首发于我的微信公众号【黄小斜】，也会同步到我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/10/10/黄小斜/Java后端工程师必备书单（从Java基础到分布式）/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

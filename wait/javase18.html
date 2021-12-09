@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本文介绍了Java序列化的基本概念，序列化和反序列化的使用方法，以及实现原理等，比较全面地总结序列化相关知识点，并且使用具体例子来加以佐证。 具体代码在我的GitHub中可以找到  https://github.com/h2pl/MyTech  喜欢的话麻烦点一下星哈谢谢。 文章首发于我的个人博客：  https://h2pl.github.io/2018/05/05/javase18  更多关于">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Java基础18：Java序列化与反序列化">
+<meta property="og:url" content="http://yoursite.com/wait/javase18.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本文介绍了Java序列化的基本概念，序列化和反序列化的使用方法，以及实现原理等，比较全面地总结序列化相关知识点，并且使用具体例子来加以佐证。 具体代码在我的GitHub中可以找到  https://github.com/h2pl/MyTech  喜欢的话麻烦点一下星哈谢谢。 文章首发于我的个人博客：  https://h2pl.github.io/2018/05/05/javase18  更多关于">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-11-24T08:03:24.083Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java基础18：Java序列化与反序列化">
+<meta name="twitter:description" content="本文介绍了Java序列化的基本概念，序列化和反序列化的使用方法，以及实现原理等，比较全面地总结序列化相关知识点，并且使用具体例子来加以佐证。 具体代码在我的GitHub中可以找到  https://github.com/h2pl/MyTech  喜欢的话麻烦点一下星哈谢谢。 文章首发于我的个人博客：  https://h2pl.github.io/2018/05/05/javase18  更多关于">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/wait/javase18.html">
+
+
+
+
+
+  <title>Java基础18：Java序列化与反序列化 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline">Java基础18：Java序列化与反序列化</h1>
+
+
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <div id="vip-container"><p>本文介绍了Java序列化的基本概念，序列化和反序列化的使用方法，以及实现原理等，比较全面地总结序列化相关知识点，并且使用具体例子来加以佐证。</p>
+<p>具体代码在我的GitHub中可以找到</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/MyTech" target="_blank" rel="noopener">https://github.com/h2pl/MyTech</a></p>
+</blockquote>
+<p>喜欢的话麻烦点一下星哈谢谢。</p>
+<p>文章首发于我的个人博客：</p>
+<blockquote>
+<p><a href="https://h2pl.github.io/2018/05/05/javase18" target="_blank" rel="noopener">https://h2pl.github.io/2018/05/05/javase18</a></p>
+</blockquote>
+<p>更多关于Java后端学习的内容请到我的CSDN博客上查看：</p>
+<blockquote>
+<p><a href="https://blog.csdn.net/a724888" target="_blank" rel="noopener">https://blog.csdn.net/a724888</a></p>
+</blockquote>
+<p>本文参考 <a href="http://www.importnew.com/17964.html和" target="_blank" rel="noopener">http://www.importnew.com/17964.html和</a><br><a href="https://www.ibm.com/developerworks/cn/java/j-lo-serial/" target="_blank" rel="noopener">https://www.ibm.com/developerworks/cn/java/j-lo-serial/</a></p>
+<a id="more"></a>
+
+<h2 id="序列化与反序列化概念"><a href="#序列化与反序列化概念" class="headerlink" title="序列化与反序列化概念"></a>序列化与反序列化概念</h2><p>序列化 (Serialization)是将对象的状态信息转换为可以存储或传输的形式的过程。一般将一个对象存储至一个储存媒介，例如档案或是记亿体缓冲等。在网络传输过程中，可以是字节或是XML等格式。而字节的或XML编码格式可以还原完全相等的对象。这个相反的过程又称为反序列化。</p>
+<p><strong>Java对象的序列化与反序列化</strong></p>
+<p>在Java中，我们可以通过多种方式来创建对象，并且只要对象没有被回收我们都可以复用该对象。但是，我们创建出来的这些Java对象都是存在于JVM的堆内存中的。</p>
+<p>只有JVM处于运行状态的时候，这些对象才可能存在。一旦JVM停止运行，这些对象的状态也就随之而丢失了。</p>
+<p>但是在真实的应用场景中，我们需要将这些对象持久化下来，并且能够在需要的时候把对象重新读取出来。Java的对象序列化可以帮助我们实现该功能。</p>
+<blockquote>
+<p>对象序列化机制（object serialization）是Java语言内建的一种对象持久化方式，通过对象序列化，可以把对象的状态保存为字节数组，并且可以在有需要的时候将这个字节数组通过反序列化的方式再转换成对象。</p>
+</blockquote>
+<p>对象序列化可以很容易的在JVM中的活动对象和字节数组（流）之间进行转换。</p>
+<p>在Java中，对象的序列化与反序列化被广泛应用到RMI(远程方法调用)及网络传输中。</p>
+<h2 id="相关接口及类"><a href="#相关接口及类" class="headerlink" title="相关接口及类"></a>相关接口及类</h2><p>Java为了方便开发人员将Java对象进行序列化及反序列化提供了一套方便的API来支持。其中包括以下接口和类：</p>
+<pre><code>java.io.Serializable
+
+java.io.Externalizable
+
+ObjectOutput
+
+ObjectInput
+
+ObjectOutputStream
+
+ObjectInputStream
+
+Serializable 接口</code></pre><p><strong>类通过实现 java.io.Serializable 接口以启用其序列化功能。</strong></p>
+<p>未实现此接口的类将无法使其任何状态序列化或反序列化。可序列化类的所有子类型本身都是可序列化的。序列化接口没有方法或字段，仅用于标识可序列化的语义。 (该接口并没有方法和字段，为什么只有实现了该接口的类的对象才能被序列化呢？)</p>
+<p>当试图对一个对象进行序列化的时候，如果遇到不支持 Serializable 接口的对象。在此情况下，将抛出NotSerializableException。</p>
+<p>如果要序列化的类有父类，要想同时将在父类中定义过的变量持久化下来，那么父类也应该集成java.io.Serializable接口。</p>
+<p>下面是一个实现了java.io.Serializable接口的类</p>
+<pre><code>public class 序列化和反序列化 {
+
+
+    public static void main(String[] args) {
+
+    }
+    //注意，内部类不能进行序列化，因为它依赖于外部类
+    @Test
+    public void test() throws IOException {
+        A a = new A();
+        a.i = 1;
+        a.s = &quot;a&quot;;
+        FileOutputStream fileOutputStream = null;
+        FileInputStream fileInputStream = null;
+        try {
+            //将obj写入文件
+            fileOutputStream = new FileOutputStream(&quot;temp&quot;);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(a);
+            fileOutputStream.close();
+            //通过文件读取obj
+            fileInputStream = new FileInputStream(&quot;temp&quot;);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            A a2 = (A) objectInputStream.readObject();
+            fileInputStream.close();
+            System.out.println(a2.i);
+            System.out.println(a2.s);
+            //打印结果和序列化之前相同
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class A implements Serializable {
+
+    int i;
+    String s;
+}</code></pre><p><strong>Externalizable接口</strong></p>
+<p>除了Serializable 之外，java中还提供了另一个序列化接口Externalizable</p>
+<p>为了了解Externalizable接口和Serializable接口的区别，先来看代码，我们把上面的代码改成使用Externalizable的形式。</p>
+<pre><code>class B implements Externalizable {
+    //必须要有公开无参构造函数。否则报错
+    public B() {
+
+    }
+    int i;
+    String s;
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+
+    }
+}
+
+@Test
+    public void test2() throws IOException, ClassNotFoundException {
+        B b = new B();
+        b.i = 1;
+        b.s = &quot;a&quot;;
+        //将obj写入文件
+        FileOutputStream fileOutputStream = new FileOutputStream(&quot;temp&quot;);
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(b);
+        fileOutputStream.close();
+        //通过文件读取obj
+        FileInputStream fileInputStream = new FileInputStream(&quot;temp&quot;);
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        B b2 = (B) objectInputStream.readObject();
+        fileInputStream.close();
+        System.out.println(b2.i);
+        System.out.println(b2.s);
+        //打印结果为0和null，即初始值，没有被赋值
+        //0
+        //null
+    }</code></pre><p>通过上面的实例可以发现，对B类进行序列化及反序列化之后得到的对象的所有属性的值都变成了默认值。也就是说，之前的那个对象的状态并没有被持久化下来。这就是Externalizable接口和Serializable接口的区别：</p>
+<p>Externalizable继承了Serializable，该接口中定义了两个抽象方法：writeExternal()与readExternal()。</p>
+<p>当使用Externalizable接口来进行序列化与反序列化的时候需要开发人员重写writeExternal()与readExternal()方法。由于上面的代码中，并没有在这两个方法中定义序列化实现细节，所以输出的内容为空。</p>
+<blockquote>
+<p>还有一点值得注意：在使用Externalizable进行序列化的时候，在读取对象时，会调用被序列化类的无参构造器去创建一个新的对象，然后再将被保存对象的字段的值分别填充到新对象中。所以，实现Externalizable接口的类必须要提供一个public的无参的构造器。</p>
+</blockquote>
+<pre><code>class C implements Externalizable {
+    int i;
+    int j;
+    String s;
+    public C() {
+
+    }
+    //实现下面两个方法可以选择序列化中需要被复制的成员。
+    //并且，写入顺序和读取顺序要一致，否则报错。
+    //可以写入多个同类型变量，顺序保持一致即可。
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeInt(i);
+        out.writeInt(j);
+        out.writeObject(s);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        i = in.readInt();
+        j = in.readInt();
+        s = (String) in.readObject();
+    }
+}
+
+@Test
+    public void test3() throws IOException, ClassNotFoundException {
+        C c = new C();
+        c.i = 1;
+        c.j = 2;
+        c.s = &quot;a&quot;;
+        //将obj写入文件
+        FileOutputStream fileOutputStream = new FileOutputStream(&quot;temp&quot;);
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(c);
+        fileOutputStream.close();
+        //通过文件读取obj
+        FileInputStream fileInputStream = new FileInputStream(&quot;temp&quot;);
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        C c2 = (C) objectInputStream.readObject();
+        fileInputStream.close();
+        System.out.println(c2.i);
+        System.out.println(c2.j);
+        System.out.println(c2.s);
+        //打印结果为0和null，即初始值，没有被赋值
+        //0
+        //null
+    }</code></pre><h2 id="序列化ID"><a href="#序列化ID" class="headerlink" title="序列化ID"></a>序列化ID</h2><p>序列化 ID 问题<br>情境：两个客户端 A 和 B 试图通过网络传递对象数据，A 端将对象 C 序列化为二进制数据再传给 B，B 反序列化得到 C。</p>
+<p>问题：C 对象的全类路径假设为 com.inout.Test，在 A 和 B 端都有这么一个类文件，功能代码完全一致。也都实现了 Serializable 接口，但是反序列化时总是提示不成功。</p>
+<p>解决：虚拟机是否允许反序列化，不仅取决于类路径和功能代码是否一致，一个非常重要的一点是两个类的序列化 ID 是否一致（就是 private static final long serialVersionUID = 1L）。清单 1 中，虽然两个类的功能代码完全一致，但是序列化 ID 不同，他们无法相互序列化和反序列化。</p>
+<pre><code>package com.inout; 
+
+import java.io.Serializable; 
+
+public class A implements Serializable { 
+
+    private static final long serialVersionUID = 1L; 
+
+    private String name; 
+
+    public String getName() 
+    { 
+        return name; 
+    } 
+
+    public void setName(String name) 
+    { 
+        this.name = name; 
+    } 
+} 
+
+package com.inout; 
+
+import java.io.Serializable; 
+
+public class A implements Serializable { 
+
+    private static final long serialVersionUID = 2L; 
+
+    private String name; 
+
+    public String getName() 
+    { 
+        return name; 
+    } 
+
+    public void setName(String name) 
+    { 
+        this.name = name; 
+    } 
+}</code></pre><h2 id="静态变量不参与序列化"><a href="#静态变量不参与序列化" class="headerlink" title="静态变量不参与序列化"></a>静态变量不参与序列化</h2><p>清单 2 中的 main 方法，将对象序列化后，修改静态变量的数值，再将序列化对象读取出来，然后通过读取出来的对象获得静态变量的数值并打印出来。依照清单 2，这个 System.out.println(t.staticVar) 语句输出的是 10 还是 5 呢？</p>
+<pre><code>public class Test implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    public static int staticVar = 5;
+
+    public static void main(String[] args) {
+        try {
+            //初始时staticVar为5
+            ObjectOutputStream out = new ObjectOutputStream(
+                    new FileOutputStream(&quot;result.obj&quot;));
+            out.writeObject(new Test());
+            out.close();
+
+            //序列化后修改为10
+            Test.staticVar = 10;
+
+            ObjectInputStream oin = new ObjectInputStream(new FileInputStream(
+                    &quot;result.obj&quot;));
+            Test t = (Test) oin.readObject();
+            oin.close();
+
+            //再读取，通过t.staticVar打印新的值
+            System.out.println(t.staticVar);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+}</code></pre><p>最后的输出是 10，对于无法理解的读者认为，打印的 staticVar 是从读取的对象里获得的，应该是保存时的状态才对。之所以打印 10 的原因在于序列化时，并不保存静态变量，这其实比较容易理解，序列化保存的是对象的状态，静态变量属于类的状态，因此 序列化并不保存静态变量。</p>
+<h2 id="探究ArrayList的序列化"><a href="#探究ArrayList的序列化" class="headerlink" title="探究ArrayList的序列化"></a>探究ArrayList的序列化</h2><p>ArrayList的序列化<br>在介绍ArrayList序列化之前，先来考虑一个问题：</p>
+<p>如何自定义的序列化和反序列化策略</p>
+<p>带着这个问题，我们来看java.util.ArrayList的源码</p>
+<pre><code>public class ArrayList&lt;E&gt; extends AbstractList&lt;E&gt;
+        implements List&lt;E&gt;, RandomAccess, Cloneable, java.io.Serializable
+{
+    private static final long serialVersionUID = 8683452581122892189L;
+    transient Object[] elementData; // non-private to simplify nested class access
+    private int size;
+}</code></pre><p>笔者省略了其他成员变量，从上面的代码中可以知道ArrayList实现了java.io.Serializable接口，那么我们就可以对它进行序列化及反序列化。</p>
+<p>因为elementData是transient的（1.8好像改掉了这一点)，所以我们认为这个成员变量不会被序列化而保留下来。我们写一个Demo，验证一下我们的想法：</p>
+<pre><code>public class ArrayList的序列化 {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        ArrayList list = new ArrayList();
+        list.add(&quot;a&quot;);
+        list.add(&quot;b&quot;);
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(&quot;arr&quot;));
+        objectOutputStream.writeObject(list);
+        objectOutputStream.close();
+        ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(&quot;arr&quot;));
+        ArrayList list1 = (ArrayList) objectInputStream.readObject();
+        objectInputStream.close();
+        System.out.println(Arrays.toString(list.toArray()));
+        //序列化成功，里面的元素保持不变。
+    }</code></pre><p>了解ArrayList的人都知道，ArrayList底层是通过数组实现的。那么数组elementData其实就是用来保存列表中的元素的。通过该属性的声明方式我们知道，他是无法通过序列化持久化下来的。那么为什么code 4的结果却通过序列化和反序列化把List中的元素保留下来了呢？</p>
+<p><strong>writeObject和readObject方法</strong></p>
+<p>在ArrayList中定义了来个方法： writeObject和readObject。</p>
+<p>这里先给出结论:</p>
+<blockquote>
+<p>在序列化过程中，如果被序列化的类中定义了writeObject 和 readObject 方法，虚拟机会试图调用对象类里的 writeObject 和 readObject 方法，进行用户自定义的序列化和反序列化。</p>
+<p>如果没有这样的方法，则默认调用是 ObjectOutputStream 的 defaultWriteObject 方法以及 ObjectInputStream 的 defaultReadObject 方法。</p>
+<p>用户自定义的 writeObject 和 readObject 方法可以允许用户控制序列化的过程，比如可以在序列化的过程中动态改变序列化的数值。</p>
+</blockquote>
+<p>来看一下这两个方法的具体实现：</p>
+<pre><code>private void readObject(java.io.ObjectInputStream s)
+        throws java.io.IOException, ClassNotFoundException {
+        elementData = EMPTY_ELEMENTDATA;
+
+        // Read in size, and any hidden stuff
+        s.defaultReadObject();
+
+        // Read in capacity
+        s.readInt(); // ignored
+
+        if (size &gt; 0) {
+            // be like clone(), allocate array based upon size not capacity
+            ensureCapacityInternal(size);
+
+            Object[] a = elementData;
+            // Read in all elements in the proper order.
+            for (int i=0; i&lt;size; i++) {
+                a[i] = s.readObject();
+            }
+        }
+    }
+
+
+private void writeObject(java.io.ObjectOutputStream s)
+        throws java.io.IOException{
+        // Write out element count, and any hidden stuff
+        int expectedModCount = modCount;
+        s.defaultWriteObject();
+
+        // Write out size as capacity for behavioural compatibility with clone()
+        s.writeInt(size);
+
+        // Write out all elements in the proper order.
+        for (int i=0; i&lt;size; i++) {
+            s.writeObject(elementData[i]);
+        }
+
+        if (modCount != expectedModCount) {
+            throw new ConcurrentModificationException();
+        }
+    }</code></pre><p>那么为什么ArrayList要用这种方式来实现序列化呢？</p>
+<pre><code>why transient
+ArrayList实际上是动态数组，每次在放满以后自动增长设定的长度值，如果数组自动增长长度设为100，而实际只放了一个元素，那就会序列化99个null元素。为了保证在序列化的时候不会将这么多null同时进行序列化，ArrayList把元素数组设置为transient。
+
+why writeObject and readObject
+前面说过，为了防止一个包含大量空对象的数组被序列化，为了优化存储，所以，ArrayList使用transient来声明elementData。 但是，作为一个集合，在序列化过程中还必须保证其中的元素可以被持久化下来，所以，通过重写writeObject 和 readObject方法的方式把其中的元素保留下来。
+
+writeObject方法把elementData数组中的元素遍历的保存到输出流（ObjectOutputStream）中。
+
+readObject方法从输入流（ObjectInputStream）中读出对象并保存赋值到elementData数组中。</code></pre><h2 id="如何自定义的序列化和反序列化策略"><a href="#如何自定义的序列化和反序列化策略" class="headerlink" title="如何自定义的序列化和反序列化策略"></a>如何自定义的序列化和反序列化策略</h2><p>延续上一部分，刚刚我们明白了ArrayList序列化数组元素的原理。</p>
+<p>至此，我们先试着来回答刚刚提出的问题：</p>
+<p>如何自定义的序列化和反序列化策略</p>
+<p>答：可以通过在被序列化的类中增加writeObject 和 readObject方法。那么问题又来了：</p>
+<blockquote>
+<p>虽然ArrayList中写了writeObject 和 readObject 方法，但是这两个方法并没有显示的被调用啊。</p>
+<p>那么如果一个类中包含writeObject 和 readObject 方法，那么这两个方法是怎么被调用的呢?</p>
+</blockquote>
+<p>ObjectOutputStream<br>从code 4中，我们可以看出，对象的序列化过程通过ObjectOutputStream和ObjectInputputStream来实现的，那么带着刚刚的问题，我们来分析一下ArrayList中的writeObject 和 readObject 方法到底是如何被调用的呢？</p>
+<p>为了节省篇幅，这里给出ObjectOutputStream的writeObject的调用栈：</p>
+<p>writeObject —&gt; writeObject0 —&gt;writeOrdinaryObject—&gt;writeSerialData—&gt;invokeWriteObject</p>
+<p>这里看一下invokeWriteObject：</p>
+<pre><code>void invokeWriteObject(Object obj, ObjectOutputStream out)
+        throws IOException, UnsupportedOperationException
+    {
+        if (writeObjectMethod != null) {
+            try {
+                writeObjectMethod.invoke(obj, new Object[]{ out });
+            } catch (InvocationTargetException ex) {
+                Throwable th = ex.getTargetException();
+                if (th instanceof IOException) {
+                    throw (IOException) th;
+                } else {
+                    throwMiscException(th);
+                }
+            } catch (IllegalAccessException ex) {
+                // should not occur, as access checks have been suppressed
+                throw new InternalError(ex);
+            }
+        } else {
+            throw new UnsupportedOperationException();
+        }
+    }</code></pre><p>其中writeObjectMethod.invoke(obj, new Object[]{ out });是关键，通过反射的方式调用writeObjectMethod方法。官方是这么解释这个writeObjectMethod的：</p>
+<p>class-defined writeObject method, or null if none</p>
+<p>在我们的例子中，这个方法就是我们在ArrayList中定义的writeObject方法。通过反射的方式被调用了。</p>
+<p>至此，我们先试着来回答刚刚提出的问题：</p>
+<pre><code>如果一个类中包含writeObject 和 readObject 方法，那么这两个方法是怎么被调用的?
+
+答：在使用ObjectOutputStream的writeObject方法和ObjectInputStream的readObject方法时，会通过反射的方式调用。</code></pre><h2 id="为什么要实现Serializable"><a href="#为什么要实现Serializable" class="headerlink" title="为什么要实现Serializable"></a>为什么要实现Serializable</h2><p>至此，我们已经介绍完了ArrayList的序列化方式。那么，不知道有没有人提出这样的疑问：</p>
+<p>Serializable明明就是一个空的接口，它是怎么保证只有实现了该接口的方法才能进行序列化与反序列化的呢？</p>
+<pre><code>Serializable接口的定义：
+
+public interface Serializable {
+}
+读者可以尝试把code 1中的继承Serializable的代码去掉，再执行code 2，会抛出java.io.NotSerializableException。</code></pre><p>其实这个问题也很好回答，我们再回到刚刚ObjectOutputStream的writeObject的调用栈：</p>
+<pre><code>writeObject ---&gt; writeObject0 ---&gt;writeOrdinaryObject---&gt;writeSerialData---&gt;invokeWriteObject</code></pre><p>writeObject0方法中有这么一段代码：</p>
+<pre><code>if (obj instanceof String) {
+                writeString((String) obj, unshared);
+            } else if (cl.isArray()) {
+                writeArray(obj, desc, unshared);
+            } else if (obj instanceof Enum) {
+                writeEnum((Enum&lt;?&gt;) obj, desc, unshared);
+            } else if (obj instanceof Serializable) {
+                writeOrdinaryObject(obj, desc, unshared);
+            } else {
+                if (extendedDebugInfo) {
+                    throw new NotSerializableException(
+                        cl.getName() + &quot;\n&quot; + debugInfoStack.toString());
+                } else {
+                    throw new NotSerializableException(cl.getName());
+                }
+            }</code></pre><p>在进行序列化操作时，会判断要被序列化的类是否是Enum、Array和Serializable类型，如果不是则直接抛出NotSerializableException。</p>
+<h2 id="序列化知识点总结"><a href="#序列化知识点总结" class="headerlink" title="序列化知识点总结"></a>序列化知识点总结</h2><blockquote>
+<p>1、如果一个类想被序列化，需要实现Serializable接口。否则将抛出NotSerializableException异常，这是因为，在序列化操作过程中会对类型进行检查，要求被序列化的类必须属于Enum、Array和Serializable类型其中的任何一种。</p>
+<p>2、通过ObjectOutputStream和ObjectInputStream对对象进行序列化及反序列化</p>
+<p>3、虚拟机是否允许反序列化，不仅取决于类路径和功能代码是否一致，一个非常重要的一点是两个类的序列化 ID 是否一致（就是 private static final long serialVersionUID）</p>
+<p>序列化 ID 在 Eclipse 下提供了两种生成策略，一个是固定的 1L，一个是随机生成一个不重复的 long 类型数据（实际上是使用 JDK 工具生成），在这里有一个建议，如果没有特殊需求，就是用默认的 1L 就可以，这样可以确保代码一致时反序列化成功。那么随机生成的序列化 ID 有什么作用呢，有些时候，通过改变序列化 ID 可以用来限制某些用户的使用。</p>
+<p>4、序列化并不保存静态变量。</p>
+<p>5、要想将父类对象也序列化，就需要让父类也实现Serializable 接口。</p>
+<p>6、Transient 关键字的作用是控制变量的序列化，在变量声明前加上该关键字，可以阻止该变量被序列化到文件中，在被反序列化后，transient 变量的值被设为初始值，如 int 型的是 0，对象型的是 null。</p>
+<p>7、服务器端给客户端发送序列化对象数据，对象中有一些数据是敏感的，比如密码字符串等，希望对该密码字段在序列化时，进行加密，而客户端如果拥有解密的密钥，只有在客户端进行反序列化时，才可以对密码进行读取，这样可以一定程度保证序列化对象的数据安全。</p>
+<p>8、在类中增加writeObject 和 readObject 方法可以实现自定义序列化策略</p>
+</blockquote>
+</div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+        
+      </div>
+      
+      
+      
+    </div>
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#序列化与反序列化概念"><span class="nav-number">1.</span> <span class="nav-text">序列化与反序列化概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关接口及类"><span class="nav-number">2.</span> <span class="nav-text">相关接口及类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#序列化ID"><span class="nav-number">3.</span> <span class="nav-text">序列化ID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#静态变量不参与序列化"><span class="nav-number">4.</span> <span class="nav-text">静态变量不参与序列化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#探究ArrayList的序列化"><span class="nav-number">5.</span> <span class="nav-text">探究ArrayList的序列化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何自定义的序列化和反序列化策略"><span class="nav-number">6.</span> <span class="nav-text">如何自定义的序列化和反序列化策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要实现Serializable"><span class="nav-number">7.</span> <span class="nav-text">为什么要实现Serializable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#序列化知识点总结"><span class="nav-number">8.</span> <span class="nav-text">序列化知识点总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

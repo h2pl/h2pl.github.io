@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content=",,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="这篇总结主要是基于我之前Java网络编程与NIO系列文章而形成的的。主要是把重要的知识点用自己的话说了一遍，可能会有一些错误，还望见谅和指点。谢谢 更多详细内容可以查看我的专栏文章：Java网络编程与NIO https://blog.csdn.net/column/details/21963.html">
+<meta name="keywords" content="Java网络编程,NIO">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Java网络编程与NIO学习总结">
+<meta property="og:url" content="http://yoursite.com/wait/Java网络与NIO总结.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="这篇总结主要是基于我之前Java网络编程与NIO系列文章而形成的的。主要是把重要的知识点用自己的话说了一遍，可能会有一些错误，还望见谅和指点。谢谢 更多详细内容可以查看我的专栏文章：Java网络编程与NIO https://blog.csdn.net/column/details/21963.html">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-11-24T08:03:24.054Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java网络编程与NIO学习总结">
+<meta name="twitter:description" content="这篇总结主要是基于我之前Java网络编程与NIO系列文章而形成的的。主要是把重要的知识点用自己的话说了一遍，可能会有一些错误，还望见谅和指点。谢谢 更多详细内容可以查看我的专栏文章：Java网络编程与NIO https://blog.csdn.net/column/details/21963.html">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/wait/Java网络与NIO总结.html">
+
+
+
+
+
+  <title>Java网络编程与NIO学习总结 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline">Java网络编程与NIO学习总结</h1>
+
+
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <div id="vip-container"><p>这篇总结主要是基于我之前Java网络编程与NIO系列文章而形成的的。主要是把重要的知识点用自己的话说了一遍，可能会有一些错误，还望见谅和指点。谢谢</p>
+<p>更多详细内容可以查看我的专栏文章：Java网络编程与NIO</p>
+<p><a href="https://blog.csdn.net/column/details/21963.html" target="_blank" rel="noopener">https://blog.csdn.net/column/details/21963.html</a></p>
+<a id="more"></a>
+
+<h2 id="Java-IO"><a href="#Java-IO" class="headerlink" title="Java IO"></a>Java IO</h2><p>Java IO的基础知识已在前面讲过</p>
+<h2 id="Socket编程"><a href="#Socket编程" class="headerlink" title="Socket编程"></a>Socket编程</h2><p>socket是操作系统提供的网络编程接口，他封装了对于TCP/IP协议栈的支持，用于进程间的通信，当有连接接入主机以后，操作系统自动为其分配一个socket套接字，套接字绑定着一个IP与端口号。通过socket接口，可以获取tcp连接的输入流和输出流，并且通过他们进行读取和写入此操作。</p>
+<p>Java提供了net包用于socket编程，同时支持像Inetaddress，URL等工具类，使用socket绑定一个endpoint（ip+端口号），可以用于客户端的请求处理和发送，使用serversocket绑定本地ip和端口号，可以用于服务端接收TCP请求。</p>
+<h2 id="客户端，服务端的线程模型"><a href="#客户端，服务端的线程模型" class="headerlink" title="客户端，服务端的线程模型"></a>客户端，服务端的线程模型</h2><p>一般客户端使用单线程模型即可，当有数据到来时启动线程读取，需要写入数据时开启线程进行数据写入。</p>
+<p>服务端一般使用多线程模型，一个线程负责接收tcp连接请求，每当接收到请求后开启一个线程处理它的读写请求。</p>
+<p>udp的客户端和服务端就比较简单了，由于udp数据报长度是确定的，只需要写入一个固定的缓存和读取一个固定的缓存空间即可。</p>
+<p>一般通过DatagramPacket包装一个udp数据报，然后通过DatagramSocket发送</p>
+<h2 id="IO模型"><a href="#IO模型" class="headerlink" title="IO模型"></a>IO模型</h2><p>上述的socket在处理IO请求时使用的是阻塞模型。</p>
+<p>于是我们还是得来探讨一下IO模型。</p>
+<p>一般认为，应用程序处理IO请求需要将内核缓存区中的数据拷贝到用户缓冲区。这个步骤可以通过系统调用来完成，而用户程序处理IO请求的时候，需要先检查用户缓冲区是否准备好了数据，这个操作是系统调用recevfrom，如果数据没有准备好，默认会阻塞调用该方法的线程。</p>
+<p>这样就导致了线程处理IO请求需要频繁进行阻塞，特别是并发量大的时候，线程切换的开销巨大。</p>
+<p>一般认为有几种IO模型</p>
+<p>1 阻塞IO ：就是线程会阻塞在系统调用recevfrom上，并且等待数据准备就绪以后才会返回。</p>
+<p>2 非阻塞IO : 不阻塞在系统调用recevfrom，而是通过自旋忙等的方式不断询问缓冲区数据是否准备就绪，避免线程阻塞的开销。</p>
+<p>3 IO多路复用 ：使用IO多路复用器管理socket，由于每个socket是一个文件描述符，操作系统可以维护socket和它的连接状态，一般分为可连接，可读和可写等状态。</p>
+<p>每当用户程序接受到socket请求，将请求托管给多路复用器进行监控，当程序对请求感兴趣的事件发生时，多路复用器以某种方式通知或是用户程序自己轮询请求，以便获取就绪的socket，然后只需使用一个线程进行轮询，多个线程处理就绪请求即可。</p>
+<p>IO多路复用避免了每个socket请求都需要一个线程去处理，而是使用事件驱动的方式，让少数的线程去处理多数socket的IO请求。</p>
+<p>Linux操作系统对IO多路复用提供了较好的支持，select，poll，epoll是Linux提供的支持IO多路复用的API。一般用户程序基于这个API去开发自己的IO复用模型。比如NIO的非阻塞模型，就是采用了IO多路复用的方式，是基于epoll实现的。</p>
+<p>3.1 select方式主要是使用数组来存储socket描述符，系统将发生事件的描述符做标记，然后IO复用器在轮询描述符数组的时候，就可以知道哪些请求是就绪了的。缺点是数组的长度只能到1024，并且需要不断地在内核空间和用户空间之间拷贝数组。</p>
+<p>3.2 poll方式不采用数组存储描述符，而是使用独立的数据结构来描述，并且使用id来表示描述符，能支持更多的请求数量，缺点和select方式有点类似，就是轮询的效率很低，并且需要拷贝数据。</p>
+<p>当然，上述两种方法适合在请求总数较少，并且活跃请求数较多的情况，这种场景下他们的性能还是不错的。</p>
+<p>3.3 epoll</p>
+<p>epoll函数会在内核空间开辟一个特殊的数据结构，红黑树，树节点中存放的是一个socket描述符以及用户程序感兴趣的事件类型。同时epoll还会维护一个链表。用于存储已经就绪的socket描述符节点。</p>
+<p>由Linux内核完成对红黑树的维护，当事件到达时，内核将就绪的socket节点加入链表中，用户程序可以直接访问这个链表以便获取就绪的socket。</p>
+<p>当然了，这些操作都linux包装在epoll的api中了。</p>
+<p>epoll_create函数会执行红黑树的创建操作。</p>
+<p>epoll_ctl函数会将socket和感兴趣的事件注册到红黑树中。</p>
+<p>epoll_wait函数会等待内核空间发来的链表，从而执行IO请求。</p>
+<p>epoll的水平触发和边缘触发有所区别，水平触发的意思是，如果用户程序没有执行就绪链表里的任务，epoll仍会不断通知程序。</p>
+<p>而边缘触发只会通知程序一次，之后socket的状态不发生改变epoll就不会再通知程序了。</p>
+<p>4 信号驱动<br>略</p>
+<p>5 异步非阻塞</p>
+<p>用户进程发起read操作之后，立刻就可以开始去做其它的事。而另一方面，从kernel的角度，当它受到一个asynchronous read之后，首先它会立刻返回，所以不会对用户进程产生任何block。然后，kernel会等待数据准备完成，然后将数据拷贝到用户内存，当这一切都完成之后，kernel会给用户进程发送一个signal，告诉它read操作完成了。</p>
+<p>事实上就是，用户提交IO请求，然后直接返回，并且内核自动完成将数据从内核缓冲区复制到用户缓冲区，完成后再通知用户。</p>
+<p>当然，内核通知我们以后我们还需要执行剩余的操作，但是我们的代码已经继续往下运行了，所以AIO采用了回调的机制，为每个socket注册一个回调事件或者是回调处理器，在处理器中完成数据的操作，也就是内核通知到用户的时候，会自动触发回调函数，完成剩余操作。<br>这样的方式就是异步的网络编程。</p>
+<p>但是，想要让操作系统支持这样的功能并非易事，windows的IOCP可以支持AIO方式，但是Linux的AIO支持并不是很好</p>
+<h2 id="NIO"><a href="#NIO" class="headerlink" title="NIO"></a>NIO</h2><p>由于Java原生的socket只支持阻塞方式处理IO</p>
+<p>所以Java后来推出了新版IO 也叫New IO = NIO</p>
+<p>NIO提出了socketChannel，serversocketchannel，bytebuffer，selector和selectedkey等概念。</p>
+<p>1 socketchannel其实就是socket的替代品，他的好处是多个socket可以复用同一个bytebuffer，因为socket是从channel里打开的，所以多个socket都可以访问channel绑定着的buffer。</p>
+<p>2 serversocketchannel顾名思义，是用在服务端的channel。</p>
+<p>3 bytebuffer以前对用户是透明的，用户直接操作io流即可，所以之前的socket io操作都是阻塞的，引入bytebuffer以后，用户可以更灵活地进行io操作。</p>
+<p>buffer可以分为不同数据类型的buffer，但是常用的还是bytebuffer。写入数据时按顺序写入，写入完使用flip方法反转缓冲区，让接收端反向读取。这个操作比较麻烦，后来的netty对缓冲区进行了重新封装，封装了这个经常容易出错的方法。</p>
+<p>4 selector其实就是对io多路复用器的封装，一般基于linux的epoll来实现。<br>socket把感兴趣的事件和描述符注册到selector上，然后通过遍历selectedKey来获取感兴趣的请求，进行IO操作。<br>selectedkey应该就是epoll中就绪链表的实现了。</p>
+<p>5 所以一般的流程是：<br>新建一个serversocket，启动一个线程进行while循环，当有请求接入时，使用accept方法阻塞获取socket，然后将socket和感兴趣的事件注册到selector上。再开启一个线程轮询selectoredKey，当请求就绪时开启一个线程去处理即可。</p>
+<h2 id="AIO"><a href="#AIO" class="headerlink" title="AIO"></a>AIO</h2><p>后来NIO发展到2.0，Java又推出了AIO 的API，与上面描述的异步非阻塞模型类似。</p>
+<p>AIO使用回调的方式处理IO请求，在socket上注册一个回调函数，然后提交请求后直接返回。由操作系统完成数据拷贝操作，需要操作系统对AIO的支持。</p>
+<p>AIO的具体使用方式还是比较复杂的，感兴趣的可以自己查阅资料。</p>
+<h2 id="Tomcat中的NIO模型"><a href="#Tomcat中的NIO模型" class="headerlink" title="Tomcat中的NIO模型"></a>Tomcat中的NIO模型</h2><p>Tomcat作为一个应用服务器，分为connector和container两个部分，connector负责接收请求，而container负责解析请求。</p>
+<p>一般connector负责接收http请求，当然首先要建立tcp连接，所以涉及到了如何处理连接和IO请求。</p>
+<p>Tomcat使用endpoint的概念来绑定一个ip+port，首先，使用acceptor循环等待连接请求。然后开启一个线程池，也叫poller池，每个请求绑定一个poller进行后续处理，poller将socket请求封装成一个事件，并且将这个事件注册到selector中。</p>
+<p>poller还需要维护一个事件列表，以便获取selector上就绪的事件。然后poller再去列表中获取就绪的请求，将其封装成processor，交给后续的worker线程池，会有worker将其提交给container流程中进行处理。</p>
+<p>当然，到达container之后还有非常复杂的处理过程，稍微提几个点。</p>
+<h2 id="Tomcat的container"><a href="#Tomcat的container" class="headerlink" title="Tomcat的container"></a>Tomcat的container</h2><p>container是一个多级容器，最外层到最内层依次是engine，host，context和wrapper</p>
+<p>下面是个server.xml文件实例，Tomcat根据该文件进行部署</p>
+<p><server>                                                //顶层类元素，可以包括多个Service<br>    <service>                                           //顶层类元素，可包含一个Engine，多个Connecter<br>        <connector>                                     //连接器类元素，代表通信接口<br>                <engine>                                //容器类元素，为特定的Service组件处理客户请求，要包含多个Host<br>                        <host>                          //容器类元素，为特定的虚拟主机组件处理客户请求，可包含多个Context<br>                                <context>               //容器类元素，为特定的Web应用处理所有的客户请求<br>                                </context><br>                        </host><br>                </engine><br>        </connector><br>    </service><br></server></p>
+<p>根据配置文件初始化容器信息，当请求到达时进行容器间的请求传递，事实上整个链条被称作pipeline，pipeline连接了各个容器的入口，由于每个容器和组件都实现了lifecycle接口。</p>
+<p>tomcat可以在任意流程中通过加监听器的方式监听组件的生命周期，也就能够控制整个运行的流程，通过在pipeline上增加valve可以增加一些自定义的操作。</p>
+<p>一般到wrapper层才开始真正的请求解析，因为wrapper其实就是对servlet的简单封装，此时进来的请求和响应已经是httprequest和httpresponse，很多信息已经解析完毕，只需要按照service方法执行业务逻辑即可，当然在执行service方法之前，会调用filter链先执行过滤操作。</p>
+<h2 id="netty"><a href="#netty" class="headerlink" title="netty"></a>netty</h2><p>netty我也不是很在行，这里简单总结一下</p>
+<p>netty是一个基于事件驱动的网络编程框架。</p>
+<p>因为直接基于Java NIO编程复杂度太高，而且容易出错，于是netty对NIO进行了改造和封装。形成了一个比较完整的网络框架，可以通过他实现rpc，http服务。</p>
+<p>先了解一下两种线程模型。reactor和proactor。</p>
+<p>1 reactor就是netty采用的模型，首先也是使用一个acceptor线程接收连接请求，然后开启一个线程组reactor thread pool。</p>
+<p>server会事先在endpoint上注册一系列的回调方法，然后接收socket请求后交给底层的selector进行管理，当selector对应的事件响应以后，会通知用户进程，然后reactor工作线程会执行接下来的IO请求，执行操作是写在回调处理器中的。</p>
+<p>其实netty 支持三种reactor模型<br>1.1.Reactor单线程模型：Reactor单线程模型，指的是所有的I/O操作都在同一个NIO线程上面完成。对于一些小容量应用场景，可以使用单线程模型。</p>
+<p>1.2.Reactor多线程模型：Rector多线程模型与单线程模型最大的区别就是有一组NIO线程处理I/O操作。主要用于高并发、大业务量场景。</p>
+<p>1.3.主从Reactor多线程模型：主从Reactor线程模型的特点是服务端用于接收客户端连接的不再是个1个单独的NIO线程，而是一个独立的NIO线程池。利用主从NIO线程模型，可以解决1个服务端监听线程无法有效处理所有客户端连接的性能不足问题</p>
+<p>2 proactor模型其实是基于异步非阻塞IO模型的，当accpetor接收到请求以后，直接提交异步的io请求给linux内核，内核完成io请求后会回写消息到proactor提供的事件队列中，此时工作线程查看到IO请求已完成，则会继续剩余的工作，也是通过回调处理器来进行的。</p>
+<p>所以两者最大的差别是，前者基于epoll的IO多路复用，后者基于AIO实现。</p>
+<p>3 netty的核心组件：</p>
+<p>bytebuf</p>
+<p>bytebuf是对NIO中Bytebuffer的优化和扩展，并且支持堆外内存分配，堆外内存避免gc，可以更好地与内核空间进行交换数据。</p>
+<p>channel和NIO的channel类似，但是NIO的socket代码改成nio实现非常麻烦，所以netty优化了这个过程，只需替换几个类就可以实现不更新太多代码就完成旧IO和新IO的切换。</p>
+<p>channelhandler就是任务的处理器了，使用回调函数的方式注册到channel中，更准确来说是注册到channelpipeline里。</p>
+<p>channelpipeline是用来管理和连接多个channelhandler的容器，执行任务时，会根据channelpipeline的调用链完成处理器的顺序调用，启动服务器时只需要将需要的channelhandler注册在上面就可以了。</p>
+<p>eventloop<br>在Netty的线程模型中，一个EventLoop将由一个永远不会改变的Thread驱动，而一个Channel一生只会使用一个EventLoop（但是一个EventLoop可能会被指派用于服务多个Channel），在Channel中的所有I/O操作和事件都由EventLoop中的线程处理，也就是说一个Channel的一生之中都只会使用到一个线程。</p>
+<p>bootstrap</p>
+<p>在深入了解地Netty的核心组件之后，发现它们的设计都很模块化，如果想要实现你自己的应用程序，就需要将这些组件组装到一起。Netty通过Bootstrap类，以对一个Netty应用程序进行配置（组装各个组件），并最终使它运行起来。</p>
+<p>对于客户端程序和服务器程序所使用到的Bootstrap类是不同的，后者需要使用ServerBootstrap，这样设计是因为，在如TCP这样有连接的协议中，服务器程序往往需要一个以上的Channel，通过父Channel来接受来自客户端的连接，然后创建子Channel用于它们之间的通信，而像UDP这样无连接的协议，它不需要每个连接都创建子Channel，只需要一个Channel即可。</p>
+</div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+        
+      </div>
+      
+      
+      
+    </div>
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-IO"><span class="nav-number">1.</span> <span class="nav-text">Java IO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Socket编程"><span class="nav-number">2.</span> <span class="nav-text">Socket编程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端，服务端的线程模型"><span class="nav-number">3.</span> <span class="nav-text">客户端，服务端的线程模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IO模型"><span class="nav-number">4.</span> <span class="nav-text">IO模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NIO"><span class="nav-number">5.</span> <span class="nav-text">NIO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AIO"><span class="nav-number">6.</span> <span class="nav-text">AIO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tomcat中的NIO模型"><span class="nav-number">7.</span> <span class="nav-text">Tomcat中的NIO模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tomcat的container"><span class="nav-number">8.</span> <span class="nav-text">Tomcat的container</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#netty"><span class="nav-number">9.</span> <span class="nav-text">netty</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

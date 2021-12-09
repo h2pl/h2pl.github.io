@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content=",">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本系列文章首发于我的个人博客：https://h2pl.github.io/ 欢迎阅览我的CSDN专栏：Spring源码解析 https://blog.csdn.net/column/details/21851.html 部分代码会放在我的的Github：https://github.com/h2pl/">
+<meta name="keywords" content="SpringMVC">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SpringMVC源码分析4：DispatcherServlet如何找到正确的Controller">
+<meta property="og:url" content="http://yoursite.com/wait/springmvc4.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本系列文章首发于我的个人博客：https://h2pl.github.io/ 欢迎阅览我的CSDN专栏：Spring源码解析 https://blog.csdn.net/column/details/21851.html 部分代码会放在我的的Github：https://github.com/h2pl/">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/232033308878895.jpg">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/240149411377243.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/241246397157212.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/241246574657656.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/241429158878034.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/241556162777007.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/241831201065104.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/241922304028276.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/241932113242502.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/251242523404424.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/252348515124305.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/250107154024892.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/260023477461660.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/251617000436911.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/251917084021029.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/251919265597456.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/252206079491274.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/252219494658063.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/252208290431970.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/260032509654870.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/260046407936253.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/260049401063106.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/260125371817100.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/260125488223078.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/260129091195087.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/260129342756267.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/260151358222728.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/260152065252948.png">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/261025451501584.jpg">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/261026409781228.jpg">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/261013551199069.jpg">
+<meta property="og:image" content="https://images0.cnblogs.com/i/411512/201405/261028504315946.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:24.100Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SpringMVC源码分析4：DispatcherServlet如何找到正确的Controller">
+<meta name="twitter:description" content="本系列文章首发于我的个人博客：https://h2pl.github.io/ 欢迎阅览我的CSDN专栏：Spring源码解析 https://blog.csdn.net/column/details/21851.html 部分代码会放在我的的Github：https://github.com/h2pl/">
+<meta name="twitter:image" content="https://images0.cnblogs.com/i/411512/201405/232033308878895.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/wait/springmvc4.html">
+
+
+
+
+
+  <title>SpringMVC源码分析4：DispatcherServlet如何找到正确的Controller | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline">SpringMVC源码分析4：DispatcherServlet如何找到正确的Controller</h1>
+
+
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <div id="vip-container"><p>本系列文章首发于我的个人博客：<a href="https://h2pl.github.io/" target="_blank" rel="noopener">https://h2pl.github.io/</a></p>
+<p>欢迎阅览我的CSDN专栏：Spring源码解析 <a href="https://blog.csdn.net/column/details/21851.html" target="_blank" rel="noopener">https://blog.csdn.net/column/details/21851.html</a></p>
+<p>部分代码会放在我的的Github：<a href="https://github.com/h2pl/" target="_blank" rel="noopener">https://github.com/h2pl/</a></p>
+<a id="more"></a>
+
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>SpringMVC是目前主流的Web MVC框架之一。 </p>
+<p>我们使用浏览器通过地址 <a href="http://ip:port/contextPath/path进行访问，SpringMVC是如何得知用户到底是访问哪个Controller中的方法，这期间到底发生了什么。" target="_blank" rel="noopener">http://ip:port/contextPath/path进行访问，SpringMVC是如何得知用户到底是访问哪个Controller中的方法，这期间到底发生了什么。</a></p>
+<p>本文将分析SpringMVC是如何处理请求与Controller之间的映射关系的，让读者知道这个过程中到底发生了什么事情。</p>
+<p>本文实际上是在上文基础上，深入分析</p>
+<pre>HandlerMapping里的</pre>
+
+<pre>HandlerExecutionChain getHandler(HttpServletRequest var1) throws Exception;</pre>
+
+<pre>该方法的具体实现，包括它如何找到对应的方法，以及如何把结果保存在map里，以便让请求转发到对应的handler上，同时也分析了handleradaptor具体做了什么事情。</pre>
+
+<h1 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h1><p>在分析源码之前，我们先了解一下几个东西。</p>
+<p>1.这个过程中重要的接口和类。</p>
+<p><strong>HandlerMethod类：</strong></p>
+<p>　　Spring3.1版本之后引入的。 是一个封装了方法参数、方法注解，方法返回值等众多元素的类。</p>
+<p>　　<img src="https://images0.cnblogs.com/i/411512/201405/232033308878895.jpg" alt></p>
+<p>　　它的子类InvocableHandlerMethod有两个重要的属性WebDataBinderFactory和HandlerMethodArgumentResolverComposite， 很明显是对请求进行处理的。</p>
+<p>　　InvocableHandlerMethod的子类ServletInvocableHandlerMethod有个重要的属性HandlerMethodReturnValueHandlerComposite，很明显是对响应进行处理的。</p>
+<p>　　ServletInvocableHandlerMethod这个类在HandlerAdapter对每个请求处理过程中，都会实例化一个出来(上面提到的属性由HandlerAdapter进行设置)，分别对请求和返回进行处理。　　(RequestMappingHandlerAdapter源码，实例化ServletInvocableHandlerMethod的时候分别set了上面提到的重要属性)</p>
+<p>　　<img src="https://images0.cnblogs.com/i/411512/201405/240149411377243.png" alt></p>
+<p><strong>MethodParameter类：</strong></p>
+<p>　　HandlerMethod类中的parameters属性类型，是一个MethodParameter数组。MethodParameter是一个封装了方法参数具体信息的工具类，包括参数的的索引位置，类型，注解，参数名等信息。</p>
+<p>　　HandlerMethod在实例化的时候，构造函数中会初始化这个数组，这时只初始化了部分数据，在HandlerAdapter对请求处理过程中会完善其他属性，之后交予合适的HandlerMethodArgumentResolver接口处理。</p>
+<p>　　以类DeptController为例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@Controller</span><br><span class="line">@RequestMapping(value = &quot;/dept&quot;)</span><br><span class="line">public class DeptController &#123;</span><br><span class="line"></span><br><span class="line">  @Autowired</span><br><span class="line">  private IDeptService deptService;</span><br><span class="line"></span><br><span class="line">  @RequestMapping(&quot;/update&quot;)</span><br><span class="line">  @ResponseBody</span><br><span class="line">  public String update(Dept dept) &#123;</span><br><span class="line">    deptService.saveOrUpdate(dept);</span><br><span class="line">    return &quot;success&quot;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　(刚初始化时的数据)　　</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/241246397157212.png" alt></p>
+<p>　　(HandlerAdapter处理后的数据)</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/241246574657656.png" alt></p>
+<p><strong>RequestCondition接口：</strong></p>
+<p>　　<strong>Spring3.1版本之后引入的。 是SpringMVC的映射基础中的请求条件，可以进行combine, compareTo，getMatchingCondition操作。这个接口是映射匹配的关键接口，其中getMatchingCondition方法关乎是否能找到合适的映射。</strong></p>
+<p>　　<img src="https://images0.cnblogs.com/i/411512/201405/241429158878034.png" alt></p>
+<p><strong>RequestMappingInfo类：</strong></p>
+<p>　　Spring3.1版本之后引入的。 是一个封装了各种请求映射条件并实现了RequestCondition接口的类。</p>
+<p>　　有各种RequestCondition实现类属性，patternsCondition，methodsCondition，paramsCondition，headersCondition，consumesCondition以及producesCondition，这个请求条件看属性名也了解，分别代表http请求的路径模式、方法、参数、头部等信息。</p>
+<p>　　<img src="https://images0.cnblogs.com/i/411512/201405/241556162777007.png" alt></p>
+<p><strong>RequestMappingHandlerMapping类：</strong></p>
+<p> 　　处理请求与HandlerMethod映射关系的一个类。</p>
+<p>2.Web服务器启动的时候，SpringMVC到底做了什么。</p>
+<p>先看AbstractHandlerMethodMapping的initHandlerMethods方法中。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/241831201065104.png" alt></p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/241922304028276.png" alt></p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/241932113242502.png" alt></p>
+<p>我们进入createRequestMappingInfo方法看下是如何构造RequestMappingInfo对象的。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/251242523404424.png" alt></p>
+<p>PatternsRequestCondition构造函数：</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/252348515124305.png" alt></p>
+<p>类对应的RequestMappingInfo存在的话，跟方法对应的RequestMappingInfo进行combine操作。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/250107154024892.png" alt></p>
+<p>然后使用符合条件的method来注册各种HandlerMethod。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/260023477461660.png" alt></p>
+<p>下面我们来看下各种RequestCondition接口的实现类的combine操作。</p>
+<p>PatternsRequestCondition：</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/251617000436911.png" alt></p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/251917084021029.png" alt></p>
+<p>RequestMethodsRequestCondition：</p>
+<p>方法的请求条件，用个set直接add即可。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/251919265597456.png" alt></p>
+<p>其他相关的RequestConditon实现类读者可自行查看源码。</p>
+<p>最终，RequestMappingHandlerMapping中两个比较重要的属性</p>
+<p>private final Map&lt;T, HandlerMethod&gt; handlerMethods = new LinkedHashMap&lt;T, HandlerMethod&gt;();</p>
+<p>private final MultiValueMap&lt;String, T&gt; urlMap = new LinkedMultiValueMap&lt;String, T&gt;();</p>
+<p>T为RequestMappingInfo。</p>
+<p>构造完成。</p>
+<p>我们知道，SpringMVC的分发器DispatcherServlet会根据浏览器的请求地址获得HandlerExecutionChain。</p>
+<p>这个过程我们看是如何实现的。</p>
+<p>首先看HandlerMethod的获得(直接看关键代码了)：</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/252206079491274.png" alt></p>
+<p>这里的比较器是使用RequestMappingInfo的compareTo方法(RequestCondition接口定义的)。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/252219494658063.png" alt></p>
+<p>然后构造HandlerExecutionChain加上拦截器</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/252208290431970.png" alt></p>
+<h1 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h1><p>写了这么多，来点例子让我们验证一下吧。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">@Controller</span><br><span class="line">@RequestMapping(value = &quot;/wildcard&quot;)</span><br><span class="line">public class TestWildcardController &#123;</span><br><span class="line"></span><br><span class="line">  @RequestMapping(&quot;/test/**&quot;)</span><br><span class="line">  @ResponseBody</span><br><span class="line">  public String test1(ModelAndView view) &#123;</span><br><span class="line">    view.setViewName(&quot;/test/test&quot;);</span><br><span class="line">    view.addObject(&quot;attr&quot;, &quot;TestWildcardController -&gt; /test/**&quot;);</span><br><span class="line">    return view;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @RequestMapping(&quot;/test/*&quot;)</span><br><span class="line">  @ResponseBody</span><br><span class="line">  public String test2(ModelAndView view) &#123;</span><br><span class="line">    view.setViewName(&quot;/test/test&quot;);</span><br><span class="line">    view.addObject(&quot;attr&quot;, &quot;TestWildcardController -&gt; /test*&quot;);</span><br><span class="line">    return view;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @RequestMapping(&quot;test?&quot;)</span><br><span class="line">  @ResponseBody</span><br><span class="line">  public String test3(ModelAndView view) &#123;</span><br><span class="line">    view.setViewName(&quot;/test/test&quot;);</span><br><span class="line">    view.addObject(&quot;attr&quot;, &quot;TestWildcardController -&gt; test?&quot;);</span><br><span class="line">    return view;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @RequestMapping(&quot;test/*&quot;)</span><br><span class="line">  @ResponseBody</span><br><span class="line">  public String test4(ModelAndView view) &#123;</span><br><span class="line">    view.setViewName(&quot;/test/test&quot;);</span><br><span class="line">    view.addObject(&quot;attr&quot;, &quot;TestWildcardController -&gt; test/*&quot;);</span><br><span class="line">    return view;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于这里的每个pattern都带了*因此，都不会加入到urlMap中，但是handlerMethods还是有的。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/260032509654870.png" alt></p>
+<p>当我们访问：<a href="http://localhost:8888/SpringMVCDemo/wildcard/test1的时候。" target="_blank" rel="noopener">http://localhost:8888/SpringMVCDemo/wildcard/test1的时候。</a></p>
+<p>会先根据 “/wildcard/test1” 找urlMap对应的RequestMappingInfo集合，找不到的话取handlerMethods集合中所有的key集合(也就是RequestMappingInfo集合)。</p>
+<p>然后进行匹配，匹配根据RequestCondition的getMatchingCondition方法。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/260046407936253.png" alt></p>
+<p>最终匹配到2个RequestMappingInfo：</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/260049401063106.png" alt></p>
+<p>然后会使用比较器进行排序。</p>
+<p>之前也分析过，比较器是有优先级的。</p>
+<p>我们看到，RequestMappingInfo除了pattern，其他属性都是一样的。</p>
+<p>我们看下PatternsRequestCondition比较的逻辑：</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/260125371817100.png" alt></p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/260125488223078.png" alt></p>
+<p>因此，/test*的通配符比/test?的多，因此，最终选择了/test?</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/260129091195087.png" alt></p>
+<p>直接比较优先于通配符。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/260129342756267.png" alt></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">@Controller</span><br><span class="line">@RequestMapping(value = &quot;/priority&quot;)</span><br><span class="line">public class TestPriorityController &#123;</span><br><span class="line"></span><br><span class="line">  @RequestMapping(method = RequestMethod.GET)</span><br><span class="line">  @ResponseBody</span><br><span class="line">  public String test1(ModelAndView view) &#123;</span><br><span class="line">    view.setViewName(&quot;/test/test&quot;);</span><br><span class="line">    view.addObject(&quot;attr&quot;, &quot;其他condition相同，带有method属性的优先级高&quot;);</span><br><span class="line">    return view;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @RequestMapping()</span><br><span class="line">  @ResponseBody</span><br><span class="line">  public String test2(ModelAndView view) &#123;</span><br><span class="line">    view.setViewName(&quot;/test/test&quot;);</span><br><span class="line">    view.addObject(&quot;attr&quot;, &quot;其他condition相同，不带method属性的优先级高&quot;);</span><br><span class="line">    return view;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 这里例子，其他requestCondition都一样，只有RequestMethodCondition不一样。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/260151358222728.png" alt></p>
+<p>看出，方法多的优先级越多。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/260152065252948.png" alt></p>
+<p>至于其他的RequestCondition，大家自行查看源码吧。</p>
+<h1 id="资源文件映射"><a href="#资源文件映射" class="headerlink" title="资源文件映射"></a>资源文件映射</h1><p>以上分析均是基于Controller方法的映射(RequestMappingHandlerMapping)。</p>
+<p>SpringMVC中还有静态文件的映射，SimpleUrlHandlerMapping。</p>
+<p>DispatcherServlet找对应的HandlerExecutionChain的时候会遍历属性handlerMappings，这个一个实现了HandlerMapping接口的集合。</p>
+<p>由于我们在*-dispatcher.xml中加入了以下配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;mvc:resources location=&quot;/static/&quot; mapping=&quot;/static/**&quot;/&gt;</span><br></pre></td></tr></table></figure>
+
+<p> Spring解析配置文件会使用ResourcesBeanDefinitionParser进行解析的时候，会实例化出SimpleUrlHandlerMapping。</p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/261025451501584.jpg" alt></p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/261026409781228.jpg" alt></p>
+<p>其中注册的HandlerMethod为ResourceHttpRequestHandler。</p>
+<p>访问地址：<a href="http://localhost:8888/SpringMVCDemo/static/js/jquery-1.11.0.js" target="_blank" rel="noopener">http://localhost:8888/SpringMVCDemo/static/js/jquery-1.11.0.js</a></p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/261013551199069.jpg" alt></p>
+<p><img src="https://images0.cnblogs.com/i/411512/201405/261028504315946.jpg" alt></p>
+<p>地址匹配到/static/**。</p>
+<p>最终SimpleUrlHandlerMapping找到对应的Handler -&gt; ResourceHttpRequestHandler。</p>
+<p>ResourceHttpRequestHandler进行handleRequest的时候，直接输出资源文件的文本内容。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>大致上整理了一下SpringMVC对请求的处理，包括其中比较关键的类和接口，希望对读者有帮助。</p>
+<p>让自己对SpringMVC有了更深入的认识，也为之后分析数据绑定，拦截器、HandlerAdapter等打下基础。</p>
+</div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+        
+      </div>
+      
+      
+      
+    </div>
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#源码分析"><span class="nav-number">2.</span> <span class="nav-text">源码分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实例"><span class="nav-number">3.</span> <span class="nav-text">实例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#资源文件映射"><span class="nav-number">4.</span> <span class="nav-text">资源文件映射</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

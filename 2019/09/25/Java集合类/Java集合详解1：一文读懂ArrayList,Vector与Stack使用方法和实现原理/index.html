@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linkedlist,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《走进JavaWeb技术世界》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰">
+<meta name="keywords" content="Linkedlist">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java集合详解1：一文读懂ArrayList,Vector与Stack使用方法和实现原理">
+<meta property="og:url" content="http://yoursite.com/2019/09/25/Java集合类/Java集合详解1：一文读懂ArrayList,Vector与Stack使用方法和实现原理/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《走进JavaWeb技术世界》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img-blog.csdn.net/2018081819553095?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNjM3ODkxNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdn.net/20180818200637720?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNjM3ODkxNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdn.net/20180818200704724?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNjM3ODkxNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdn.net/20180818200735561?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNjM3ODkxNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0081/2496/006da63f-388e-3669-b57f-1cdd1909d5f8.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:23.929Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java集合详解1：一文读懂ArrayList,Vector与Stack使用方法和实现原理">
+<meta name="twitter:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《走进JavaWeb技术世界》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰">
+<meta name="twitter:image" content="https://img-blog.csdn.net/2018081819553095?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNjM3ODkxNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/09/25/Java集合类/Java集合详解1：一文读懂ArrayList,Vector与Stack使用方法和实现原理/">
+
+
+
+
+
+  <title>Java集合详解1：一文读懂ArrayList,Vector与Stack使用方法和实现原理 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/25/Java集合类/Java集合详解1：一文读懂ArrayList,Vector与Stack使用方法和实现原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java集合详解1：一文读懂ArrayList,Vector与Stack使用方法和实现原理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-25T22:01:42+08:00">
+                2019-09-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/" itemprop="url" rel="index">
+                    <span itemprop="name">Java技术江湖</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/Java集合类/" itemprop="url" rel="index">
+                    <span itemprop="name">Java集合类</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/09/25/Java集合类/Java集合详解1：一文读懂ArrayList,Vector与Stack使用方法和实现原理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/09/25/Java集合类/Java集合详解1：一文读懂ArrayList,Vector与Stack使用方法和实现原理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章首发于我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>本文是微信公众号【Java技术江湖】的《走进JavaWeb技术世界》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透彻，也整合了很多我认为不错的技术博客内容，引用其中了一些比较好的博客文章，如有侵权，请联系作者。</p>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+<p><strong>文末赠送8000G的Java架构师学习资料，需要的朋友可以到文末了解领取方式，资料包括Java基础、进阶、项目和架构师等免费学习资料，更有数据库、分布式、微服务等热门技术学习视频，内容丰富，兼顾原理和实践，另外也将赠送作者原创的Java学习指南、Java程序员面试指南等干货资源）</strong></p>
+<a id="more"></a>
+
+
+<pre><code>//一般讨论集合类无非就是。这里的两种数组类型更是如此
+// 1底层数据结构
+// 2增删改查方式
+// 3初始容量，扩容方式，扩容时机。
+// 4线程安全与否
+// 5是否允许空，是否允许重复，是否有序 </code></pre><h2 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h2><h3 id="ArrayList概述"><a href="#ArrayList概述" class="headerlink" title="ArrayList概述"></a>ArrayList概述</h3><p>  ArrayList是实现List接口的动态数组，所谓动态就是它的大小是可变的。实现了所有可选列表操作，并允许包括 null 在内的所有元素。除了实现 List 接口外，此类还提供一些方法来操作内部用来存储列表的数组的大小。</p>
+<p>  每个ArrayList实例都有一个容量，该容量是指用来存储列表元素的数组的大小。默认初始容量为10。随着ArrayList中元素的增加，它的容量也会不断的自动增长。</p>
+<p>  在每次添加新的元素时，ArrayList都会检查是否需要进行扩容操作，扩容操作带来数据向新数组的重新拷贝，所以如果我们知道具体业务数据量，在构造ArrayList时可以给ArrayList指定一个初始容量，这样就会减少扩容时数据的拷贝问题。当然在添加大量元素前，应用程序也可以使用ensureCapacity操作来增加ArrayList实例的容量，这可以减少递增式再分配的数量。</p>
+<p>  注意，ArrayList实现不是同步的。如果多个线程同时访问一个ArrayList实例，而其中至少一个线程从结构上修改了列表，那么它必须保持外部同步。所以为了保证同步，最好的办法是在创建时完成，以防止意外对列表进行不同步的访问：</p>
+<pre><code>List list = Collections.synchronizedList(new ArrayList(...)); </code></pre><h3 id="ArrayList的继承关系"><a href="#ArrayList的继承关系" class="headerlink" title="ArrayList的继承关系"></a>ArrayList的继承关系</h3><p>ArrayList继承AbstractList抽象父类，实现了List接口（规定了List的操作规范）、RandomAccess（可随机访问）、Cloneable（可拷贝）、Serializable（可序列化）。</p>
+<p><img src="https://img-blog.csdn.net/2018081819553095?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNjM3ODkxNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<h3 id="底层数据结构"><a href="#底层数据结构" class="headerlink" title="底层数据结构"></a>底层数据结构</h3><p> ArrayList的底层是一个object数组，并且由trasient修饰。</p>
+<pre><code>//transient Object[] elementData; //</code></pre><p>non-private to simplify nested class access<br>//ArrayList底层数组不会参与序列化，而是使用另外的序列化方式。</p>
+<p>//使用writeobject方法进行序列化,具体为什么这么做欢迎查看我之前的关于序列化的文章</p>
+<p>//总结一下就是只复制数组中有值的位置，其他未赋值的位置不进行序列化，可以节省空间。</p>
+<pre><code>//        private void writeObject(java.io.ObjectOutputStream s)
+//        throws java.io.IOException{
+//            // Write out element count, and any hidden stuff
+//            int expectedModCount = modCount;
+//            s.defaultWriteObject();
+//
+//            // Write out size as capacity for behavioural compatibility with clone()
+//            s.writeInt(size);
+//
+//            // Write out all elements in the proper order.
+//            for (int i=0; i&lt;size; i++) {
+//                s.writeObject(elementData[i]);
+//            }
+//
+//            if (modCount != expectedModCount) {
+//                throw new ConcurrentModificationException();
+//            }
+//        }</code></pre><h3 id="增删改查"><a href="#增删改查" class="headerlink" title="增删改查"></a>增删改查</h3><pre><code>//增删改查</code></pre><p>添加元素时，首先判断索引是否合法，然后检测是否需要扩容，最后使用System.arraycopy方法来完成数组的复制。</p>
+<p>这个方法无非就是使用System.arraycopy()方法将C集合(先准换为数组)里面的数据复制到elementData数组中。这里就稍微介绍下System.arraycopy()，因为下面还将大量用到该方法</p>
+<p>。该方法的原型为：</p>
+<pre><code>public static void arraycopy(Object src, int srcPos, Object dest, int destPos, int length)。</code></pre><p>它的根本目的就是进行数组元素的复制。即从指定源数组中复制一个数组，复制从指定的位置开始，到目标数组的指定位置结束。</p>
+<p>将源数组src从srcPos位置开始复制到dest数组中，复制长度为length，数据从dest的destPos位置开始粘贴。</p>
+<pre><code>//        public void add(int index, E element) {
+//            rangeCheckForAdd(index);
+//
+//            ensureCapacityInternal(size + 1);  // Increments modCount!!
+//            System.arraycopy(elementData, index, elementData, index + 1,
+//                    size - index);
+//            elementData[index] = element;
+//            size++;
+//        }
+//</code></pre><p>删除元素时，同样判断索引是否和法，删除的方式是把被删除元素右边的元素左移，方法同样是使用System.arraycopy进行拷贝。</p>
+<pre><code>//        public E remove(int index) {
+//            rangeCheck(index);
+//
+//            modCount++;
+//            E oldValue = elementData(index);
+//
+//            int numMoved = size - index - 1;
+//            if (numMoved &gt; 0)
+//                System.arraycopy(elementData, index+1, elementData, index,
+//                        numMoved);
+//            elementData[--size] = null; // clear to let GC do its work
+//
+//            return oldValue;
+//        }</code></pre><p>ArrayList提供一个清空数组的办法，方法是将所有元素置为null，这样就可以让GC自动回收掉没有被引用的元素了。</p>
+<pre><code>//
+//        /**
+//         * Removes all of the elements from this list.  The list will
+//         * be empty after this call returns.
+//         */
+//        public void clear() {
+//            modCount++;
+//
+//            // clear to let GC do its work
+//            for (int i = 0; i &lt; size; i++)
+//                elementData[i] = null;
+//
+//            size = 0;
+//        }</code></pre><p>修改元素时，只需要检查下标即可进行修改操作。</p>
+<pre><code>//        public E set(int index, E element) {
+//            rangeCheck(index);
+//
+//            E oldValue = elementData(index);
+//            elementData[index] = element;
+//            return oldValue;
+//        }
+//
+//        public E get(int index) {
+//            rangeCheck(index);
+//
+//            return elementData(index);
+//        }
+//</code></pre><p>上述方法都使用了rangeCheck方法，其实就是简单地检查下标而已。</p>
+<pre><code>//        private void rangeCheck(int index) {
+//            if (index &gt;= size)
+//                throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+//        }</code></pre><h3 id="modCount"><a href="#modCount" class="headerlink" title="modCount"></a>modCount</h3><pre><code>//        protected transient int modCount = 0;</code></pre><p>由以上代码可以看出，在一个迭代器初始的时候会赋予它调用这个迭代器的对象的mCount，如何在迭代器遍历的过程中，一旦发现这个对象的mcount和迭代器中存储的mcount不一样那就抛异常 </p>
+<blockquote>
+<p>好的，下面是这个的完整解释<br>Fail-Fast 机制<br>我们知道 java.util.ArrayList 不是线程安全的，ArrayList，那么将抛出ConcurrentModificationException，这就是所谓fail-fast策略。</p>
+<p>这一策略在源码中的实现是通过 modCount 域，modCount 顾名思义就是修改次数，对ArrayList 内容的修改都将增加这个值，那么在迭代器初始化过程中会将这个值赋给迭代器的 expectedModCount。</p>
+<p>在迭代过程中，判断 modCount 跟 expectedModCount 是否相等，如果不相等就表示已经有其他线程修改了 ArrayList。</p>
+<p>所以在这里和大家建议，当大家遍历那些非线程安全的数据结构时，尽量使用迭代器</p>
+</blockquote>
+<h3 id="初始容量和扩容方式"><a href="#初始容量和扩容方式" class="headerlink" title="初始容量和扩容方式"></a>初始容量和扩容方式</h3><p>初始容量是10，下面是扩容方法。<br>首先先取</p>
+<pre><code>//        private static final int DEFAULT_CAPACITY = 10;
+
+扩容发生在add元素时，传入当前元素容量加一
+   public boolean add(E e) {
+    ensureCapacityInternal(size + 1);  // Increments modCount!!
+    elementData[size++] = e;
+    return true;
+}
+
+
+这里给出初始化时的数组
+private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
+
+这说明：如果数组还是初始数组，那么最小的扩容大小就是size+1和初始容量中较大的一个，初始容量为10。
+因为addall方法也会调用该函数，所以此时需要做判断。
+private void ensureCapacityInternal(int minCapacity) {
+    if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
+        minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);
+    }
+
+    ensureExplicitCapacity(minCapacity);
+}
+
+//开始精确地扩容
+private void ensureExplicitCapacity(int minCapacity) {
+    modCount++;
+
+    // overflow-conscious code
+        如果此时扩容容量大于数组长度吗，执行grow，否则不执行。
+    if (minCapacity - elementData.length &gt; 0)
+        grow(minCapacity);
+}</code></pre><p>真正执行扩容的方法grow</p>
+<p>扩容方式是让新容量等于旧容量的1.5被。</p>
+<p>当新容量大于最大数组容量时，执行大数扩容</p>
+<pre><code>//        private void grow(int minCapacity) {
+//            // overflow-conscious code
+//            int oldCapacity = elementData.length;
+//            int newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1);
+//            if (newCapacity - minCapacity &lt; 0)
+//                newCapacity = minCapacity;
+//            if (newCapacity - MAX_ARRAY_SIZE &gt; 0)
+//                newCapacity = hugeCapacity(minCapacity);
+//            // minCapacity is usually close to size, so this is a win:
+//            elementData = Arrays.copyOf(elementData, newCapacity);
+//        }</code></pre><p>当新容量大于最大数组长度，有两种情况，一种是溢出，抛异常，一种是没溢出，返回整数的最大值。</p>
+<pre><code>private static int hugeCapacity(int minCapacity) {
+    if (minCapacity &lt; 0) // overflow
+        throw new OutOfMemoryError();
+    return (minCapacity &gt; MAX_ARRAY_SIZE) ?
+        Integer.MAX_VALUE :
+        MAX_ARRAY_SIZE;
+}</code></pre><p>在这里有一个疑问，为什么每次扩容处理会是1.5倍，而不是2.5、3、4倍呢？通过google查找，发现1.5倍的扩容是最好的倍数。因为一次性扩容太大(例如2.5倍)可能会浪费更多的内存(1.5倍最多浪费33%，而2.5被最多会浪费60%，3.5倍则会浪费71%……)。但是一次性扩容太小，需要多次对数组重新分配内存，对性能消耗比较严重。所以1.5倍刚刚好，既能满足性能需求，也不会造成很大的内存消耗。</p>
+<p>  处理这个ensureCapacity()这个扩容数组外，ArrayList还给我们提供了将底层数组的容量调整为当前列表保存的实际元素的大小的功能。它可以通过trimToSize()方法来实现。该方法可以最小化ArrayList实例的存储量。</p>
+<pre><code>public void trimToSize() {
+    modCount++;
+    int oldCapacity = elementData.length;
+    if (size &lt; oldCapacity) {
+        elementData = Arrays.copyOf(elementData, size);
+    }
+}</code></pre><h3 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h3><p>ArrayList是线程不安全的。在其迭代器iteator中，如果有多线程操作导致modcount改变，会执行fastfail。抛出异常。</p>
+<pre><code>final void checkForComodification() {
+    if (modCount != expectedModCount)
+        throw new ConcurrentModificationException();
+}</code></pre><h2 id="Vector"><a href="#Vector" class="headerlink" title="Vector"></a>Vector</h2><h3 id="Vector简介"><a href="#Vector简介" class="headerlink" title="Vector简介"></a>Vector简介</h3><p>Vector可以实现可增长的对象数组。与数组一样，它包含可以使用整数索引进行访问的组件。不过，Vector的大小是可以增加或者减小的，以便适应创建Vector后进行添加或者删除操作。</p>
+<p>Vector实现List接口，继承AbstractList类，所以我们可以将其看做队列，支持相关的添加、删除、修改、遍历等功能。</p>
+<p>Vector实现RandmoAccess接口，即提供了随机访问功能，提供提供快速访问功能。在Vector我们可以直接访问元素。</p>
+<p>Vector 实现了Cloneable接口，支持clone()方法，可以被克隆。</p>
+<p>vector底层数组不加transient，序列化时会全部复制</p>
+<pre><code> protected Object[] elementData;
+
+
+
+//        private void writeObject(java.io.ObjectOutputStream s)
+//            throws java.io.IOException {
+//            final java.io.ObjectOutputStream.PutField fields = s.putFields();
+//            final Object[] data;
+//            synchronized (this) {
+//                fields.put(&quot;capacityIncrement&quot;, capacityIncrement);
+//                fields.put(&quot;elementCount&quot;, elementCount);
+//                data = elementData.clone();
+//            }
+//            fields.put(&quot;elementData&quot;, data);
+//            s.writeFields();
+//        }</code></pre><p>Vector除了iterator外还提供Enumeration枚举方法，不过现在比较过时。</p>
+<pre><code>//        public Enumeration&lt;E&gt; elements() {
+//            return new Enumeration&lt;E&gt;() {
+//                int count = 0;
+//
+//                public boolean hasMoreElements() {
+//                    return count &lt; elementCount;
+//                }
+//
+//                public E nextElement() {
+//                    synchronized (Vector.this) {
+//                        if (count &lt; elementCount) {
+//                            return elementData(count++);
+//                        }
+//                    }
+//                    throw new NoSuchElementException(&quot;Vector Enumeration&quot;);
+//                }
+//            };
+//        }
+//</code></pre><h3 id="增删改查-1"><a href="#增删改查-1" class="headerlink" title="增删改查"></a>增删改查</h3><p>vector的增删改查既提供了自己的实现，也继承了abstractList抽象类的部分方法。<br>下面的方法是vector自己实现的。</p>
+<pre><code>//
+//    public synchronized E elementAt(int index) {
+//        if (index &gt;= elementCount) {
+//            throw new ArrayIndexOutOfBoundsException(index + &quot; &gt;= &quot; + elementCount);
+//        }
+//
+//        return elementData(index);
+//    }
+//
+//
+
+//    public synchronized void setElementAt(E obj, int index) {
+//        if (index &gt;= elementCount) {
+//            throw new ArrayIndexOutOfBoundsException(index + &quot; &gt;= &quot; +
+//                    elementCount);
+//        }
+//        elementData[index] = obj;
+//    }
+//
+
+
+//    public synchronized void removeElementAt(int index) {
+//        modCount++;
+//        if (index &gt;= elementCount) {
+//            throw new ArrayIndexOutOfBoundsException(index + &quot; &gt;= &quot; +
+//                    elementCount);
+//        }
+//        else if (index &lt; 0) {
+//            throw new ArrayIndexOutOfBoundsException(index);
+//        }
+//        int j = elementCount - index - 1;
+//        if (j &gt; 0) {
+//            System.arraycopy(elementData, index + 1, elementData, index, j);
+//        }
+//        elementCount--;
+//        elementData[elementCount] = null; /* to let gc do its work */
+//    }
+
+
+//    public synchronized void insertElementAt(E obj, int index) {
+//        modCount++;
+//        if (index &gt; elementCount) {
+//            throw new ArrayIndexOutOfBoundsException(index
+//                    + &quot; &gt; &quot; + elementCount);
+//        }
+//        ensureCapacityHelper(elementCount + 1);
+//        System.arraycopy(elementData, index, elementData, index + 1, elementCount - index);
+//        elementData[index] = obj;
+//        elementCount++;
+//    }
+//
+
+//    public synchronized void addElement(E obj) {
+//        modCount++;
+//        ensureCapacityHelper(elementCount + 1);
+//        elementData[elementCount++] = obj;
+//    }</code></pre><h3 id="初始容量和扩容"><a href="#初始容量和扩容" class="headerlink" title="初始容量和扩容"></a>初始容量和扩容</h3><p>扩容方式与ArrayList基本一样，但是扩容时不是1.5倍扩容，而是有一个扩容增量。</p>
+<pre><code>//    protected int elementCount;
+
+//    protected int capacityIncrement;
+//
+//
+//    }
+//    public Vector() {
+//        this(10);
+//    }</code></pre><p>capacityIncrement：向量的大小大于其容量时，容量自动增加的量。如果在创建Vector时，指定了capacityIncrement的大小；则，每次当Vector中动态数组容量增加时&gt;，增加的大小都是capacityIncrement。如果容量的增量小于等于零，则每次需要增大容量时，向量的容量将增大一倍。</p>
+<pre><code>//        public synchronized void ensureCapacity(int minCapacity) {
+//            if (minCapacity &gt; 0) {
+//                modCount++;
+//                ensureCapacityHelper(minCapacity);
+//            }
+//        }
+//        private void ensureCapacityHelper(int minCapacity) {
+//            // overflow-conscious code
+//            if (minCapacity - elementData.length &gt; 0)
+//                grow(minCapacity);
+//        }
+//
+//        private void grow(int minCapacity) {
+//            // overflow-conscious code
+//            int oldCapacity = elementData.length;
+//            int newCapacity = oldCapacity + ((capacityIncrement &gt; 0) ?
+//                    capacityIncrement : oldCapacity);
+//            if (newCapacity - minCapacity &lt; 0)
+//                newCapacity = minCapacity;
+//            if (newCapacity - MAX_ARRAY_SIZE &gt; 0)
+//                newCapacity = hugeCapacity(minCapacity);
+//            elementData = Arrays.copyOf(elementData, newCapacity);
+//        }</code></pre><p>下面是扩容过程示意图</p>
+<p><img src="https://img-blog.csdn.net/20180818200637720?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNjM3ODkxNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<p><img src="https://img-blog.csdn.net/20180818200704724?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNjM3ODkxNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<p><img src="https://img-blog.csdn.net/20180818200735561?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNjM3ODkxNw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<h3 id="线程安全-1"><a href="#线程安全-1" class="headerlink" title="线程安全"></a>线程安全</h3><p>vector大部分方法都使用了synchronized修饰符，所以他是线层安全的集合类。</p>
+<h2 id="Stack"><a href="#Stack" class="headerlink" title="Stack"></a>Stack</h2><p>我们最常用的数据结构之一大概就是stack了。在实际的程序执行，方法调用的过程中都离不开stack。那么，在一个成熟的类库里面，它的实现是怎么样的呢？也许平时我们实践的时候也会尝试着去写一个stack的实现玩玩。这里，我们就仔细的分析一下jdk里的详细实现。</p>
+<h1 id="Stack-1"><a href="#Stack-1" class="headerlink" title="Stack"></a>Stack</h1><pre><code>如果我们去查jdk的文档，我们会发现stack是在java.util这个包里。它对应的一个大致的类关系图如下：</code></pre><p><img src="http://dl.iteye.com/upload/attachment/0081/2496/006da63f-388e-3669-b57f-1cdd1909d5f8.jpg" alt></p>
+<pre><code>通过继承Vector类，Stack类可以很容易的实现他本身的功能。因为大部分的功能在Vector里面已经提供支持了。</code></pre><p>在Java中Stack类表示后进先出（LIFO）的对象堆栈。栈是一种非常常见的数据结构，它采用典型的先进后出的操作方式完成的。</p>
+<p>Stack通过五个操作对Vector进行扩展，允许将向量视为堆栈。这个五个操作如下：</p>
+<blockquote>
+<p>empty()</p>
+<p>测试堆栈是否为空。</p>
+<p>peek()</p>
+<p>查看堆栈顶部的对象，但不从堆栈中移除它。</p>
+<p>pop()</p>
+<p>移除堆栈顶部的对象，并作为此函数的值返回该对象。</p>
+<p>push(E item)</p>
+<p>把项压入堆栈顶部。</p>
+<p>search(Object o)</p>
+<p>返回对象在堆栈中的位置，以 1 为基数。</p>
+</blockquote>
+<p>Stack继承Vector，他对Vector进行了简单的扩展：</p>
+<p>public class Stack<e> extends Vector<e><br>  Stack的实现非常简单，仅有一个构造方法，五个实现方法（从Vector继承而来的方法不算与其中），同时其实现的源码非常简单</e></e></p>
+<pre><code>/**
+ * 构造函数
+ */
+public Stack() {
+}
+
+/**
+ *  push函数：将元素存入栈顶
+ */
+public E push(E item) {
+    // 将元素存入栈顶。
+    // addElement()的实现在Vector.java中
+    addElement(item);
+
+    return item;
+}
+
+/**
+ * pop函数：返回栈顶元素，并将其从栈中删除
+ */
+public synchronized E pop() {
+    E    obj;
+    int    len = size();
+
+    obj = peek();
+    // 删除栈顶元素，removeElementAt()的实现在Vector.java中
+    removeElementAt(len - 1);
+
+    return obj;
+}
+
+/**
+ * peek函数：返回栈顶元素，不执行删除操作
+ */
+public synchronized E peek() {
+    int    len = size();
+
+    if (len == 0)
+        throw new EmptyStackException();
+    // 返回栈顶元素，elementAt()具体实现在Vector.java中
+    return elementAt(len - 1);
+}
+
+/**
+ * 栈是否为空
+ */
+public boolean empty() {
+    return size() == 0;
+}
+
+/**
+ *  查找“元素o”在栈中的位置：由栈底向栈顶方向数
+ */
+public synchronized int search(Object o) {
+    // 获取元素索引，elementAt()具体实现在Vector.java中
+    int i = lastIndexOf(o);
+
+    if (i &gt;= 0) {
+        return size() - i;
+    }
+    return -1;
+}</code></pre><p>Stack的源码很多都是基于Vector，所以这里不再累述</p>
+<h2 id="三个集合类之间的区别"><a href="#三个集合类之间的区别" class="headerlink" title="三个集合类之间的区别"></a>三个集合类之间的区别</h2><p>ArrayList的优缺点</p>
+<p>从上面的几个过程总结一下ArrayList的优缺点。ArrayList的优点如下：</p>
+<blockquote>
+<p>1、ArrayList底层以数组实现，是一种随机访问模式，再加上它实现了RandomAccess接口，因此查找也就是get的时候非常快</p>
+<p>2、ArrayList在顺序添加一个元素的时候非常方便，只是往数组里面添加了一个元素而已</p>
+</blockquote>
+<p>不过ArrayList的缺点也十分明显：</p>
+<blockquote>
+<p>1、删除元素的时候，涉及到一次元素复制，如果要复制的元素很多，那么就会比较耗费性能</p>
+<p>2、插入元素的时候，涉及到一次元素复制，如果要复制的元素很多，那么就会比较耗费性能</p>
+<p>因此，ArrayList比较适合顺序添加、随机访问的场景。</p>
+</blockquote>
+<p>ArrayList和Vector的区别</p>
+<blockquote>
+<p>ArrayList是线程非安全的，这很明显，因为ArrayList中所有的方法都不是同步的，在并发下一定会出现线程安全问题。那么我们想要使用ArrayList并且让它线程安全怎么办？一个方法是用Collections.synchronizedList方法把你的ArrayList变成一个线程安全的List，比如：</p>
+<pre><code>List&lt;String&gt; synchronizedList = Collections.synchronizedList(list);
+synchronizedList.add(&quot;aaa&quot;);
+synchronizedList.add(&quot;bbb&quot;);
+for (int i = 0; i &lt; synchronizedList.size(); i++)
+{
+    System.out.println(synchronizedList.get(i));
+}</code></pre></blockquote>
+<p>另一个方法就是Vector，它是ArrayList的线程安全版本，其实现90%和ArrayList都完全一样，区别在于：</p>
+<blockquote>
+<p>1、Vector是线程安全的，ArrayList是线程非安全的</p>
+<p>2、Vector可以指定增长因子，如果该增长因子指定了，那么扩容的时候会每次新的数组大小会在原数组的大小基础上加上增长因子；如果不指定增长因子，那么就给原数组大小*2，源代码是这样的：</p>
+</blockquote>
+<pre><code>int newCapacity = oldCapacity + ((capacityIncrement &gt; 0) ?
+                                 capacityIncrement : oldCapacity);</code></pre><h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://www.cnblogs.com/williamjie/p/11158523.html" target="_blank" rel="noopener">https://www.cnblogs.com/williamjie/p/11158523.html</a></p>
+<p><a href="https://www.cnblogs.com/shenzhichipingguo/p/10075212.html" target="_blank" rel="noopener">https://www.cnblogs.com/shenzhichipingguo/p/10075212.html</a></p>
+<p><a href="https://www.cnblogs.com/rnmb/p/6553711.html" target="_blank" rel="noopener">https://www.cnblogs.com/rnmb/p/6553711.html</a></p>
+<p><a href="https://blog.csdn.net/u011419651/article/details/83831156" target="_blank" rel="noopener">https://blog.csdn.net/u011419651/article/details/83831156</a></p>
+<p><a href="https://www.jianshu.com/p/c4027084ac43" target="_blank" rel="noopener">https://www.jianshu.com/p/c4027084ac43</a></p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linkedlist/" rel="tag"># Linkedlist</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/23/23继承、封装、多态的实现原理/" rel="next" title="夯实Java基础系列23：深入理解Java继承、封装、多态的底层实现原理">
+                <i class="fa fa-chevron-left"></i> 夯实Java基础系列23：深入理解Java继承、封装、多态的底层实现原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/25/Java集合类/Java集合详解2：Queue和LinkedList/" rel="prev" title="Java集合类详解2：一文读懂Queue和LinkedList">
+                Java集合类详解2：一文读懂Queue和LinkedList <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ArrayList"><span class="nav-number">1.</span> <span class="nav-text">ArrayList</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ArrayList概述"><span class="nav-number">1.1.</span> <span class="nav-text">ArrayList概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ArrayList的继承关系"><span class="nav-number">1.2.</span> <span class="nav-text">ArrayList的继承关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#底层数据结构"><span class="nav-number">1.3.</span> <span class="nav-text">底层数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增删改查"><span class="nav-number">1.4.</span> <span class="nav-text">增删改查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#modCount"><span class="nav-number">1.5.</span> <span class="nav-text">modCount</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始容量和扩容方式"><span class="nav-number">1.6.</span> <span class="nav-text">初始容量和扩容方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程安全"><span class="nav-number">1.7.</span> <span class="nav-text">线程安全</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vector"><span class="nav-number">2.</span> <span class="nav-text">Vector</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Vector简介"><span class="nav-number">2.1.</span> <span class="nav-text">Vector简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增删改查-1"><span class="nav-number">2.2.</span> <span class="nav-text">增删改查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始容量和扩容"><span class="nav-number">2.3.</span> <span class="nav-text">初始容量和扩容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程安全-1"><span class="nav-number">2.4.</span> <span class="nav-text">线程安全</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stack"><span class="nav-number">3.</span> <span class="nav-text">Stack</span></a></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#Stack-1"><span class="nav-number"></span> <span class="nav-text">Stack</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#三个集合类之间的区别"><span class="nav-number">1.</span> <span class="nav-text">三个集合类之间的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">2.</span> <span class="nav-text">参考文章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">3.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">3.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">3.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

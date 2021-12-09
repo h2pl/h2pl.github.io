@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="回调机制,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透">
+<meta name="keywords" content="回调机制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="夯实Java基础系列11：深入理解Java中的回调机制">
+<meta property="og:url" content="http://yoursite.com/2019/09/11/11解读Java中的回调/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/3796264-6a5b5b898aa3930e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1031/format/webp">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:23.912Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="夯实Java基础系列11：深入理解Java中的回调机制">
+<meta name="twitter:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/3796264-6a5b5b898aa3930e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1031/format/webp">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/09/11/11解读Java中的回调/">
+
+
+
+
+
+  <title>夯实Java基础系列11：深入理解Java中的回调机制 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/11/11解读Java中的回调/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">夯实Java基础系列11：深入理解Java中的回调机制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-11T15:56:26+08:00">
+                2019-09-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/" itemprop="url" rel="index">
+                    <span itemprop="name">Java技术江湖</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/Java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/09/11/11解读Java中的回调/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/09/11/11解读Java中的回调/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章首发于我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透彻，也整合了很多我认为不错的技术博客内容，引用其中了一些比较好的博客文章，如有侵权，请联系作者。<br>该系列博文会告诉你如何从入门到进阶，一步步地学习Java基础知识，并上手进行实战，接着了解每个Java知识点背后的实现原理，更完整地了解整个Java技术体系，形成自己的知识框架。为了更好地总结和检验你的学习成果，本系列文章也会提供每个知识点对应的面试题以及参考答案。</p>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+<a id="more"></a>
+<h2 id="模块间的调用"><a href="#模块间的调用" class="headerlink" title="模块间的调用"></a>模块间的调用</h2><p>本部分摘自<a href="https://www.cnblogs.com/xrq730/p/6424471.html" target="_blank" rel="noopener">https://www.cnblogs.com/xrq730/p/6424471.html</a></p>
+<p>在一个应用系统中，无论使用何种语言开发，必然存在模块之间的调用，调用的方式分为几种：</p>
+<p>（1）同步调用</p>
+<blockquote>
+<p>同步调用是最基本并且最简单的一种调用方式，类A的方法a()调用类B的方法b()，一直等待b()方法执行完毕，a()方法继续往下走。这种调用方式适用于方法b()执行时间不长的情况，因为b()方法执行时间一长或者直接阻塞的话，a()方法的余下代码是无法执行下去的，这样会造成整个流程的阻塞。</p>
+</blockquote>
+<p>（2）异步调用</p>
+<blockquote>
+<p>异步调用是为了解决同步调用可能出现阻塞，导致整个流程卡住而产生的一种调用方式。类A的方法方法a()通过新起线程的方式调用类B的方法b()，代码接着直接往下执行，这样无论方法b()执行时间多久，都不会阻塞住方法a()的执行。</p>
+<p>但是这种方式，由于方法a()不等待方法b()的执行完成，在方法a()需要方法b()执行结果的情况下（视具体业务而定，有些业务比如启异步线程发个微信通知、刷新一个缓存这种就没必要），必须通过一定的方式对方法b()的执行结果进行监听。</p>
+<p>在Java中，可以使用Future+Callable的方式做到这一点，具体做法可以参见我的这篇文章Java多线程21：多线程下其他组件之CyclicBarrier、Callable、Future和FutureTask。</p>
+</blockquote>
+<p>（3）回调</p>
+<p>1、什么是回调？<br>一般来说，模块之间都存在一定的调用关系，从调用方式上看，可以分为三类同步调用、异步调用和回调。同步调用是一种阻塞式调用，即在函数A的函数体里通过书写函数B的函数名来调用之，使内存中对应函数B的代码得以执行。异步调用是一种类似消息或事件的机制解决了同步阻塞的问题，例如 A通知 B后，他们各走各的路，互不影响，不用像同步调用那样， A通知 B后，非得等到 B走完后， A才继续走 。回调是一种双向的调用模式，也就是说，被调用的接口被调用时也会调用对方的接口，例如A要调用B，B在执行完又要调用A。</p>
+<p>2、回调的用途<br>回调一般用于层间协作，上层将本层函数安装在下层，这个函数就是回调，而下层在一定条件下触发回调。例如作为一个驱动，是一个底层，他在收到一个数据时，除了完成本层的处理工作外，还将进行回调，将这个数据交给上层应用层来做进一步处理，这在分层的数据通信中很普遍。</p>
+<h2 id="多线程中的“回调”"><a href="#多线程中的“回调”" class="headerlink" title="多线程中的“回调”"></a>多线程中的“回调”</h2><p>Java多线程中可以通过callable和future或futuretask结合来获取线程执行后的返回值。实现方法是通过get方法来调用callable的call方法获取返回值。</p>
+<p>其实这种方法本质上不是回调，回调要求的是任务完成以后被调用者主动回调调用者的接口。而这里是调用者主动使用get方法阻塞获取返回值。</p>
+<pre><code>public class 多线程中的回调 {
+    //这里简单地使用future和callable实现了线程执行完后
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        ExecutorService executor = Executors.newCachedThreadPool();
+        Future&lt;String&gt; future = executor.submit(new Callable&lt;String&gt;() {
+            @Override
+            public String call() throws Exception {
+                System.out.println(&quot;call&quot;);
+                TimeUnit.SECONDS.sleep(1);
+                return &quot;str&quot;;
+            }
+        });
+        //手动阻塞调用get通过call方法获得返回值。
+        System.out.println(future.get());
+        //需要手动关闭，不然线程池的线程会继续执行。
+        executor.shutdown();
+
+    //使用futuretask同时作为线程执行单元和数据请求单元。
+    FutureTask&lt;Integer&gt; futureTask = new FutureTask(new Callable&lt;Integer&gt;() {
+        @Override
+        public Integer call() throws Exception {
+            System.out.println(&quot;dasds&quot;);
+            return new Random().nextInt();
+        }
+    });
+    new Thread(futureTask).start();
+    //阻塞获取返回值
+    System.out.println(futureTask.get());
+}
+@Test
+public void test () {
+    Callable callable = new Callable() {
+        @Override
+        public Object call() throws Exception {
+            return null;
+        }
+    };
+    FutureTask futureTask = new FutureTask(callable);
+
+}
+}</code></pre><h2 id="Java回调机制实战"><a href="#Java回调机制实战" class="headerlink" title="Java回调机制实战"></a>Java回调机制实战</h2><p>曾经自己偶尔听说过回调机制，隐隐约约能够懂一些意思，但是当让自己写一个简单的示例程序时，自己就傻眼了。随着工作经验的增加，自己经常听到这儿使用了回调，那儿使用了回调，自己是时候好好研究一下Java回调机制了。网上关于Java回调的文章一抓一大把，但是看完总是云里雾里，不知所云，特别是看到抓取别人的代码走两步时，总是现眼。于是自己决定写一篇关于Java机制的文章，以方便大家和自己更深入的学习Java回调机制。</p>
+<p>首先，什么是回调函数，引用百度百科的解释：回调函数就是一个通过函数指针调用的函数。如果你把函数的指针（地址）作为参数传递给另一个函数，当这个指针被用来调用其所指向的函数时，我们就说这是回调函数。回调函数不是由该函数的实现方直接调用，而是在特定的事件或条件发生时由另外的一方调用的，用于对该事件或条件进行响应[2].</p>
+<p>不好意思，上述解释我看了好几遍，也没理解其中深刻奥秘，相信一些读者你也一样。光说不练假把式，咱们还是以实战理解脉络。</p>
+<h3 id="实例一-：-同步调用"><a href="#实例一-：-同步调用" class="headerlink" title="实例一 ： 同步调用"></a>实例一 ： 同步调用</h3><p>本文以底层服务BottomService和上层服务UpperService为示例，利用上层服务调用底层服务，整体执行过程如下：</p>
+<p>第一步: 执行UpperService.callBottomService();</p>
+<p>第二步: 执行BottomService.bottom();</p>
+<p>第三步:执行UpperService.upperTaskAfterCallBottomService()</p>
+<h4 id="1-1-同步调用代码"><a href="#1-1-同步调用代码" class="headerlink" title="1.1 同步调用代码"></a>1.1 同步调用代码</h4><p>同步调用时序图：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/3796264-6a5b5b898aa3930e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1031/format/webp" alt></p>
+<p>同步调用时序图</p>
+<p><strong>1.1.1 底层服务类:BottomService.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">package synchronization.demo;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"></span><br><span class="line">* Created by lance on 2017/1/19.</span><br><span class="line"></span><br><span class="line">*/</span><br><span class="line"></span><br><span class="line">public class BottomService &#123;</span><br><span class="line"></span><br><span class="line">public String bottom(String param) &#123;</span><br><span class="line"></span><br><span class="line">try &#123; //  模拟底层处理耗时，上层服务需要等待</span><br><span class="line"></span><br><span class="line">Thread.sleep(3000);</span><br><span class="line"></span><br><span class="line">&#125; catch (InterruptedException e) &#123;</span><br><span class="line"></span><br><span class="line">e.printStackTrace();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">return param +&quot; BottomService.bottom() execute --&gt;&quot;;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>1.1.2 上层服务接口: UpperService.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package synchronization.demo;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"></span><br><span class="line">* Created by lance on 2017/1/19.</span><br><span class="line"></span><br><span class="line">*/</span><br><span class="line"></span><br><span class="line">public interface UpperService &#123;</span><br><span class="line"></span><br><span class="line">public void upperTaskAfterCallBottomService(String upperParam);</span><br><span class="line"></span><br><span class="line">public String callBottomService(final String param);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>1.1.3 上层服务接口实现类:UpperServiceImpl.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">package synchronization.demo;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"></span><br><span class="line">* Created by lance on 2017/1/19.</span><br><span class="line"></span><br><span class="line">*/</span><br><span class="line"></span><br><span class="line">public class UpperServiceImpl implements UpperService &#123;</span><br><span class="line"></span><br><span class="line">private BottomService bottomService;</span><br><span class="line"></span><br><span class="line">@Override</span><br><span class="line"></span><br><span class="line">public void upperTaskAfterCallBottomService(String upperParam) &#123;</span><br><span class="line"></span><br><span class="line">System.out.println(upperParam + &quot; upperTaskAfterCallBottomService() execute.&quot;);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public UpperServiceImpl(BottomService bottomService) &#123;</span><br><span class="line"></span><br><span class="line">this.bottomService = bottomService;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Override</span><br><span class="line"></span><br><span class="line">public String callBottomService(final String param) &#123;</span><br><span class="line"></span><br><span class="line">return bottomService.bottom(param + &quot; callBottomService.bottom() execute --&gt; &quot;);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>1.1.4 Test测试类:Test.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">package synchronization.demo;</span><br><span class="line"></span><br><span class="line">import java.util.Date;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"></span><br><span class="line">* Created by lance on 2017/1/19.</span><br><span class="line"></span><br><span class="line">*/</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line"></span><br><span class="line">public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">BottomService bottomService = new BottomService();</span><br><span class="line"></span><br><span class="line">UpperService upperService = new UpperServiceImpl(bottomService);</span><br><span class="line"></span><br><span class="line">System.out.println(&quot;=============== callBottomService start ==================:&quot; + new Date());</span><br><span class="line"></span><br><span class="line">String result = upperService.callBottomService(&quot;callBottomService start --&gt; &quot;);</span><br><span class="line"></span><br><span class="line">//upperTaskAfterCallBottomService执行必须等待callBottomService()调用BottomService.bottom()方法返回后才能够执行</span><br><span class="line"></span><br><span class="line">upperService.upperTaskAfterCallBottomService(result);</span><br><span class="line"></span><br><span class="line">System.out.println(&quot;=============== callBottomService end ====================:&quot; + new Date());</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>1.1.5 输出结果:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">=============== callBottomService start ==================:Thu Jan 19 14:59:58 CST 2017</span><br><span class="line"></span><br><span class="line">callBottomService start --&gt;  callBottomService.bottom() execute --&gt;  BottomService.bottom() execute --&gt; upperTaskAfterCallBottomService() execute.</span><br><span class="line"></span><br><span class="line">=============== callBottomService end ====================:Thu Jan 19 15:00:01 CST 2017</span><br></pre></td></tr></table></figure>
+
+<p>注意输出结果：</p>
+<p>是同步方式，Test调用callBottomService()等待执行结束，然后再执行下一步，即执行结束。callBottomService开始执行时间为Thu Jan 19 14:59:58 CST 2017，执行结束时间为Thu Jan 19 15:00:01 CST 2017，耗时3秒钟，与模拟的耗时时间一致，即3000毫秒。</p>
+<h2 id="实例二：由浅入深"><a href="#实例二：由浅入深" class="headerlink" title="实例二：由浅入深"></a>实例二：由浅入深</h2><p>前几天公司面试有问道java回调的问题，因为这方面也没有太多研究，所以回答的含糊不清，这回特意来补习一下。看了看网上的回调解释和例子，都那么的绕口，得看半天才能绕回来，其实吧，回调是个很简单的机制。在这里我用简单的语言先来解释一下：假设有两个类，分别是A和B，在A中有一个方法a()，B中有一个方法b()；在A里面调用B中的方法b()，而方法b()中调用了方法a()，这样子就同时实现了b()和a()两个方法的功能。</p>
+<p>疑惑：为啥这么麻烦，我直接在类A中的B.b()方法下调用a()方法就行了呗。<br>解答：回调更像是一个约定，就是如果我调用了b()方法，那么就必须要回调，而不需要显示调用<br>一、Java的回调-浅<br>我们用例子来解释：小明和小李相约一起去吃早饭，但是小李起的有点晚要先洗漱，等小李洗漱完成后，通知小明再一起去吃饭。小明就是类A，小李就是类B。一起去吃饭这个事件就是方法a(),小李去洗漱就是方法b()。</p>
+<pre><code>public class XiaoMing { 
+   //小明和小李一起吃饭
+   public void eatFood() {
+      XiaoLi xl = new XiaoLi();
+      //A调用B的方法
+      xl.washFace();
+   }
+
+   public void eat() {
+      System.out.print(&quot;小明和小李一起去吃大龙虾&quot;);
+   }
+}
+那么怎么让小李洗漱完后在通知小明一起去吃饭呢
+
+public class XiaoMing { 
+   //小明和小李一起吃饭
+   public void eatFood() {
+      XiaoLi xl = new XiaoLi();
+      //A调用B的方法
+      xl.washFace();
+      eat();
+   }
+
+   public void eat() {
+      System.out.print(&quot;小明和小李一起去吃大龙虾&quot;);
+   }
+}</code></pre><p>不过上面已经说过了这个不是回调函数，所以不能这样子，正确的方式如下</p>
+<pre><code>public class XiaoLi{//小李
+   public void washFace() {
+    System.out.print(&quot;小李要洗漱&quot;);
+    XiaoMing xm = new XiaoMing();
+        //B调用A的方法
+    xm.eat();//洗漱完后，一起去吃饭
+   }
+}</code></pre><p>这样子就可以实现washFace()同时也能实现eat()。小李洗漱完后，再通知小明一起去吃饭，这就是回调。</p>
+<p>二、Java的回调-中<br>可是细心的伙伴可能会发现，小李的代码完全写死了，这样子的场合可能适用和小明一起去吃饭，可是假如小李洗漱完不吃饭了，想和小王上网去，这样子就不适用了。其实上面是伪代码，仅仅是帮助大家理解的，真正情况下是需要利用接口来设置回调的。现在我们继续用小明和小李去吃饭的例子来讲讲接口是如何使用的。</p>
+<p>小明和小李相约一起去吃早饭，但是小李起的有点晚要先洗漱，等小李洗漱完成后，通知小明再一起去吃饭。小明就是类A，小李就是类B。不同的是我们新建一个吃饭的接口EatRice，接口中有个抽象方法eat()。在小明中调用这个接口，并实现eat()；小李声明这个接口对象，并且调用这个接口的抽象方法。这里可能有点绕口，不过没关系，看看例子就很清楚了。</p>
+<p>EatRice接口：</p>
+<pre><code>public interface EatRice {
+   public void eat(String food);
+}
+小明：
+
+public class XiaoMing implements EatRice{//小明
+
+   //小明和小李一起吃饭
+   public void eatFood() {
+    XiaoLi xl = new XiaoLi();
+    //A调用B的方法
+    xl.washFace(&quot;大龙虾&quot;, this);//this指的是小明这个类实现的EatRice接口
+   }
+
+   @Override
+   public void eat(String food) {
+    // TODO Auto-generated method stub
+    System.out.println(&quot;小明和小李一起去吃&quot; + food);
+   }
+}
+小李:
+
+public class XiaoLi{//小李
+   public void washFace(String food,EatRice er) {
+    System.out.println(&quot;小李要洗漱&quot;);
+        //B调用了A的方法
+    er.eat(food);
+   }
+}
+测试Demo:
+
+public class demo {
+   public static void main(String args[]) {
+    XiaoMing xm = new XiaoMing();
+    xm.eatFood();
+   }
+}</code></pre><p>测试结果：</p>
+<p>这样子就通过接口的形式实现了软编码。通过接口的形式我可以实现小李洗漱完后，和小王一起去上网。代码如下</p>
+<pre><code>public class XiaoWang implements EatRice{//小王
+
+   //小王和小李一起去上网
+   public void eatFood() {
+    XiaoLi xl = new XiaoLi();
+    //A调用B的方法
+    xl.washFace(&quot;轻舞飞扬上网&quot;, this);
+   }
+
+   @Override
+   public void eat(String bar) {
+    // TODO Auto-generated method stub
+    System.out.println(&quot;小王和小李一起去&quot; + bar);
+   }
+}</code></pre><h2 id="实例三：Tom做题"><a href="#实例三：Tom做题" class="headerlink" title="实例三：Tom做题"></a>实例三：Tom做题</h2><p>数学老师让Tom做一道题，并且Tom做题期间数学老师不用盯着Tom，而是在玩手机，等Tom把题目做完后再把答案告诉老师。</p>
+<blockquote>
+<p>1 数学老师需要Tom的一个引用，然后才能将题目发给Tom。</p>
+<p>2 数学老师需要提供一个方法以便Tom做完题目以后能够将答案告诉他。</p>
+<p>3 Tom需要数学老师的一个引用，以便Tom把答案给这位老师，而不是隔壁的体育老师。</p>
+</blockquote>
+<p>回调接口，可以理解为老师接口</p>
+<pre><code>//回调指的是A调用B来做一件事，B做完以后将结果告诉给A，这期间A可以做别的事情。
+//这个接口中有一个方法，意为B做完题目后告诉A时使用的方法。
+//所以我们必须提供这个接口以便让B来回调。
+//回调接口，
+public interface CallBack {
+    void tellAnswer(int res);
+}</code></pre><p>数学老师类</p>
+<pre><code>    //老师类实例化回调接口，即学生写完题目之后通过老师的提供的方法进行回调。
+    //那么学生如何调用到老师的方法呢，只要在学生类的方法中传入老师的引用即可。
+    //而老师需要指定学生答题，所以也要传入学生的实例。
+public class Teacher implements CallBack{
+    private Student student;
+
+    Teacher(Student student) {
+        this.student = student;
+    }
+
+    void askProblem (Student student, Teacher teacher) {
+        //main方法是主线程运行，为了实现异步回调，这里开启一个线程来操作
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                student.resolveProblem(teacher);
+            }
+        }).start();
+        //老师让学生做题以后，等待学生回答的这段时间，可以做别的事，比如玩手机.\
+        //而不需要同步等待，这就是回调的好处。
+        //当然你可以说开启一个线程让学生做题就行了，但是这样无法让学生通知老师。
+        //需要另外的机制去实现通知过程。
+        // 当然，多线程中的future和callable也可以实现数据获取的功能。
+        for (int i = 1;i &lt; 4;i ++) {
+            System.out.println(&quot;等学生回答问题的时候老师玩了 &quot; + i + &quot;秒的手机&quot;);
+        }
+    }
+
+    @Override
+    public void tellAnswer(int res) {
+        System.out.println(&quot;the answer is &quot; + res);
+    }
+}</code></pre><p>学生接口</p>
+<pre><code>    //学生的接口，解决问题的方法中要传入老师的引用，否则无法完成对具体实例的回调。
+    //写为接口的好处就是，很多个学生都可以实现这个接口，并且老师在提问题时可以通过
+    //传入List&lt;Student&gt;来聚合学生，十分方便。
+public interface Student {
+    void resolveProblem (Teacher teacher);
+}</code></pre><p>学生Tom</p>
+<pre><code>public class Tom implements Student{
+
+    @Override
+    public void resolveProblem(Teacher teacher) {
+        try {
+            //学生思考了3秒后得到了答案，通过老师提供的回调方法告诉老师。
+            Thread.sleep(3000);
+            System.out.println(&quot;work out&quot;);
+            teacher.tellAnswer(111);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }</code></pre><p>测试类</p>
+<pre><code>public class Test {
+    public static void main(String[] args) {
+        //测试
+        Student tom = new Tom();
+        Teacher lee = new Teacher(tom);
+        lee.askProblem(tom, lee);
+        //结果
+//        等学生回答问题的时候老师玩了 1秒的手机
+//        等学生回答问题的时候老师玩了 2秒的手机
+//        等学生回答问题的时候老师玩了 3秒的手机
+//        work out
+//        the answer is 111
+    }
+}</code></pre><h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://blog.csdn.net/fengye454545/article/details/80198446" target="_blank" rel="noopener">https://blog.csdn.net/fengye454545/article/details/80198446</a><br><a href="https://blog.csdn.net/xiaanming/article/details/8703708/" target="_blank" rel="noopener">https://blog.csdn.net/xiaanming/article/details/8703708/</a><br><a href="https://www.cnblogs.com/prayjourney/p/9667835.html" target="_blank" rel="noopener">https://www.cnblogs.com/prayjourney/p/9667835.html</a><br><a href="https://blog.csdn.net/qq_25652949/article/details/86572948" target="_blank" rel="noopener">https://blog.csdn.net/qq_25652949/article/details/86572948</a><br><a href="https://my.oschina.net/u/3703858/blog/1798627" target="_blank" rel="noopener">https://my.oschina.net/u/3703858/blog/1798627</a></p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/回调机制/" rel="tag"># 回调机制</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/11/MySQL/重新学习MySQL数据库11：以Java的视角来聊聊SQL注入/" rel="next" title="重新学习MySQL数据库11：以Java的视角来聊聊SQL注入">
+                <i class="fa fa-chevron-left"></i> 重新学习MySQL数据库11：以Java的视角来聊聊SQL注入
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/12/MySQL/重新学习MySQL数据库12：从实践sql语句优化开始/" rel="prev" title="重新学习MySQL数据库12：从实践sql语句优化开始">
+                重新学习MySQL数据库12：从实践sql语句优化开始 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#模块间的调用"><span class="nav-number">1.</span> <span class="nav-text">模块间的调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多线程中的“回调”"><span class="nav-number">2.</span> <span class="nav-text">多线程中的“回调”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java回调机制实战"><span class="nav-number">3.</span> <span class="nav-text">Java回调机制实战</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实例一-：-同步调用"><span class="nav-number">3.1.</span> <span class="nav-text">实例一 ： 同步调用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-同步调用代码"><span class="nav-number">3.1.1.</span> <span class="nav-text">1.1 同步调用代码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实例二：由浅入深"><span class="nav-number">4.</span> <span class="nav-text">实例二：由浅入深</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实例三：Tom做题"><span class="nav-number">5.</span> <span class="nav-text">实例三：Tom做题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">6.</span> <span class="nav-text">参考文章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">7.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">7.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">7.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

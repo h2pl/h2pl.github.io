@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="大后端,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="Qemu，KVM，Virsh傻傻的分不清原创文章，转载请注明： 转载自Itweet的博客 当你安装了一台Linux，想启动一个KVM虚拟机的时候，你会发现需要安装不同的软件，启动虚拟机的时候，有多种方法：  virsh start  kvm命令  qemu命令  qemu-kvm命令  qemu-system-x86_64命令   这些之间是什么关系呢？请先阅读上一篇《白话虚拟化技术》 有了上一篇">
+<meta name="keywords" content="大后端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="后端技术杂谈7：OpenStack的基石KVM">
+<meta property="og:url" content="http://yoursite.com/2019/10/13/后端技术杂谈/后端技术杂谈7：OpenStack的基石KVM/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="Qemu，KVM，Virsh傻傻的分不清原创文章，转载请注明： 转载自Itweet的博客 当你安装了一台Linux，想启动一个KVM虚拟机的时候，你会发现需要安装不同的软件，启动虚拟机的时候，有多种方法：  virsh start  kvm命令  qemu命令  qemu-kvm命令  qemu-system-x86_64命令   这些之间是什么关系呢？请先阅读上一篇《白话虚拟化技术》 有了上一篇">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/635909/201803/635909-20180307150620008-108720261.jpg">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/635909/201803/635909-20180307150634298-628102674.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/635909/201803/635909-20180307150654328-1662633336.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/635909/201803/635909-20180307150710177-1591777831.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/635909/201803/635909-20180307150733042-369996016.jpg">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/635909/201803/635909-20180307150801681-1586679180.jpg">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/635909/201803/635909-20180307150815111-1223973253.jpg">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/6/19/69d6aeff29b1a8ff1d9a62579ad91afb?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:23.976Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="后端技术杂谈7：OpenStack的基石KVM">
+<meta name="twitter:description" content="Qemu，KVM，Virsh傻傻的分不清原创文章，转载请注明： 转载自Itweet的博客 当你安装了一台Linux，想启动一个KVM虚拟机的时候，你会发现需要安装不同的软件，启动虚拟机的时候，有多种方法：  virsh start  kvm命令  qemu命令  qemu-kvm命令  qemu-system-x86_64命令   这些之间是什么关系呢？请先阅读上一篇《白话虚拟化技术》 有了上一篇">
+<meta name="twitter:image" content="https://images2018.cnblogs.com/blog/635909/201803/635909-20180307150620008-108720261.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/13/后端技术杂谈/后端技术杂谈7：OpenStack的基石KVM/">
+
+
+
+
+
+  <title>后端技术杂谈7：OpenStack的基石KVM | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/13/后端技术杂谈/后端技术杂谈7：OpenStack的基石KVM/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">后端技术杂谈7：OpenStack的基石KVM</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-13T15:07:26+08:00">
+                2019-10-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/后端技术/" itemprop="url" rel="index">
+                    <span itemprop="name">后端技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/13/后端技术杂谈/后端技术杂谈7：OpenStack的基石KVM/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/13/后端技术杂谈/后端技术杂谈7：OpenStack的基石KVM/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><h1 id="Qemu，KVM，Virsh傻傻的分不清"><a href="#Qemu，KVM，Virsh傻傻的分不清" class="headerlink" title="Qemu，KVM，Virsh傻傻的分不清"></a><a href="https://www.cnblogs.com/popsuper1982/p/8522535.html" target="_blank" rel="noopener">Qemu，KVM，Virsh傻傻的分不清</a></h1><p>原创文章，转载请注明： 转载自<a href="https://link.juejin.im/?target=http%3A%2F%2Fwww.itweet.cn" target="_blank" rel="noopener">Itweet</a>的博客</p>
+<p>当你安装了一台Linux，想启动一个KVM虚拟机的时候，你会发现需要安装不同的软件，启动虚拟机的时候，有多种方法：</p>
+<ul>
+<li><p>virsh start</p>
+</li>
+<li><p>kvm命令</p>
+</li>
+<li><p>qemu命令</p>
+</li>
+<li><p>qemu-kvm命令</p>
+</li>
+<li><p>qemu-system-x86_64命令</p>
+</li>
+</ul>
+<p>这些之间是什么关系呢？请先阅读上一篇《<a href="https://blog.csdn.net/a724888/article/details/80996570" target="_blank" rel="noopener">白话虚拟化技术</a>》</p>
+<p>有了上一篇的基础，我们就能说清楚来龙去脉。</p>
+<p>KVM（Kernel-based Virtual Machine的英文缩写）是内核内建的虚拟机。有点类似于 Xen ，但更追求更简便的运作，比如运行此虚拟机，仅需要加载相应的 kvm 模块即可后台待命。和 Xen 的完整模拟不同的是，KVM 需要芯片支持虚拟化技术（英特尔的 VT 扩展或者 AMD 的 AMD-V 扩展）。</p>
+<p>首先看qemu，其中关键字emu，全称emulator，模拟器，所以单纯使用qemu是采用的完全虚拟化的模式。</p>
+<p>Qemu向Guest OS模拟CPU，也模拟其他的硬件，GuestOS认为自己和硬件直接打交道，其实是同Qemu模拟出来的硬件打交道，Qemu将这些指令转译给真正的硬件。由于所有的指令都要从Qemu里面过一手，因而性能比较差</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180307150620008-108720261.jpg" alt></p>
+<p>按照上一次的理论，完全虚拟化是非常慢的，所以要使用硬件辅助虚拟化技术Intel-VT，AMD-V，所以需要CPU硬件开启这个标志位，一般在BIOS里面设置。查看是否开启</p>
+<p>对于Intel CPU 可用命令 grep “vmx” /proc/cpuinfo 判断</p>
+<p>对于AMD CPU 可用命令 grep “svm” /proc/cpuinfo 判断</p>
+<p>当确认开始了标志位之后，通过KVM，GuestOS的CPU指令不用经过Qemu转译，直接运行，大大提高了速度。</p>
+<p>所以KVM在内核里面需要有一个模块，来设置当前CPU是Guest OS在用，还是Host OS在用。</p>
+<p>查看内核模块中是否含有kvm, ubuntu默认加载这些模块</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180307150634298-628102674.png" alt></p>
+<p>KVM内核模块通过/dev/kvm暴露接口，用户态程序可以通过ioctl来访问这个接口，例如书写下面的程序</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180307150654328-1662633336.png" alt></p>
+<p>Qemu将KVM整合进来，通过ioctl调用/dev/kvm接口，将有关CPU指令的部分交由内核模块来做，就是qemu-kvm (qemu-system-XXX)</p>
+<p>Qemu-kvm对kvm的整合从release_0_5_1开始有branch，在1.3.0正式merge到master</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180307150710177-1591777831.png" alt></p>
+<p>qemu和kvm整合之后，CPU的性能问题解决了，另外Qemu还会模拟其他的硬件，如Network, Disk，同样全虚拟化的方式也会影响这些设备的性能。</p>
+<p>于是qemu采取半虚拟化或者类虚拟化的方式，让Guest OS加载特殊的驱动来做这件事情。</p>
+<p>例如网络需要加载virtio_net，存储需要加载virtio_blk，Guest需要安装这些半虚拟化驱动，GuestOS知道自己是虚拟机，所以数据直接发送给半虚拟化设备，经过特殊处理，例如排队，缓存，批量处理等性能优化方式，最终发送给真正的硬件，一定程度上提高了性能。</p>
+<p>至此整个关系如下：</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180307150733042-369996016.jpg" alt></p>
+<p>qemu-kvm会创建Guest OS，当需要执行CPU指令的时候，通过/dev/kvm调用kvm内核模块，通过硬件辅助虚拟化方式加速。如果需要进行网络和存储访问，则通过类虚拟化或者直通Pass through的方式，通过加载特殊的驱动，加速访问网络和存储资源。</p>
+<p>然而直接用qemu或者qemu-kvm或者qemu-system-xxx的少，大多数还是通过virsh启动，virsh属于libvirt工具，libvirt是目前使用最为广泛的对KVM虚拟机进行管理的工具和API，可不止管理KVM。</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180307150801681-1586679180.jpg" alt></p>
+<p>Libvirt分服务端和客户端，Libvirtd是一个daemon进程，是服务端，可以被本地的virsh调用，也可以被远程的virsh调用，virsh相当于客户端。</p>
+<p>Libvirtd调用qemu-kvm操作虚拟机，有关CPU虚拟化的部分，qemu-kvm调用kvm的内核模块来实现</p>
+<p><img src="https://images2018.cnblogs.com/blog/635909/201803/635909-20180307150815111-1223973253.jpg" alt></p>
+<p>这下子，整个相互关系才搞清楚了。</p>
+<p>虽然使用virsh创建虚拟机相对简单，但是为了探究虚拟机的究竟如何使用，下一次，我们来解析一下如何裸使用qemu-kvm来创建一台虚拟机，并且能上网。</p>
+<p>如果搭建使用过vmware桌面版或者virtualbox桌面版，创建一个能上网的虚拟机非常简单，但是其实背后做了很多事情，下一次我们裸用qemu-kvm，全部使用手工配置，看创建虚拟机都做了哪些事情。</p>
+<p>本章节我们主要介绍通过VMware技术虚拟出相关的Linux软件环境，在Linux系统中，安装KVM虚拟化软件，实实在在的去实践一下KVM到底是一个什么样的技术？</p>
+<h2 id="Kvm虚拟化技术实践"><a href="#Kvm虚拟化技术实践" class="headerlink" title="Kvm虚拟化技术实践"></a>Kvm虚拟化技术实践</h2><h3 id="VMware虚拟机支持Kvm虚拟化技术？"><a href="#VMware虚拟机支持Kvm虚拟化技术？" class="headerlink" title="VMware虚拟机支持Kvm虚拟化技术？"></a>VMware虚拟机支持Kvm虚拟化技术？</h3><p>在VMware创建的虚拟机中，默认不支持Kvm虚拟化技术，需要芯片级的扩展支持，幸好VMware提供完整的解决方案，可以通过修改虚拟化引擎。</p>
+<p>VMware软件版本信息，<code>VMware® Workstation 11.0.0 build-2305329</code></p>
+<p>首先，你需要启动VMware软件，新建一个<code>CentOS 6.x</code>类型的虚拟机，正常安装完成，这个虚拟机默认的<code>虚拟化引擎</code>，<code>首选模式</code>为”自动”。</p>
+<p>如果想让我们的VMware虚拟化出来的CentOS虚拟机支持KVM虚拟化，我们需要修改它支持的<code>虚拟化引擎</code>,打开新建的虚拟机，虚拟机状态必须处于<code>关闭</code>状态，通过双击<code>编辑虚拟机设置</code> &gt; <code>硬件</code> ，选择<code>处理器</code>菜单，右边会出现<code>虚拟化引擎</code>区域，选择<code>首选模式</code>为 <em>Intel Tv-x/EPT或AMD-V/RVI</em>,接下来勾选<code>虚拟化Intel Tv-x/EPT或AMD-V/RVI(v)</code>，点击<code>确定</code>。</p>
+<p>KVM需要虚拟机宿主（host）的处理器带有虚拟化支持（对于Intel处理器来说是VT-x，对于AMD处理器来说是AMD-V）。你可以通过以下命令来检查你的处理器是否支持虚拟化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep --color -E &apos;(vmx|svm)&apos; /proc/cpuinfo</span><br></pre></td></tr></table></figure>
+
+<p>如果运行后没有显示，那么你的处理器不支持硬件虚拟化，你不能使用KVM。</p>
+<ul>
+<li>注意: 如果是硬件服务器，您可能需要在BIOS中启用虚拟化支持，参考 <a href="https://link.juejin.im/?target=http%3A%2F%2Fwww.itweet.cn%2Fblog%2F2016%2F06%2F14%2FPrivate%2520Cloud%2520personal%2520workstation" target="_blank" rel="noopener">Private Cloud personal workstation</a></li>
+</ul>
+<h3 id="安装Kvm虚拟化软件"><a href="#安装Kvm虚拟化软件" class="headerlink" title="安装Kvm虚拟化软件"></a>安装Kvm虚拟化软件</h3><p>安装kvm虚拟化软件，我们需要一个Linux操作系统环境，这里我们选择的Linux版本为<code>CentOS release 6.8 (Final)</code>，在这个VMware虚拟化出来的虚拟机中安装kvm虚拟化软件，具体步骤如下：</p>
+<ul>
+<li><p>首选安装epel源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm -ivh http://mirrors.ustc.edu.cn/fedora/epel/6/x86_64/epel-release-6-8.noarch.rpm</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装kvm虚拟化软件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install qemu-kvm qeum-kvm-tools virt-manager libvirt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动kvm虚拟化软件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /etc/init.d/libvirtd start</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>启动成功之后你可以通过<code>/etc/init.d/libvirtd status</code>查看启动状态，这个时候，kvm会自动生成一个本地网桥 <code>virbr0</code>，可以通过命令查看他的详细信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ifconfig virbr0virbr0    Link encap:Ethernet  HWaddr 52:54:00:D7:23:AD            inet addr:192.168.122.1  Bcast:192.168.122.255  Mask:255.255.255.0          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1          RX packets:0 errors:0 dropped:0 overruns:0 frame:0          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0          collisions:0 txqueuelen:0           RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)</span><br></pre></td></tr></table></figure>
+
+<p>KVM默认使用NAT网络模式。虚拟机获取一个私有 IP（例如 192.168.122.0/24 网段的），并通过本地主机的NAT访问外网。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># brctl showbridge name     bridge id               STP enabled     interfacesvirbr0          8000.525400d723ad       yes             virbr0-nic</span><br></pre></td></tr></table></figure>
+
+<p>创建一个本地网桥virbr0，包括两个端口：virbr0-nic 为网桥内部端口，vnet0 为虚拟机网关端口（192.168.122.1）。</p>
+<p>虚拟机启动后，配置 192.168.122.1（vnet0）为网关。所有网络操作均由本地主机系统负责。</p>
+<p>DNS/DHCP的实现，本地主机系统启动一个 dnsmasq 来负责管理。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps aux|grep dnsmasq</span><br></pre></td></tr></table></figure>
+
+<p><code>注意：</code> 启动libvirtd之后自动启动iptables，并且写上一些默认规则。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># iptables -nvL -t natChain PREROUTING (policy ACCEPT 304 packets, 38526 bytes) pkts bytes target     prot opt in     out     source               destination          Chain POSTROUTING (policy ACCEPT 7 packets, 483 bytes) pkts bytes target     prot opt in     out     source               destination             0     0 MASQUERADE  tcp  --  *      *       192.168.122.0/24    !192.168.122.0/24    masq ports: 1024-65535     0     0 MASQUERADE  udp  --  *      *       192.168.122.0/24    !192.168.122.0/24    masq ports: 1024-65535     0     0 MASQUERADE  all  --  *      *       192.168.122.0/24    !192.168.122.0/24     Chain OUTPUT (policy ACCEPT 7 packets, 483 bytes) pkts bytes target     prot opt in     out     source               destination</span><br></pre></td></tr></table></figure>
+
+<h3 id="kvm创建虚拟机"><a href="#kvm创建虚拟机" class="headerlink" title="kvm创建虚拟机"></a>kvm创建虚拟机</h3><p>上传一个镜像文件：<code>CentOS-6.6-x86_64-bin-DVD1.iso</code></p>
+<p>通过<code>qemu</code>创建一个raw格式的文件(注：QEMU使用的镜像文件：qcow2与raw，它们都是QEMU(KVM)虚拟机使用的磁盘文件格式)，大小为5G。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-img create -f raw /data/Centos-6.6-x68_64.raw 5G</span><br></pre></td></tr></table></figure>
+
+<p>查看创建的raw磁盘格式文件信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-img info /data/Centos-6.6-x68_64.raw  image: /data/Centos-6.6-x68_64.rawfile format: rawvirtual size: 5.0G (5368709120 bytes)disk size: 0</span><br></pre></td></tr></table></figure>
+
+<p>启动，kvm虚拟机，进行操作系统安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">virt-install  --virt-type kvm --name CentOS-6.6-x86_64 --ram 512 --cdrom /data/CentOS-6.6-x86_64-bin-DVD1.iso --disk path=/data/Centos-6.6-x68_64.raw --network network=default --graphics vnc,listen=0.0.0.0 --noautoconsole</span><br></pre></td></tr></table></figure>
+
+<p>启动之后，通过命令查看启动状态，默认会在操作系统开一个<code>5900</code>的端口，可以通过虚拟机远程管理软件<code>vnc</code>客户端连接，然后可视化的方式安装操作系统。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># netstat -ntlp|grep 5900tcp        0      0 0.0.0.0:5900                0.0.0.0:*                   LISTEN      2504/qemu-kvm</span><br></pre></td></tr></table></figure>
+
+<p><code>注意</code>：kvm安装的虚拟机，不确定是那一台，在后台就是一个进程，每增加一台端口号+1，第一次创建的为5900！</p>
+<h3 id="虚拟机远程管理软件"><a href="#虚拟机远程管理软件" class="headerlink" title="虚拟机远程管理软件"></a>虚拟机远程管理软件</h3><p>我们可以使用虚拟机远程管理软件VNC进行操作系统的安装，我使用过的两款不错的虚拟机远程管理终端软件，一个是Windows上使用，一个在Mac上为了方便安装一个Google Chrome插件后即可开始使用，软件信息 <code>Tightvnc</code> 或者 <code>VNC[@Viewer](https://link.juejin.im/?target=https%3A%2F%2Fgithub.com%2FViewer &quot;@Viewer&quot;) for Google Chrome</code></p>
+<p>如果你和我一样使用的是<code>Google Chrome</code>提供的VNC插件，使用方式，在<code>Address</code>输入框中输入，宿主机IP:59000,<code>Picture Quality</code>选择框使用默认选项，点击<code>Connect</code>进入到安装操作系统的界面，你可以安装常规的方式进行安装，等待系统安装完成重启，然后就可以正常使用kvm虚拟化出来的操作系统了。</p>
+<p><code>Tightvnc</code>软件的使用，请参考官方手册。</p>
+<ul>
+<li>Tightvnc下载地址：<a href="https://link.juejin.im/?target=http%3A%2F%2Fwww.tightvnc.com%2Fdownload.php" target="_blank" rel="noopener">www.tightvnc.com/download.ph…</a></li>
+<li>Tightvnc下载地址：<a href="https://link.juejin.im/?target=http%3A%2F%2Fwww.tightvnc.com%2Fdownload%2F2.7.10%2Ftightvnc-2.7.10-setup-64bit.msi" target="_blank" rel="noopener">www.tightvnc.com/download/2.…</a></li>
+<li>Tightvnc下载地址：<a href="https://link.juejin.im/?target=http%3A%2F%2Fwww.tightvnc.com%2Fdownload%2F2.7.10%2Ftightvnc-2.7.10-setup-32bit.msi" target="_blank" rel="noopener">www.tightvnc.com/download/2.…</a></li>
+</ul>
+<h3 id="KVM虚拟机管理"><a href="#KVM虚拟机管理" class="headerlink" title="KVM虚拟机管理"></a>KVM虚拟机管理</h3><p>kvm虚拟机是通过virsh命令进行管理的，libvirt是Linux上的虚拟化库，是长期稳定的C语言API，支持KVM/QEMU、Xen、LXC等主流虚拟化方案。链接：<a href="https://link.juejin.im/?target=http%3A%2F%2Flibvirt.org%2F" target="_blank" rel="noopener">libvirt.org/</a><br>virsh是Libvirt对应的shell命令。</p>
+<p>查看所有虚拟机状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">virsh list --all</span><br></pre></td></tr></table></figure>
+
+<p>启动虚拟机</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">virsh start [NAME]</span><br></pre></td></tr></table></figure>
+
+<p>列表启动状态的虚拟机</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">virsh list</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>常用命令查看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">virsh --help|more less</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="libvirt虚拟机配置文件"><a href="#libvirt虚拟机配置文件" class="headerlink" title="libvirt虚拟机配置文件"></a>libvirt虚拟机配置文件</h3><p>虚拟机libvirt配置文件在<code>/etc/libvirt/qemu</code>路径下，生产中我们需要去修改它的网络信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># lltotal 8-rw-------. 1 root root 3047 Oct 19  2016 Centos-6.6-x68_64.xmldrwx------. 3 root root 4096 Oct 17  2016 networks</span><br></pre></td></tr></table></figure>
+
+<p><code>注意</code>：不能直接修改xml文件，需要通过提供的命令！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">virsh edit Centos-6.6-x68_64</span><br></pre></td></tr></table></figure>
+
+<p>kvm三种网络类型,桥接、NAT、仅主机模式，默认NAT模式,其他机器无法登陆，生产中一般选择桥接。</p>
+<h3 id="监控kvm虚拟机"><a href="#监控kvm虚拟机" class="headerlink" title="监控kvm虚拟机"></a>监控kvm虚拟机</h3><ul>
+<li>安装软件监控虚拟机</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install virt-top -y</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看虚拟机资源使用情况</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">virt-top virt-top 23:46:39 - x86_64 1/1CPU 3392MHz 3816MB1 domains, 1 active, 1 running, 0 sleeping, 0 paused, 0 inactive D:0 O:0 X:0CPU: 5.6%  Mem: 2024 MB (2024 MB by guests)    ID S RDRQ WRRQ RXBY TXBY %CPU %MEM    TIME   NAME                                                                                                     1 R    0    1   52    0  5.6 53.0   5:16.15 centos-6.8</span><br></pre></td></tr></table></figure>
+
+<h3 id="KVM修改NAT模式为桥接-案例"><a href="#KVM修改NAT模式为桥接-案例" class="headerlink" title="KVM修改NAT模式为桥接[案例]"></a>KVM修改NAT模式为桥接[案例]</h3><p>在开始案例之前，需要知道的必要信息，宿主机IP是<code>192.168.2.200</code>，操作系统版本<code>Centos-6.6-x68_64</code>。</p>
+<p>启动虚拟网卡</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifup eth0</span><br></pre></td></tr></table></figure>
+
+<p>这里网卡是NAT模式，可以上网，ping通其他机器，但是其他机器无法登陆！</p>
+<p>宿主机查看网卡信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brctl show ifconfig virbr0 ifconfig vnet0</span><br></pre></td></tr></table></figure>
+
+<p><em>实现网桥，在kvm宿主机完成</em></p>
+<ul>
+<li>步骤1，创建一个网桥，新建网桥连接到eth0,删除eth0,让新的网桥拥有eth0的ip</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brctl addbr br0  #创建一个网桥 brctl show       #显示网桥信息 brctl addif br0 eth0 &amp;&amp; ip addr del dev eth0 192.168.2.200/24 &amp;&amp; ifconfig br0 192.168.2.200/24 up brctl show      #查看结果ifconfig br0    #验证br0是否成功取代了eth0的IP</span><br></pre></td></tr></table></figure>
+
+<p><code>注意</code>: 这里的IP地址为 <em>宿主机ip</em></p>
+<ul>
+<li>修改虚拟机桥接到br0网卡，在宿主机修改</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">virsh list --all ps aux |grep kvm virsh stop Centos-6.6-x68_64 virsh list --all</span><br></pre></td></tr></table></figure>
+
+<p>修改虚拟机桥接到宿主机，修改52行type为<code>bridge</code>，第54行bridge为<code>br0</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># virsh edit Centos-6.6-x68_64  # 命令 52     &lt;interface type=&apos;network&apos;&gt;     53       &lt;mac address=&apos;52:54:00:2a:2d:60&apos;/&gt;     54       &lt;source network=&apos;default&apos;/&gt;     55            56     &lt;/interface&gt; 修改为：52     &lt;interface type=&apos;bridge&apos;&gt;     53       &lt;mac address=&apos;52:54:00:2a:2d:60&apos;/&gt;     54       &lt;source bridge=&apos;br0&apos;/&gt;     55            56     &lt;/interface&gt;</span><br></pre></td></tr></table></figure>
+
+<p>启动虚拟机，看到启动前后，桥接变化，vnet0被桥接到了br0</p>
+<p>启动前：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># brctl showbridge name     bridge id               STP enabled     interfacesbr0             8000.000c29f824c9       no              eth0virbr0          8000.525400353d8e       yes             virbr0-nic</span><br></pre></td></tr></table></figure>
+
+<p>启动后：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># virsh start CentOS-6.6-x86_64Domain CentOS-6.6-x86_64 started # brctl show                   bridge name     bridge id               STP enabled     interfacesbr0             8000.000c29f824c9       no              eth0                                                        vnet0virbr0          8000.525400353d8e       yes             virbr0-nic</span><br></pre></td></tr></table></figure>
+
+<p>Vnc登陆后，修改ip地址，看到dhcp可以使用，被桥接到现有的ip段，ip是自动获取,而且是和宿主机在同一个IP段.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ifup eth0</span><br></pre></td></tr></table></figure>
+
+<p>从宿主机登陆此服务器，可以成功。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ssh 192.168.2.108root@192.168.2.108&apos;s password: Last login: Sat Jan 30 12:40:28 2016</span><br></pre></td></tr></table></figure>
+
+<p>从同一网段其他服务器登陆此虚拟机,也可以成功,至此让kvm管理的服务器能够桥接上网就完成了，在生产环境中，桥接上网是非常必要的。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过kvm相关的命令来创建虚拟机，安装和调试是非常必要的，因为现有的很多私有云，公有云产品都使用到了kvm这样的技术，学习基本的kvm使用对维护<code>openstack</code>集群有非常要的作用，其次所有的<code>openstack image</code>制作也得通过kvm这样的底层技术来完成，最后上传到<code>openstack</code>的镜像管理模块，才能开始通过<code>openstack image</code>生成云主机。</p>
+<p>到此，各位应该能够体会到，其实kvm是一个非常底层和核心的虚拟化技术，而openstack就是对<code>kvm</code>这样的技术进行了一个上层封装，可以非常方便，可视化的操作和维护<code>kvm</code>虚拟机，这就是现在<code>牛</code>上天的<code>云计算</code>技术最底层技术栈，具体怎么实现请看下图。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/6/19/69d6aeff29b1a8ff1d9a62579ad91afb?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="Libvirt_support"></p>
+<p>如上图，没有<code>openstack</code>我们依然可以通过，<code>libvirt</code>来对虚拟机进行操作，只不过比较繁琐和难以维护。通过openstack就可以非常方便的进行底层虚拟化技术的管理、维护、使用。</p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/大后端/" rel="tag"># 大后端</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/13/后端技术杂谈/后端技术杂谈6：白话虚拟化技术/" rel="next" title="后端技术杂谈6：白话虚拟化技术">
+                <i class="fa fa-chevron-left"></i> 后端技术杂谈6：白话虚拟化技术
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/13/后端技术杂谈/后端技术杂谈8：OpenStack架构设计/" rel="prev" title="后端技术杂谈8：OpenStack架构设计">
+                后端技术杂谈8：OpenStack架构设计 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Qemu，KVM，Virsh傻傻的分不清"><span class="nav-number">1.</span> <span class="nav-text">Qemu，KVM，Virsh傻傻的分不清</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Kvm虚拟化技术实践"><span class="nav-number">1.1.</span> <span class="nav-text">Kvm虚拟化技术实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#VMware虚拟机支持Kvm虚拟化技术？"><span class="nav-number">1.1.1.</span> <span class="nav-text">VMware虚拟机支持Kvm虚拟化技术？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Kvm虚拟化软件"><span class="nav-number">1.1.2.</span> <span class="nav-text">安装Kvm虚拟化软件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kvm创建虚拟机"><span class="nav-number">1.1.3.</span> <span class="nav-text">kvm创建虚拟机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机远程管理软件"><span class="nav-number">1.1.4.</span> <span class="nav-text">虚拟机远程管理软件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#KVM虚拟机管理"><span class="nav-number">1.1.5.</span> <span class="nav-text">KVM虚拟机管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#libvirt虚拟机配置文件"><span class="nav-number">1.1.6.</span> <span class="nav-text">libvirt虚拟机配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#监控kvm虚拟机"><span class="nav-number">1.1.7.</span> <span class="nav-text">监控kvm虚拟机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#KVM修改NAT模式为桥接-案例"><span class="nav-number">1.1.8.</span> <span class="nav-text">KVM修改NAT模式为桥接[案例]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.1.9.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">1.2.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">1.2.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">1.2.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

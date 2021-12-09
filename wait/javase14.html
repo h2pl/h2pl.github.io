@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="前言：本文教你怎么用javac和java命令，讲解了classpath的原理，以及如何利用脚本（shell或bat）进行项目部署，离开ide，还原最本质的Java编译运行过程，并用简单的实例展示这些用法。  具体代码在我的GitHub中可以找到  https://github.com/h2pl/MyTech  文章首发于我的个人博客：  https://h2pl.github.io/2018/05">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Java基础14：离开IDE，使用java和javac构建项目">
+<meta property="og:url" content="http://yoursite.com/wait/javase14.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="前言：本文教你怎么用javac和java命令，讲解了classpath的原理，以及如何利用脚本（shell或bat）进行项目部署，离开ide，还原最本质的Java编译运行过程，并用简单的实例展示这些用法。  具体代码在我的GitHub中可以找到  https://github.com/h2pl/MyTech  文章首发于我的个人博客：  https://h2pl.github.io/2018/05">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2021-11-24T08:03:24.081Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java基础14：离开IDE，使用java和javac构建项目">
+<meta name="twitter:description" content="前言：本文教你怎么用javac和java命令，讲解了classpath的原理，以及如何利用脚本（shell或bat）进行项目部署，离开ide，还原最本质的Java编译运行过程，并用简单的实例展示这些用法。  具体代码在我的GitHub中可以找到  https://github.com/h2pl/MyTech  文章首发于我的个人博客：  https://h2pl.github.io/2018/05">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/wait/javase14.html">
+
+
+
+
+
+  <title>Java基础14：离开IDE，使用java和javac构建项目 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline">Java基础14：离开IDE，使用java和javac构建项目</h1>
+
+
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <div id="vip-container"><p>前言：本文教你怎么用javac和java命令，讲解了classpath的原理，以及如何利用脚本（shell或bat）进行项目部署，离开ide，还原最本质的Java编译运行过程，并用简单的实例展示这些用法。 </p>
+<p>具体代码在我的GitHub中可以找到</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/MyTech" target="_blank" rel="noopener">https://github.com/h2pl/MyTech</a></p>
+</blockquote>
+<p>文章首发于我的个人博客：</p>
+<blockquote>
+<p><a href="https://h2pl.github.io/2018/05/01/javase14" target="_blank" rel="noopener">https://h2pl.github.io/2018/05/01/javase14</a></p>
+</blockquote>
+<p>更多关于Java后端学习的内容请到我的CSDN博客上查看：</p>
+<blockquote>
+<p><a href="https://blog.csdn.net/a724888" target="_blank" rel="noopener">https://blog.csdn.net/a724888</a></p>
+</blockquote>
+<a id="more"></a>
+
+<blockquote>
+<p>IDE是把双刃剑，它可以什么都帮你做了，你只要敲几行代码，点几下鼠标，程序就跑起来了，用起来相当方便。</p>
+<p>你不用去关心它后面做了些什么，执行了哪些命令，基于什么原理。然而也是这种过分的依赖往往让人散失了最基本的技能，当到了一个没有IDE的地方，你便觉得无从下手，给你个代码都不知道怎么去跑。好比给你瓶水，你不知道怎么打开去喝，然后活活给渴死。</p>
+<p>之前用惯了idea，Java文件编译运行的命令基本忘得一干二净。</p>
+<p>现在项目出了原型，放到服务器上去测试，SSH一登陆上服务器就傻眼了，都是命令行，以前程序图标什么的都成了浮云，程序放上去了不知道怎么去编译运行，只能补补课了，下面做下补课笔记。</p>
+</blockquote>
+<h2 id="javac命令初窥"><a href="#javac命令初窥" class="headerlink" title="javac命令初窥"></a>javac命令初窥</h2><p>注：以下红色标记的参数在下文中有所讲解。</p>
+<p>本部分参考<a href="https://www.cnblogs.com/xiazdong/p/3216220.html" target="_blank" rel="noopener">https://www.cnblogs.com/xiazdong/p/3216220.html</a></p>
+<p>用法: javac <options> <source files></options></p>
+<p>其中, 可能的选项包括:</p>
+<blockquote>
+<p>  -g                         生成所有调试信息</p>
+<p>  -g:none                    不生成任何调试信息</p>
+<p>  -g:{lines,vars,source}     只生成某些调试信息</p>
+<p>  -nowarn                    不生成任何警告</p>
+<p>  -verbose                   输出有关编译器正在执行的操作的消息</p>
+<p>  -deprecation               输出使用已过时的 API 的源位置</p>
+<p>  -classpath &lt;路径&gt;            指定查找用户类文件和注释处理程序的位置</p>
+<p>  -cp &lt;路径&gt;                   指定查找用户类文件和注释处理程序的位置</p>
+<p>  -sourcepath &lt;路径&gt;           指定查找输入源文件的位置</p>
+<p>  -bootclasspath &lt;路径&gt;        覆盖引导类文件的位置</p>
+<p>  -extdirs &lt;目录&gt;              覆盖所安装扩展的位置</p>
+<p>  -endorseddirs &lt;目录&gt;         覆盖签名的标准路径的位置</p>
+<p>  -proc:{none,only}          控制是否执行注释处理和/或编译。</p>
+<p>  -processor <class1>[,<class2>,<class3>…] 要运行的注释处理程序的名称; 绕过默认的搜索进程</class3></class2></class1></p>
+<p>  -processorpath &lt;路径&gt;        指定查找注释处理程序的位置</p>
+<p>  -d &lt;目录&gt;                    指定放置生成的类文件的位置</p>
+<p>  -s &lt;目录&gt;                    指定放置生成的源文件的位置</p>
+<p>  -implicit:{none,class}     指定是否为隐式引用文件生成类文件</p>
+<p>  -encoding &lt;编码&gt;             指定源文件使用的字符编码</p>
+<p>  -source &lt;发行版&gt;              提供与指定发行版的源兼容性</p>
+<p>  -target &lt;发行版&gt;              生成特定 VM 版本的类文件</p>
+<p>  -version                   版本信息</p>
+<p>  -help                      输出标准选项的提要</p>
+<p>  -A关键字[=值]                  传递给注释处理程序的选项</p>
+<p>  -X                         输出非标准选项的提要</p>
+<p>  -J&lt;标记&gt;                     直接将 &lt;标记&gt; 传递给运行时系统</p>
+<p>  -Werror                    出现警告时终止编译</p>
+<p>  @&lt;文件名&gt;                     从文件读取选项和文件名</p>
+</blockquote>
+<p>在详细介绍javac命令之前，先看看这个classpath是什么</p>
+<h2 id="classpath是什么"><a href="#classpath是什么" class="headerlink" title="classpath是什么"></a>classpath是什么</h2><p>在dos下编译java程序，就要用到classpath这个概念，尤其是在没有设置环境变量的时候。classpath就是存放.class等编译后文件的路径。</p>
+<p>javac：如果当前你要编译的java文件中引用了其它的类(比如说：继承)，但该引用类的.class文件不在当前目录下，这种情况下就需要在javac命令后面加上-classpath参数，通过使用以下三种类型的方法 来指导编译器在编译的时候去指定的路径下查找引用类。</p>
+<blockquote>
+<p>(1).绝对路径：javac -classpath c:/junit3.8.1/junit.jar   Xxx.java</p>
+<p>(2).相对路径：javac -classpath ../junit3.8.1/Junit.javr  Xxx.java</p>
+<p>(3).系统变量：javac -classpath %CLASSPATH% Xxx.java (注意：%CLASSPATH%表示使用系统变量CLASSPATH的值进行查找，这里假设Junit.jar的路径就包含在CLASSPATH系统变量中)</p>
+</blockquote>
+<h2 id="IDE中的classpath"><a href="#IDE中的classpath" class="headerlink" title="IDE中的classpath"></a>IDE中的classpath</h2><p>对于一个普通的Javaweb项目，一般有这样的配置：</p>
+<blockquote>
+<p>1 WEB-INF/classes,lib才是classpath，WEB-INF/ 是资源目录, 客户端不能直接访问。</p>
+<p>2、WEB-INF/classes目录存放src目录java文件编译之后的class文件，xml、properties等资源配置文件，这是一个定位资源的入口。</p>
+<p>3、引用classpath路径下的文件，只需在文件名前加classpath:</p>
+<p><param-value>classpath:applicationContext-*.xml</param-value> </p>
+<!-- 引用其子目录下的文件,如 -->
+<p><param-value>classpath:context/conf/controller.xml</param-value></p>
+<p>4、lib和classes同属classpath，两者的访问优先级为: lib&gt;classes。</p>
+<p>5、classpath 和 classpath* 区别：</p>
+<p>classpath：只会到你的class路径中查找找文件;<br>classpath*：不仅包含class路径，还包括jar文件中(class路径)进行查找。</p>
+</blockquote>
+<p>总结：</p>
+<p>(1).何时需要使用-classpath：当你要编译或执行的类引用了其它的类，但被引用类的.class文件不在当前目录下时，就需要通过-classpath来引入类</p>
+<p>(2).何时需要指定路径：当你要编译的类所在的目录和你执行javac命令的目录不是同一个目录时，就需要指定源文件的路径(CLASSPATH是用来指定.class路径的，不是用来指定.java文件的路径的) </p>
+<h2 id="Java项目和Java-web项目的本质区别"><a href="#Java项目和Java-web项目的本质区别" class="headerlink" title="Java项目和Java web项目的本质区别"></a>Java项目和Java web项目的本质区别</h2><p>（看清IDE及classpath本质）</p>
+<blockquote>
+<p>现在只是说说Java Project和Web Project，那么二者有区别么？回答：没有！都是Java语言的应用，只是应用场合不同罢了，那么他们的本质到底是什么？</p>
+</blockquote>
+<blockquote>
+<p>回答：编译后路径！虚拟机执行的是class文件而不是java文件，那么我们不管是何种项目都是写的java文件，怎么就不一样了呢？分成java和web两种了呢？</p>
+</blockquote>
+<blockquote>
+<p>从.classpath文件入手来看，这个文件在每个项目目录下都是存在的，很少有人打开看吧，那么我们就来一起看吧。这是一个XML文件，使用文本编辑器打开即可。</p>
+</blockquote>
+<p>这里展示一个web项目的.classpath</p>
+<p>Xml代码</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;classpath&gt;
+&lt;classpathentry kind=&quot;src&quot; path=&quot;src&quot;/&gt;
+&lt;classpathentry kind=&quot;src&quot; path=&quot;resources&quot;/&gt;
+&lt;classpathentry kind=&quot;src&quot; path=&quot;test&quot;/&gt;
+&lt;classpathentry kind=&quot;con&quot; path=&quot;org.eclipse.jdt.launching.JRE_CONTAINER&quot;/&gt;
+&lt;classpathentry kind=&quot;lib&quot; path=&quot;lib/servlet-api.jar&quot;/&gt;
+&lt;classpathentry kind=&quot;lib&quot; path=&quot;webapp/WEB-INF/lib/struts2-core-2.1.8.1.jar&quot;/&gt;
+     ……
+&lt;classpathentry kind=&quot;output&quot; path=&quot;webapp/WEB-INF/classes&quot;/&gt;
+&lt;/classpath&gt;</code></pre><blockquote>
+<p>XML文档包含一个根元素，就是classpath，类路径，那么这里面包含了什么信息呢？子元素是classpathentry，kind属性区别了种 类信息，src源码，con你看看后面的path就知道是JRE容器的信息。lib是项目依赖的第三方类库，output是src编译后的位置。</p>
+</blockquote>
+<blockquote>
+<p>既然是web项目，那么就是WEB-INF/classes目录，可能用MyEclipse的同学会说他们那里是WebRoot或者是WebContext而不是webapp，有区别么？回答：完全没有！</p>
+</blockquote>
+<blockquote>
+<p>既然看到了编译路径的本来面目后，还区分什么java项目和web项目么？回答:不区分！普通的java 项目你这样写就行了：<classpathentry kind="output" path="bin">，看看Eclipse是不是这样生成的？这个问题解决了吧。</classpathentry></p>
+</blockquote>
+<blockquote>
+<p>再说说webapp目录命名的问题，这个无所谓啊，web项目是要发布到服务器上的对吧，那么服务器读取的是类文件和页面文件吧，它不管源文件，它也无法去理解源文件。那么webapp目录的命名有何关系呢？只要让服务器找到不就行了。</p>
+</blockquote>
+<h2 id="Javac命令详解"><a href="#Javac命令详解" class="headerlink" title="Javac命令详解"></a>Javac命令详解</h2><h3 id="g、-g-none、-g-lines-vars-source"><a href="#g、-g-none、-g-lines-vars-source" class="headerlink" title="-g、-g:none、-g:{lines,vars,source}"></a>-g、-g:none、-g:{lines,vars,source}</h3><blockquote>
+<p>•-g：在生成的class文件中包含所有调试信息（行号、变量、源文件）<br>•-g:none ：在生成的class文件中不包含任何调试信息。</p>
+<p>这个参数在javac编译中是看不到什么作用的，因为调试信息都在class文件中，而我们看不懂这个class文件。</p>
+<p>为了看出这个参数的作用，我们在eclipse中进行实验。在eclipse中，我们经常做的事就是“debug”，而在debug的时候，我们会<br>•加入“断点”，这个是靠-g:lines起作用，如果不记录行号，则不能加断点。<br>•在“variables”窗口中查看当前的变量，如下图所示，这是靠-g:vars起作用，否则不能查看变量信息。<br>•在多个文件之间来回调用，比如 A.java的main()方法中调用了B.java的fun()函数，而我想看看程序进入fun()后的状态，这是靠-g:source，如果没有这个参数，则不能查看B.java的源代码。</p>
+</blockquote>
+<h3 id="bootclasspath、-extdirs"><a href="#bootclasspath、-extdirs" class="headerlink" title="-bootclasspath、-extdirs"></a>-bootclasspath、-extdirs</h3><blockquote>
+<p>-bootclasspath和-extdirs 几乎不需要用的，因为他是用来改变 “引导类”和“扩展类”。<br>•引导类(组成Java平台的类)：Java\jdk1.7.0_25\jre\lib\rt.jar等，用-bootclasspath设置。<br>•扩展类：Java\jdk1.7.0_25\jre\lib\ext目录中的文件，用-extdirs设置。<br>•用户自定义类：用-classpath设置。</p>
+<p>我们用-verbose编译后出现的“类文件的搜索路径”，就是由上面三个路径组成，如下：</p>
+</blockquote>
+<pre><code>[类文件的搜索路径: C:\Java\jdk1.7.0_25\jre\lib\resources.jar,C:\Java\jdk1.7.0_25
+
+\jre\lib\rt.jar,C:\Java\jdk1.7.0_25\jre\lib\sunrsasign.jar,C:\Java\jdk1.7.0_25\j
+
+re\lib\jsse.jar,C:\Java\jdk1.7.0_25\jre\lib\jce.jar,C:\Java\jdk1.7.0_25\jre\lib\
+
+charsets.jar,C:\Java\jdk1.7.0_25\jre\lib\jfr.jar,C:\Java\jdk1.7.0_25\jre\classes
+
+,C:\Java\jdk1.7.0_25\jre\lib\ext\access-bridge-32.jar,C:\Java\jdk1.7.0_25\jre\li
+
+b\ext\dnsns.jar,C:\Java\jdk1.7.0_25\jre\lib\ext\jaccess.jar,C:\Java\jdk1.7.0_25\
+
+jre\lib\ext\localedata.jar,C:\Java\jdk1.7.0_25\jre\lib\ext\sunec.jar,C:\Java\jdk
+
+1.7.0_25\jre\lib\ext\sunjce_provider.jar,C:\Java\jdk1.7.0_25\jre\lib\ext\sunmsca
+
+pi.jar,C:\Java\jdk1.7.0_25\jre\lib\ext\sunpkcs11.jar,C:\Java\jdk1.7.0_25\jre\lib
+\ext\zipfs.jar,..\bin]             </code></pre><p>如果利用 -bootclasspath 重新定义： javac -bootclasspath src Xxx.java，则会出现下面错误：</p>
+<p>致命错误: 在类路径或引导类路径中找不到程序包 java.lang</p>
+<h3 id="sourcepath和-classpath（-cp）"><a href="#sourcepath和-classpath（-cp）" class="headerlink" title="-sourcepath和-classpath（-cp）"></a>-sourcepath和-classpath（-cp）</h3><p>•-classpath(-cp)指定你依赖的类的class文件的查找位置。在Linux中，用“:”分隔classpath，而在windows中，用“;”分隔。<br>•-sourcepath指定你依赖的类的java文件的查找位置。</p>
+<p>举个例子，</p>
+<pre><code>public class A
+{
+    public static void main(String[] args) {
+        B b = new B();
+        b.print();
+    }
+}
+
+
+
+public class B
+{
+    public void print()
+    {
+        System.out.println(&quot;old&quot;);
+    }
+}</code></pre><p>目录结构如下：</p>
+<p>sourcepath          //此处为当前目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">|-src</span><br><span class="line">　　　　|-com</span><br><span class="line">　　　　　　|- B.java</span><br><span class="line">　　　　|- A.java</span><br><span class="line">　　|-bin</span><br><span class="line">　　　　|- B.class               //是 B.java</span><br></pre></td></tr></table></figure>
+
+<p> 编译后的类文件</p>
+<p>如果要编译 A.java，则必须要让编译器找到类B的位置，你可以指定B.class的位置，也可以是B.java的位置，也可以同时都存在。</p>
+<pre><code>javac -classpath bin src/A.java                            //查找到B.class
+
+javac -sourcepath src/com src/A.java                   //查找到B.java
+
+javac -sourcepath src/com -classpath bin src/A.java    //同时查找到B.class和B.java</code></pre><p>如果同时找到了B.class和B.java，则：<br>•如果B.class和B.java内容一致，则遵循B.class。<br>•如果B.class和B.java内容不一致，则遵循B.java，并编译B.java。</p>
+<p>以上规则可以通过 -verbose选项看出。</p>
+<h3 id="d"><a href="#d" class="headerlink" title="-d"></a>-d</h3><p>•d就是 destination，用于指定.class文件的生成目录，在eclipse中，源文件都在src中，编译的class文件都是在bin目录中。</p>
+<p>这里我用来实现一下这个功能，假设项目名称为project，此目录为当前目录，且在src/com目录中有一个Main.java文件。‘</p>
+<pre><code>package com;
+public class Main
+{
+    public static void main(String[] args) {
+        System.out.println(&quot;Hello&quot;);
+    }
+}
+
+
+
+javac -d bin src/com/Main.java</code></pre><p>上面的语句将Main.class生成在bin/com目录下。</p>
+<h3 id="implicit-none-class"><a href="#implicit-none-class" class="headerlink" title="-implicit:{none,class}"></a>-implicit:{none,class}</h3><p>•如果有文件为A.java（其中有类A），且在类A中使用了类B，类B在B.java中，则编译A.java时，默认会自动编译B.java，且生成B.class。<br>•implicit:none：不自动生成隐式引用的类文件。<br>•implicit:class（默认）：自动生成隐式引用的类文件。</p>
+<pre><code>public class A
+{
+    public static void main(String[] args) {
+        B b = new B();
+    }
+}
+
+public class B
+{
+}
+
+如果使用：
+
+
+ javac -implicit:none A.java</code></pre><p>则不会生成 B.class。</p>
+<h3 id="source和-target"><a href="#source和-target" class="headerlink" title="-source和-target"></a>-source和-target</h3><p>•-source：使用指定版本的JDK编译，比如：-source 1.4表示用JDK1.4的标准编译，如果在源文件中使用了泛型，则用JDK1.4是不能编译通过的。<br>•-target：指定生成的class文件要运行在哪个JVM版本，以后实际运行的JVM版本必须要高于这个指定的版本。</p>
+<p>javac -source 1.4 Xxx.java</p>
+<p>javac -target 1.4 Xxx.java</p>
+<h2 id="encoding"><a href="#encoding" class="headerlink" title="-encoding"></a>-encoding</h2><p>默认会使用系统环境的编码，比如我们一般用的中文windows就是GBK编码，所以直接javac时会用GBK编码，而Java文件一般要使用utf-8，如果用GBK就会出现乱码。 </p>
+<p>•指定源文件的编码格式，如果源文件是UTF-8编码的，而-encoding GBK，则源文件就变成了乱码（特别是有中文时）。</p>
+<p>javac -encoding UTF-8 Xxx.java</p>
+<h3 id="verbose"><a href="#verbose" class="headerlink" title="-verbose"></a>-verbose</h3><p>输出详细的编译信息，包括：classpath、加载的类文件信息。</p>
+<p>比如，我写了一个最简单的HelloWorld程序，在命令行中输入：</p>
+<p>D:\Java&gt;javac -verbose -encoding UTF-8 HelloWorld01.java</p>
+<p>输出：</p>
+<pre><code>[语法分析开始时间 RegularFileObject[HelloWorld01.java]]
+[语法分析已完成, 用时 21 毫秒]
+[源文件的搜索路径: .,D:\大三下\编译原理\cup\java-cup-11a.jar,E:\java\jflex\lib\J           //-sourcepath
+Flex.jar]
+[类文件的搜索路径: C:\Java\jdk1.7.0_25\jre\lib\resources.jar,C:\Java\jdk1.7.0_25      //-classpath、-bootclasspath、-extdirs
+省略............................................
+[正在加载ZipFileIndexFileObject[C:\Java\jdk1.7.0_25\lib\ct.sym(META-INF/sym/rt.j
+ar/java/lang/Object.class)]]
+[正在加载ZipFileIndexFileObject[C:\Java\jdk1.7.0_25\lib\ct.sym(META-INF/sym/rt.j
+ar/java/lang/String.class)]]
+[正在检查Demo]
+省略............................................
+[已写入RegularFileObject[Demo.class]]
+[共 447 毫秒]</code></pre><p>编写一个程序时，比如写了一句：System.out.println(“hello”)，实际上还需要加载：Object、PrintStream、String等类文件，而上面就显示了加载的全部类文件。</p>
+<h3 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h3><p>-J &lt;标记&gt;<br>•传递一些信息给 Java Launcher.</p>
+<pre><code>javac -J-Xms48m   Xxx.java          //set the startup memory to 48M.</code></pre><p>-@&lt;文件名&gt;</p>
+<blockquote>
+<p>如果同时需要编译数量较多的源文件(比如1000个)，一个一个编译是不现实的（当然你可以直接 javac *.java ），比较好的方法是：将你想要编译的源文件名都写在一个文件中（比如sourcefiles.txt），其中每行写一个文件名，如下所示：</p>
+<p>HelloWorld01.java<br>HelloWorld02.java<br>HelloWorld03.java</p>
+</blockquote>
+<p>则使用下面的命令：</p>
+<p>javac @sourcefiles.txt</p>
+<p>编译这三个源文件。</p>
+<h2 id="使用javac构建项目"><a href="#使用javac构建项目" class="headerlink" title="使用javac构建项目"></a>使用javac构建项目</h2><p>这部分参考：<br><a href="https://blog.csdn.net/mingover/article/details/57083176" target="_blank" rel="noopener">https://blog.csdn.net/mingover/article/details/57083176</a></p>
+<p>一个简单的javac编译</p>
+<p>新建两个文件夹,src和 build<br>src/com/yp/test/HelloWorld.java<br>build/</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">├─build</span><br><span class="line">└─src</span><br><span class="line">    └─com</span><br><span class="line">        └─yp</span><br><span class="line">            └─test</span><br><span class="line">                    HelloWorld.java</span><br></pre></td></tr></table></figure>
+
+<p>java文件非常简单</p>
+<pre><code>package com.yp.test;
+public class HelloWorld {
+
+    public static void main(String[] args) {
+        System.out.println(&quot;helloWorld&quot;);
+    }
+}</code></pre><p>编译:<br>javac src/com/yp/test/HelloWorld.java -d build</p>
+<p>-d 表示编译到 build文件夹下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">查看build文件夹</span><br><span class="line">├─build</span><br><span class="line">│  └─com</span><br><span class="line">│      └─yp</span><br><span class="line">│          └─test</span><br><span class="line">│                  HelloWorld.class</span><br><span class="line">│</span><br><span class="line">└─src</span><br><span class="line">    └─com</span><br><span class="line">        └─yp</span><br><span class="line">            └─test</span><br><span class="line">                    HelloWorld.java</span><br></pre></td></tr></table></figure>
+
+<p>运行文件</p>
+<blockquote>
+<p>E:\codeplace\n_learn\java\javacmd&gt; java com/yp/test/HelloWorld.class<br>错误: 找不到或无法加载主类 build.com.yp.test.HelloWorld.class</p>
+<p>运行时要指定main<br>E:\codeplace\n_learn\java\javacmd\build&gt; java com.yp.test.HelloWorld<br>helloWorld</p>
+</blockquote>
+<p>如果引用到多个其他的类，应该怎么做呢 ？</p>
+<blockquote>
+<p>编译</p>
+<p>E:\codeplace\n_learn\java\javacmd&gt;javac src/com/yp/test/HelloWorld.java -sourcepath src -d build -g<br>1<br>-sourcepath 表示 从指定的源文件目录中找到需要的.java文件并进行编译。<br>也可以用-cp指定编译好的class的路径<br>运行,注意:运行在build目录下</p>
+<p>E:\codeplace\n_learn\java\javacmd\build&gt;java com.yp.test.HelloWorld</p>
+</blockquote>
+<p>怎么打成jar包?</p>
+<blockquote>
+<p>生成:<br>E:\codeplace\n_learn\java\javacmd\build&gt;jar cvf h.jar *<br>运行:<br>E:\codeplace\n_learn\java\javacmd\build&gt;java h.jar<br>错误: 找不到或无法加载主类 h.jar</p>
+</blockquote>
+<blockquote>
+<p>这个错误是没有指定main类，所以类似这样来指定:<br>E:\codeplace\n_learn\java\javacmd\build&gt;java -cp h.jar com.yp.test.HelloWorld</p>
+</blockquote>
+<p>生成可以运行的jar包</p>
+<p>需要指定jar包的应用程序入口点，用-e选项：</p>
+<pre><code>E:\codeplace\n_learn\java\javacmd\build&gt; jar cvfe h.jar com.yp.test.HelloWorld *
+已添加清单
+正在添加: com/(输入 = 0) (输出 = 0)(存储了 0%)
+正在添加: com/yp/(输入 = 0) (输出 = 0)(存储了 0%)
+正在添加: com/yp/test/(输入 = 0) (输出 = 0)(存储了 0%)
+正在添加: com/yp/test/entity/(输入 = 0) (输出 = 0)(存储了 0%)
+正在添加: com/yp/test/entity/Cat.class(输入 = 545) (输出 = 319)(压缩了 41%)
+正在添加: com/yp/test/HelloWorld.class(输入 = 844) (输出 = 487)(压缩了 42%)</code></pre><p>直接运行</p>
+<pre><code>java -jar h.jar
+
+额外发现 
+指定了Main类后，jar包里面的 META-INF/MANIFEST.MF 是这样的， 比原来多了一行Main-Class….
+Manifest-Version: 1.0
+Created-By: 1.8.0 (Oracle Corporation)
+Main-Class: com.yp.test.HelloWorld</code></pre><p>如果类里有引用jar包呢?</p>
+<p>先下一个jar包 这里直接下 log4j </p>
+<pre><code>* main函数改成
+
+import com.yp.test.entity.Cat;
+import org.apache.log4j.Logger;
+
+public class HelloWorld {
+
+    static Logger log = Logger.getLogger(HelloWorld.class);
+
+    public static void main(String[] args) {
+        Cat c = new Cat(&quot;keyboard&quot;);
+        log.info(&quot;这是log4j&quot;);
+        System.out.println(&quot;hello,&quot; + c.getName());
+    }
+
+}</code></pre><p>现的文件是这样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">├─build</span><br><span class="line">├─lib</span><br><span class="line">│      log4j-1.2.17.jar</span><br><span class="line">│</span><br><span class="line">└─src</span><br><span class="line">    └─com</span><br><span class="line">        └─yp</span><br><span class="line">            └─test</span><br><span class="line">                │  HelloWorld.java</span><br><span class="line">                │</span><br><span class="line">                └─entity</span><br><span class="line">                        Cat.java</span><br></pre></td></tr></table></figure>
+
+<pre><code>这个时候 javac命令要接上 -cp ./lib/*.jar
+E:\codeplace\n_learn\java\javacmd&gt;javac -encoding &quot;utf8&quot; src/com/yp/test/HelloWorld.java -sourcepath src -d build -g -cp ./lib/*.jar
+
+
+运行要加上-cp, -cp 选项貌似会把工作目录给换了， 所以要加上 ;../build
+E:\codeplace\n_learn\java\javacmd\build&gt;java -cp ../lib/log4j-1.2.17.jar;../build com.yp.test.HelloWorld</code></pre><p>结果:</p>
+<pre><code>log4j:WARN No appenders could be found for logger(com.yp.test.HelloWorld).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+hello,keyboard</code></pre><p>由于没有 log4j的配置文件，所以提示上面的问题,往 build 里面加上 log4j.xml</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;!DOCTYPE log4j:configuration SYSTEM &quot;log4j.dtd&quot;&gt;
+&lt;log4j:configuration xmlns:log4j=&apos;http://jakarta.apache.org/log4j/&apos;&gt;
+    &lt;appender name=&quot;stdout&quot; class=&quot;org.apache.log4j.ConsoleAppender&quot;&gt;
+        &lt;layout class=&quot;org.apache.log4j.PatternLayout&quot;&gt;
+            &lt;param name=&quot;ConversionPattern&quot; value=&quot;%d{ABSOLUTE} %-5p [%c{1}] %m%n&quot; /&gt;
+        &lt;/layout&gt;
+    &lt;/appender&gt;
+
+    &lt;root&gt;
+        &lt;level value=&quot;info&quot; /&gt;
+        &lt;appender-ref ref=&quot;stdout&quot; /&gt;
+    &lt;/root&gt;
+&lt;/log4j:configuration&gt;</code></pre><p>再运行</p>
+<pre><code>E:\codeplace\n_learn\java\javacmd&gt;java -cp lib/log4j-1.2.17.jar;build com.yp.tes t.HelloWorld
+15:19:57,359 INFO  [HelloWorld] 这是log4j
+hello,keyboard</code></pre><p>说明:<br>这个log4j配置文件，习惯的做法是放在src目录下, 在编译过程中 copy到build中的,但根据ant的做法，不是用javac的，而是用来处理,我猜测javac是不能copy的，如果想在命令行直接 使用，应该是用cp命令主动去执行 copy操作</p>
+<p>ok 一个简单的java 工程就运行完了<br>但是  貌似有些繁琐,  需要手动键入 java文件 以及相应的jar包 很是麻烦,<br>so 可以用 shell 来脚本来简化相关操作<br>shell 文件整理如下:</p>
+<pre><code>#!/bin/bash  
+echo &quot;build start&quot;  
+
+JAR_PATH=libs  
+BIN_PATH=bin  
+SRC_PATH=src  
+
+# java文件列表目录  
+SRC_FILE_LIST_PATH=src/sources.list  
+
+#生所有的java文件列表 放入列表文件中 
+rm -f $SRC_PATH/sources  
+find $SRC_PATH/ -name *.java &gt; $SRC_FILE_LIST_PATH  
+
+#删除旧的编译文件 生成bin目录  
+rm -rf $BIN_PATH/  
+mkdir $BIN_PATH/  
+
+#生成依赖jar包 列表  
+for file in  ${JAR_PATH}/*.jar;  
+do  
+jarfile=${jarfile}:${file}  
+done  
+echo &quot;jarfile = &quot;$jarfile  
+
+#编译 通过-cp指定所有的引用jar包，将src下的所有java文件进行编译
+javac -d $BIN_PATH/ -cp $jarfile @$SRC_FILE_LIST_PATH  
+
+#运行 通过-cp指定所有的引用jar包，指定入口函数运行
+java -cp $BIN_PATH$jarfile com.zuiapps.danmaku.server.Main  </code></pre><blockquote>
+<p>有一点需要注意的是,  javac -d $BIN_PATH/ -cp $jarfile @$SRC_FILE_LIST_PATH<br>在要编译的文件很多时候，一个个敲命令会显得很长，也不方便修改，</p>
+</blockquote>
+<blockquote>
+<p>可以把要编译的源文件列在文件中，在文件名前加@，这样就可以对多个文件进行编译，</p>
+</blockquote>
+<blockquote>
+<p>以上就是吧java文件放到 $SRC_FILE_LIST_PATH 中去了</p>
+</blockquote>
+<pre><code>编译 :
+     1. 需要编译所有的java文件
+     2. 依赖的java 包都需要加入到 classpath 中去
+     3. 最后设置 编译后的 class 文件存放目录  即 -d bin/
+     4. java文件过多是可以使用  @$SRC_FILE_LIST_PATH 把他们放到一个文件中去
+运行:
+   1.需要吧 编译时设置的bin目录和 所有jar包加入到 classpath 中去</code></pre><h2 id="javap"><a href="#javap" class="headerlink" title="javap"></a>javap</h2><blockquote>
+<p>javap是jdk自带的一个工具，可以对代码反编译，也可以查看java编译器生成的字节码。</p>
+<p>情况下，很少有人使用javap对class文件进行反编译，因为有很多成熟的反编译工具可以使用，比如jad。但是，javap还可以查看java编译器为我们生成的字节码。通过它，可以对照源代码和字节码，从而了解很多编译器内部的工作。</p>
+<p>javap命令分解一个class文件，它根据options来决定到底输出什么。如果没有使用options,那么javap将会输出包，类里的protected和public域以及类里的所有方法。javap将会把它们输出在标准输出上。来看这个例子，先编译(javac)下面这个类。</p>
+</blockquote>
+<pre><code>import java.awt.*;
+import java.applet.*;
+
+public class DocFooter extends Applet {
+        String date;
+        String email;
+
+        public void init() {
+                resize(500,100);
+                date = getParameter(&quot;LAST_UPDATED&quot;);
+                email = getParameter(&quot;EMAIL&quot;);
+        }
+}</code></pre><p>在命令行上键入javap DocFooter后，输出结果如下</p>
+<p>Compiled from “DocFooter.java”</p>
+<pre><code>public class DocFooter extends java.applet.Applet {
+  java.lang.String date;
+  java.lang.String email;
+  public DocFooter();
+  public void init();
+}</code></pre><p>如果加入了-c，即javap -c DocFooter，那么输出结果如下</p>
+<p>Compiled from “DocFooter.java”</p>
+<pre><code>public class DocFooter extends java.applet.Applet {
+  java.lang.String date;
+
+  java.lang.String email;
+
+  public DocFooter();
+    Code:
+       0: aload_0       
+       1: invokespecial #1                  // Method java/applet/Applet.&quot;&lt;init&gt;&quot;:()V
+       4: return       
+
+  public void init();
+    Code:
+       0: aload_0       
+       1: sipush        500
+       4: bipush        100
+       6: invokevirtual #2                  // Method resize:(II)V
+       9: aload_0       
+      10: aload_0       
+      11: ldc           #3                  // String LAST_UPDATED
+      13: invokevirtual #4                  // Method getParameter:(Ljava/lang/String;)Ljava/lang/String;
+      16: putfield      #5                  // Field date:Ljava/lang/String;
+      19: aload_0       
+      20: aload_0       
+      21: ldc           #6                  // String EMAIL
+      23: invokevirtual #4                  // Method getParameter:(Ljava/lang/String;)Ljava/lang/String;
+      26: putfield      #7                  // Field email:Ljava/lang/String;
+      29: return       
+
+}</code></pre><p>上面输出的内容就是字节码。</p>
+<p>用法摘要</p>
+<p>-help 帮助<br>-l 输出行和变量的表<br>-public 只输出public方法和域<br>-protected 只输出public和protected类和成员<br>-package 只输出包，public和protected类和成员，这是默认的<br>-p -private 输出所有类和成员<br>-s 输出内部类型签名<br>-c 输出分解后的代码，例如，类中每一个方法内，包含java字节码的指令，<br>-verbose 输出栈大小，方法参数的个数<br>-constants 输出静态final常量<br>总结</p>
+<p>javap可以用于反编译和查看编译器编译后的字节码。平时一般用javap -c比较多，该命令用于列出每个方法所执行的JVM指令，并显示每个方法的字节码的实际作用。可以通过字节码和源代码的对比，深入分析java的编译原理，了解和解决各种Java原理级别的问题。</p>
+</div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+        
+      </div>
+      
+      
+      
+    </div>
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#javac命令初窥"><span class="nav-number">1.</span> <span class="nav-text">javac命令初窥</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#classpath是什么"><span class="nav-number">2.</span> <span class="nav-text">classpath是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IDE中的classpath"><span class="nav-number">3.</span> <span class="nav-text">IDE中的classpath</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java项目和Java-web项目的本质区别"><span class="nav-number">4.</span> <span class="nav-text">Java项目和Java web项目的本质区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Javac命令详解"><span class="nav-number">5.</span> <span class="nav-text">Javac命令详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#g、-g-none、-g-lines-vars-source"><span class="nav-number">5.1.</span> <span class="nav-text">-g、-g:none、-g:{lines,vars,source}</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bootclasspath、-extdirs"><span class="nav-number">5.2.</span> <span class="nav-text">-bootclasspath、-extdirs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sourcepath和-classpath（-cp）"><span class="nav-number">5.3.</span> <span class="nav-text">-sourcepath和-classpath（-cp）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#d"><span class="nav-number">5.4.</span> <span class="nav-text">-d</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#implicit-none-class"><span class="nav-number">5.5.</span> <span class="nav-text">-implicit:{none,class}</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#source和-target"><span class="nav-number">5.6.</span> <span class="nav-text">-source和-target</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#encoding"><span class="nav-number">6.</span> <span class="nav-text">-encoding</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#verbose"><span class="nav-number">6.1.</span> <span class="nav-text">-verbose</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他命令"><span class="nav-number">6.2.</span> <span class="nav-text">其他命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用javac构建项目"><span class="nav-number">7.</span> <span class="nav-text">使用javac构建项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#javap"><span class="nav-number">8.</span> <span class="nav-text">javap</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

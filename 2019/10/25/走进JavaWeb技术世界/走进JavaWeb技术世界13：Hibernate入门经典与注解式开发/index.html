@@ -1,0 +1,2078 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="hibernate,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《走进JavaWeb技术世界》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰">
+<meta name="keywords" content="hibernate">
+<meta property="og:type" content="article">
+<meta property="og:title" content="走进JavaWeb技术世界13：Hibernate入门经典与注解式开发">
+<meta property="og:url" content="http://yoursite.com/2019/10/25/走进JavaWeb技术世界/走进JavaWeb技术世界13：Hibernate入门经典与注解式开发/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《走进JavaWeb技术世界》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:24.008Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="走进JavaWeb技术世界13：Hibernate入门经典与注解式开发">
+<meta name="twitter:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《走进JavaWeb技术世界》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/25/走进JavaWeb技术世界/走进JavaWeb技术世界13：Hibernate入门经典与注解式开发/">
+
+
+
+
+
+  <title>走进JavaWeb技术世界13：Hibernate入门经典与注解式开发 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/25/走进JavaWeb技术世界/走进JavaWeb技术世界13：Hibernate入门经典与注解式开发/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">走进JavaWeb技术世界13：Hibernate入门经典与注解式开发</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-25T15:56:26+08:00">
+                2019-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/" itemprop="url" rel="index">
+                    <span itemprop="name">Java技术江湖</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/JavaWeb/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaWeb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/25/走进JavaWeb技术世界/走进JavaWeb技术世界13：Hibernate入门经典与注解式开发/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/25/走进JavaWeb技术世界/走进JavaWeb技术世界13：Hibernate入门经典与注解式开发/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章首发于我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>本文是微信公众号【Java技术江湖】的《走进JavaWeb技术世界》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透彻，也整合了很多我认为不错的技术博客内容，引用其中了一些比较好的博客文章，如有侵权，请联系作者。</p>
+<p>该系列博文会告诉你如何从入门到进阶，从servlet到框架，从ssm再到SpringBoot，一步步地学习JavaWeb基础知识，并上手进行实战，接着了解JavaWeb项目中经常要使用的技术和组件，包括日志组件、Maven、Junit，等等内容，以便让你更完整地了解整个JavaWeb技术体系，形成自己的知识框架。为了更好地总结和检验你的学习成果，本系列文章也会提供每个知识点对应的面试题以及参考答案。</p>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+<p><strong>文末赠送8000G的Java架构师学习资料，需要的朋友可以到文末了解领取方式，资料包括Java基础、进阶、项目和架构师等免费学习资料，更有数据库、分布式、微服务等热门技术学习视频，内容丰富，兼顾原理和实践，另外也将赠送作者原创的Java学习指南、Java程序员面试指南等干货资源）</strong></p>
+<a id="more"></a>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本博文主要讲解介绍Hibernate框架，ORM的概念和Hibernate入门，相信你们看了就会使用Hibernate了!</p>
+<p>什么是Hibernate框架？<br>Hibernate是一种ORM框架，全称为 Object_Relative DateBase-Mapping，在Java对象与关系数据库之间建立某种映射，以实现直接存取Java对象！</p>
+<p>为什么要使用Hibernate？<br>既然Hibernate是关于Java对象和关系数据库之间的联系的话，也就是我们MVC中的数据持久层-&gt;在编写程序中的DAO层…</p>
+<p>首先，我们来回顾一下我们在DAO层写程序的历程吧：</p>
+<p>在DAO层操作XML，将数据封装到XML文件上，读写XML文件数据实现CRUD<br>在DAO层使用原生JDBC连接数据库，实现CRUD<br>嫌弃JDBC的ConnectionStatementResultSet等对象太繁琐，使用对原生JDBC的封装组件–&gt;DbUtils组件<br>我们来看看使用DbUtils之后，程序的代码是怎么样的：</p>
+<pre><code>public class CategoryDAOImpl implements zhongfucheng.dao.CategoryDao {
+
+    @Override
+    public void addCategory(Category category) {
+
+        QueryRunner queryRunner = new QueryRunner(Utils2DB.getDataSource());
+
+        String sql = &quot;INSERT INTO category (id, name, description) VALUES(?,?,?)&quot;;
+        try {
+            queryRunner.update(sql, new Object[]{category.getId(), category.getName(), category.getDescription()});
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Category findCategory(String id) {
+        QueryRunner queryRunner = new QueryRunner(Utils2DB.getDataSource());
+        String sql = &quot;SELECT * FROM category WHERE id=?&quot;;
+
+        try {
+            Category category = (Category) queryRunner.query(sql, id, new BeanHandler(Category.class));
+
+            return category;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public List&lt;Category&gt; getAllCategory() {
+        QueryRunner queryRunner = new QueryRunner(Utils2DB.getDataSource());
+        String sql = &quot;SELECT * FROM category&quot;;
+
+        try {
+            List&lt;Category&gt; categories = (List&lt;Category&gt;) queryRunner.query(sql, new BeanListHandler(Category.class));
+
+            return categories;
+        } catch (SQLException e) {
+            throw  new RuntimeException(e);
+        }
+
+    }
+}</code></pre><p>其实使用DbUtils时，DAO层中的代码编写是很有规律的。</p>
+<p>当插入数据的时候，就将JavaBean对象拆分，拼装成SQL语句<br>当查询数据的时候，用SQL把数据库表中的列组合，拼装成JavaBean对象<br>也就是说：javaBean对象和数据表中的列存在映射关系!如果程序能够自动生成SQL语句就好了….那么Hibernate就实现了这个功能！</p>
+<p>简单来说：我们使用Hibernate框架就不用我们写很多繁琐的SQL语句，从而简化我们的开发！</p>
+<h2 id="ORM概述"><a href="#ORM概述" class="headerlink" title="ORM概述"></a>ORM概述</h2><p>在介绍Hibernate的时候，说了Hibernate是一种ORM的框架。那什么是ORM呢？ORM是一种思想</p>
+<p>O代表的是Objcet<br>R代表的是Relative<br>M代表的是Mapping<br>ORM-&gt;对象关系映射….ORM关注是对象与数据库中的列的关系</p>
+<p>Hibernate快速入门<br>学习一个框架无非就是三个步骤：</p>
+<p>引入jar开发包<br>配置相关的XML文件<br>熟悉API<br>引入相关jar包<br>我们使用的是Hibernate3.6的版本</p>
+<p>hibernate3.jar核心 + required 必须引入的(6个) + jpa 目录 + 数据库驱动包</p>
+<p>编写对象和对象映射<br>编写一个User对象-&gt;User.java</p>
+<pre><code>public class User {
+
+    private int id;
+    private String username;
+    private String password;
+    private String cellphone;
+
+    //各种setter和getter
+}</code></pre><p>编写对象映射-&gt;User.hbm.xml。一般它和JavaBean对象放在同一目录下</p>
+<p>我们是不知道该XML是怎么写的，可以搜索一下Hibernate文件夹中后缀为.hbm.xml。看看它们是怎么写的。然后复制一份过来</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;!DOCTYPE hibernate-mapping PUBLIC 
+    &quot;-//Hibernate/Hibernate Mapping DTD 3.0//EN&quot;
+    &quot;http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd&quot;&gt;
+
+&lt;!-- 
+
+  This mapping demonstrates content-based discrimination for the
+  table-per-hierarchy mapping strategy, using a formula
+  discriminator.
+
+--&gt;
+
+&lt;hibernate-mapping 
+    package=&quot;org.hibernate.test.array&quot;&gt;
+
+    &lt;class name=&quot;A&quot; lazy=&quot;true&quot; table=&quot;aaa&quot;&gt;
+
+        &lt;id name=&quot;id&quot;&gt;
+            &lt;generator class=&quot;native&quot;/&gt;
+        &lt;/id&gt;
+
+
+            &lt;key column=&quot;a_id&quot;/&gt;
+            &lt;list-index column=&quot;idx&quot;/&gt;
+            &lt;one-to-many class=&quot;B&quot;/&gt;
+
+
+    &lt;/class&gt;
+
+    &lt;class name=&quot;B&quot; lazy=&quot;true&quot; table=&quot;bbb&quot;&gt;
+        &lt;id name=&quot;id&quot;&gt;
+            &lt;generator class=&quot;native&quot;/&gt;
+        &lt;/id&gt;
+    &lt;/class&gt;
+
+&lt;/hibernate-mapping&gt;</code></pre><p>在上面的模板上修改～下面会具体讲解这个配置文件!</p>
+<pre><code>&lt;!--在domain包下--&gt;
+    &lt;hibernate-mapping package=&quot;zhongfucheng.domain&quot;&gt;
+
+        &lt;!--类名为User，表名也为User--&gt;
+        &lt;class name=&quot;User&quot;  table=&quot;user&quot;&gt;
+
+            &lt;!--主键映射，属性名为id，列名也为id--&gt;
+            &lt;id name=&quot;id&quot; column=&quot;id&quot;&gt;
+                &lt;!--根据底层数据库主键自动增长--&gt;
+                &lt;generator class=&quot;native&quot;/&gt;
+
+            &lt;/id&gt;
+
+            &lt;!--非主键映射，属性和列名一一对应--&gt;
+            &lt;property name=&quot;username&quot; column=&quot;username&quot;/&gt;
+            &lt;property name=&quot;cellphone&quot; column=&quot;cellphone&quot;/&gt;
+            &lt;property name=&quot;password&quot; column=&quot;password&quot;/&gt;
+        &lt;/class&gt;
+    &lt;/hibernate-mapping&gt;</code></pre><p>如果使用Intellij Idea生成的Hibernate可以指定生成出主配置文件hibernate.cfg.xml，它是要放在src目录下的</p>
+<p>如果不是自动生成的，我们可以在Hibernate的hibernate-distribution-3.6.0.Final\project\etc这个目录下可以找到</p>
+<p>它长得这个样子：</p>
+<pre><code>&lt;?xml version=&apos;1.0&apos; encoding=&apos;utf-8&apos;?&gt;
+&lt;!DOCTYPE hibernate-configuration PUBLIC
+        &quot;-//Hibernate/Hibernate Configuration DTD//EN&quot;
+        &quot;http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd&quot;&gt;
+&lt;hibernate-configuration&gt;
+    &lt;session-factory&gt;
+        &lt;property name=&quot;connection.url.&quot;/&gt;
+        &lt;property name=&quot;connection.driver_class&quot;/&gt;
+        &lt;property name=&quot;connection.username&quot;/&gt;
+        &lt;property name=&quot;connection.password&quot;/&gt;
+        &lt;!-- DB schema will be updated if needed --&gt;
+        &lt;!-- &lt;property name=&quot;hbm2ddl.auto&quot;&gt;update&lt;/property&gt; --&gt;
+    &lt;/session-factory&gt;
+&lt;/hibernate-configuration&gt;</code></pre><p>通过上面的模板进行修改，后面会有对该配置文件进行讲解！</p>
+<pre><code>&lt;hibernate-configuration&gt;
+    &lt;!-- 通常，一个session-factory节点代表一个数据库 --&gt;
+    &lt;session-factory&gt;
+
+        &lt;!-- 1\. 数据库连接配置 --&gt;
+        &lt;property name=&quot;hibernate.connection.driver_class&quot;&gt;com.mysql.jdbc.Driver&lt;/property&gt;
+        &lt;property name=&quot;hibernate.connection.url&quot;&gt;jdbc:mysql:///zhongfucheng&lt;/property&gt;
+        &lt;property name=&quot;hibernate.connection.username&quot;&gt;root&lt;/property&gt;
+        &lt;property name=&quot;hibernate.connection.password&quot;&gt;root&lt;/property&gt;
+        &lt;!--
+            数据库方法配置， hibernate在运行的时候，会根据不同的方言生成符合当前数据库语法的sql
+         --&gt;
+        &lt;property name=&quot;hibernate.dialect&quot;&gt;org.hibernate.dialect.MySQL5Dialect&lt;/property&gt;
+
+        &lt;!-- 2\. 其他相关配置 --&gt;
+        &lt;!-- 2.1 显示hibernate在运行时候执行的sql语句 --&gt;
+        &lt;property name=&quot;hibernate.show_sql&quot;&gt;true&lt;/property&gt;
+        &lt;!-- 2.2 格式化sql --&gt;
+        &lt;property name=&quot;hibernate.format_sql&quot;&gt;true&lt;/property&gt;
+        &lt;!-- 2.3 自动建表  --&gt;
+        &lt;property name=&quot;hibernate.hbm2ddl.auto&quot;&gt;create&lt;/property&gt;
+
+        &lt;!--3\. 加载所有映射--&gt;
+        &lt;mapping resource=&quot;zhongfucheng/domain/User.hbm.xml&quot;/&gt;
+
+    &lt;/session-factory&gt;
+&lt;/hibernate-configuration&gt;</code></pre><h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><pre><code>package zhongfucheng.domain;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.classic.Session;
+
+/**
+ * Created by ozc on 2017/5/6.
+ */
+public class App {
+    public static void main(String[] args) {
+
+        //创建对象
+        User user = new User();
+        user.setPassword(&quot;123&quot;);
+        user.setCellphone(&quot;122222&quot;);
+        user.setUsername(&quot;nihao&quot;);
+
+        //获取加载配置管理类
+        Configuration configuration = new Configuration();
+
+        //不给参数就默认加载hibernate.cfg.xml文件，
+        configuration.configure();
+
+        //创建Session工厂对象
+        SessionFactory factory = configuration.buildSessionFactory();
+
+        //得到Session对象
+        Session session = factory.openSession();
+
+        //使用Hibernate操作数据库，都要开启事务,得到事务对象
+        Transaction transaction = session.getTransaction();
+
+        //开启事务
+        transaction.begin();
+
+        //把对象添加到数据库中
+        session.save(user);
+
+        //提交事务
+        transaction.commit();
+
+        //关闭Session
+        session.close();
+    }
+}</code></pre><p>值得注意的是：JavaBean的主键类型只能是int类型，因为在映射关系中配置是自动增长的，String类型是不能自动增长的。如果是你设置了String类型，又使用了自动增长，那么就会报出下面的错误！</p>
+<pre><code>Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Table &apos;zhongfucheng.user&apos; does</code></pre><p>执行完程序后，Hibernate就为我们创建对应的表，并把数据存进了数据库了</p>
+<p>我们看看快速入门案例的代码用到了什么对象吧，然后一个一个讲解</p>
+<pre><code>public static void main(String[] args) {
+
+    //创建对象
+    User user = new User();
+    user.setPassword(&quot;123&quot;);
+    user.setCellphone(&quot;122222&quot;);
+    user.setUsername(&quot;nihao&quot;);
+
+    //获取加载配置管理类
+    Configuration configuration = new Configuration();
+
+    //不给参数就默认加载hibernate.cfg.xml文件，
+    configuration.configure();
+
+    //创建Session工厂对象
+    SessionFactory factory = configuration.buildSessionFactory();
+
+    //得到Session对象
+    Session session = factory.openSession();
+
+    //使用Hibernate操作数据库，都要开启事务,得到事务对象
+    Transaction transaction = session.getTransaction();
+
+    //开启事务
+    transaction.begin();
+
+    //把对象添加到数据库中
+    session.save(user);
+
+    //提交事务
+    transaction.commit();
+
+    //关闭Session
+    session.close();
+}</code></pre><h2 id="相关类"><a href="#相关类" class="headerlink" title="相关类"></a>相关类</h2><p>Configuration<br>配置管理类：主要管理配置文件的一个类</p>
+<p>它拥有一个子类AnnotationConfiguration，也就是说：我们可以使用注解来代替XML配置文件来配置相对应的信息</p>
+<p>configure方法<br>configure()方法用于加载配置文件</p>
+<p>加载主配置文件的方法</p>
+<p>如果指定参数，那么加载参数的路径配置文件<br>如果不指定参数，默认加载src/目录下的hibernate.cfg.xml</p>
+<p>buildSessionFactory方法<br>buildSessionFactory()用于创建Session工厂</p>
+<p>SessionFactory<br>SessionFactory–&gt;Session的工厂，也可以说代表了hibernate.cfg.xml这个文件…hibernate.cfg.xml的就有<session-factory>这么一个节点</session-factory></p>
+<p>openSession方法<br>创建一个Session对象</p>
+<p>getCurrentSession方法<br>创建Session对象或取出Session对象</p>
+<p>Session<br>Session是Hibernate最重要的对象，Session维护了一个连接（Connection），只要使用Hibernate操作数据库，都需要用到Session对象</p>
+<p>通常我们在DAO层中都会有以下的方法，Session也为我们提供了对应的方法来实现！</p>
+<pre><code>public interface IEmployeeDao {
+
+    void save(Employee emp);
+    void update(Employee emp);
+    Employee findById(Serializable id);
+    List&lt;Employee&gt; getAll();
+    List&lt;Employee&gt; getAll(String employeeName);
+    List&lt;Employee&gt; getAll(int index, int count);
+    void delete(Serializable id);
+
+}</code></pre><p>更新操作</p>
+<p>我们在快速入门中使用到了save(Objcet o)方法，调用了这个方法就把对象保存在数据库之中了。Session对象还提供着其他的方法来进行对数据库的更新</p>
+<p>session.save(obj); 【保存一个对象】<br>session.update(obj); 【更新一个对象】<br>session.saveOrUpdate(obj); 【保存或者更新的方法】</p>
+<p>没有设置主键，执行保存；<br>有设置主键，执行更新操作;<br>如果设置主键不存在报错！<br>我们来使用一下update()方法吧….既然是更新操作了，那么肯定需要设置主键的，不设置主键，数据库怎么知道你要更新什么。将id为1的记录修改成如下：</p>
+<pre><code>user.setId(1);
+user.setPassword(&quot;qwer&quot;);
+user.setCellphone(&quot;1111&quot;);
+user.setUsername(&quot;zhongfucheng&quot;);</code></pre><p>主键查询</p>
+<p>通过主键来查询数据库的记录，从而返回一个JavaBean对象</p>
+<p>session.get(javaBean.class, int id); 【传入对应的class和id就可以查询】<br>session.load(javaBean.class, int id); 【支持懒加载】<br>User重写toString()来看一下效果：</p>
+<pre><code>User user1 = (User) session.get(User.class, 1);
+ System.out.println(user1);</code></pre><p>HQL查询</p>
+<p>HQL:hibernate query language 即hibernate提供的面向对象的查询语言</p>
+<p>查询的是对象以及对象的属性【它查询的是对象以及属性，因此是区分大小写的！】。</p>
+<pre><code>SQL：Struct query language 结构化查询语言</code></pre><p>查询的是表以及列【不区分大小写】<br>HQL是面向对象的查询语言，可以用来查询全部的数据！</p>
+<pre><code>Query query = session.createQuery(&quot;FROM User&quot;);
+
+List list = query.list();
+System.out.println(list);</code></pre><p>当然啦，它也可以传递参数进去查询</p>
+<pre><code>Query query = session.createQuery(&quot;FROM User WHERE id=?&quot;);
+
+//这里的？号是从0开始的，并不像JDBC从1开始的！
+query.setParameter(0, user.getId());
+
+List list = query.list();
+System.out.println(list);</code></pre><p>QBC查询</p>
+<p>QBC查询: query by criteria 完全面向对象的查询</p>
+<p>从上面的HQL查询，我们就可以发现：HQL查询是需要SQL的基础的，因为还是要写少部分的SQL代码….QBC查询就是完全的面向对象查询…但是呢，我们用得比较少</p>
+<p>我们来看一下怎么使用吧：</p>
+<pre><code>//创建关于user对象的criteria对象
+Criteria criteria = session.createCriteria(User.class);
+
+//添加条件
+criteria.add(Restrictions.eq(&quot;id&quot;, 1));
+
+//查询全部数据
+List list = criteria.list();
+System.out.println(list);</code></pre><p>本地SQL查询</p>
+<p>有的时候，如果SQL是非常复杂的，我们不能靠HQL查询来实现功能的话，我们就需要使用原生的SQL来进行复杂查询了！</p>
+<p>但是呢，它有一个缺陷：它是不能跨平台的…因此我们在主配置文件中已经配置了数据库的“方言“了。</p>
+<p>我们来简单使用一下把：</p>
+<pre><code>//将所有的记录封装成User对象存进List集合中
+SQLQuery sqlQuery = session.createSQLQuery(&quot;SELECT * FROM user&quot;).addEntity(User.class);
+
+List list = sqlQuery.list();
+
+System.out.println(list);</code></pre><p>beginTransaction方法</p>
+<p>开启事务，返回的是一个事务对象….Hibernate规定所有的数据库操作都必须在事务环境下进行，否则报错！</p>
+<p>Hibernate注解开发</p>
+<p>在Hibernate中我们一般都会使用注解，这样可以帮助我们大大简化hbm映射文件的配置。下面我就来为大家详细介绍。</p>
+<p>PO类注解配置</p>
+<p>首先肯定是搭建好Hibernate的开发环境啦，我在此也不过多赘述，读者自行实践。接着在src目录下创建一个cn.itheima.domain包，并在该包下创建一个Book实体类，由于Book实体类中写有注解配置，所以就不用编写那个映射配置文件啦！</p>
+<pre><code>@Entity // 定义了一个实体
+@Table(name=&quot;t_book&quot;,catalog=&quot;hibernateTest&quot;)
+public class Book {
+
+@Id // 这表示一个主键
+// @GeneratedValue 相当于native主键生成策略
+@GeneratedValue(strategy=GenerationType.IDENTITY) // 相当于identity主键生成策略
+private Integer id; // 主键
+
+@Column(name=&quot;c_name&quot;, length=30, nullable=true)
+private String name;
+
+@Temporal(TemporalType.TIMESTAMP) // 是用来定义日期类型
+private Date publicationDate; // 出版日期
+
+@Type(type=&quot;double&quot;) // 允许你去指定Hibernate里面的一些类型
+private Double price; // 价格，如果没有添加注解，也会自动的生成在表中
+
+public Integer getId() {
+    return id;
+}
+public void setId(Integer id) {
+    this.id = id;
+}
+public String getName() {
+    return name;
+}
+public void setName(String name) {
+    this.name = name;
+}
+public Date getPublicationDate() {
+    return publicationDate;
+}
+public void setPublicationDate(Date publicationDate) {
+    this.publicationDate = publicationDate;
+}
+public Double getPrice() {
+    return price;
+}
+public void setPrice(Double price) {
+    this.price = price;
+}</code></pre><p>}</p>
+<p>下面我就来详细说一下Book实体类中的注解。</p>
+<pre><code>@Entity：声明一个实体。
+@Table：来描述类与表之间的对应关系。
+
+@Entity // 定义了一个实体
+@Table(name=&quot;t_book&quot;,catalog=&quot;hibernateTest&quot;)
+public class Book {
+    ......
+}
+
+@id：声明一个主键。
+@GeneratedValue：用它来声明一个主键生成策略。默认情况是native主键生成策略。可以选择的主键生成策略有：AUTO、IDENTITY、SEQUENCE
+
+@Id // 这表示一个主键
+// @GeneratedValue 相当于native主键生成策略
+@GeneratedValue(strategy=GenerationType.IDENTITY) // 相当于identity主键生成策略
+private Integer id; // 主键
+
+@Column：定义列。
+
+@Column(name=&quot;c_name&quot;, length=30, nullable=true)
+private String name;</code></pre><p><strong>注意：对于PO类中所有属性，如果你不写注解，默认情况下也会在表中生成对应的列，列的名称就是属性的名称，列的类型也即属性的类型</strong>。<br>    @Temporal：声明日期类型。</p>
+<pre><code>@Temporal(TemporalType.TIMESTAMP) // 是用来定义日期类型
+private Date publicationDate; // 出版日期</code></pre><p>日期类型可以选择的有：</p>
+<pre><code>*   TemporalType.DATA：只有年月日。
+*   TemporalType.TIME：只有小时分钟秒。
+*   TemporalType.TIMESTAMP：有年月日小时分钟秒。
+@Type：可允许你去指定Hibernate里面的一些类型。
+
+@Type(type=&quot;double&quot;) // 允许你去指定Hibernate里面的一些类型
+private Double price; // 价格，如果没有添加注解，也会自动的生成在表中</code></pre><p>最后我们在src目录下创建一个cn.itheima.test包，在该包下编写一个HibernateAnnotationTest单元测试类，并在该类中编写一个用于测试PO类的注解开发的方法：</p>
+<pre><code>public class HibernateAnnotationTest {
+
+    // 测试PO的注解开发
+    @Test
+    public void test1() {
+        Session session = HibernateUtils.openSession();
+        session.beginTransaction();
+
+        Book b = new Book();
+        b.setName(&quot;情书&quot;);
+        b.setPrice(56.78);
+        b.setPublicationDate(new Date());
+
+        session.save(b);
+
+        session.getTransaction().commit();
+        session.close();
+    }
+
+}</code></pre><p>现在来思考两个问题：</p>
+<p>如果主键生成策略我们想使用UUID类型呢？<br>如何设定类的属性不在表中映射？<br>这两个问题我们一起解决。废话不多说，直接上例子。在cn.itheima.domain包下再编写一个Person实体类，同样使用注解配置。</p>
+<pre><code>@Entity
+@Table(name=&quot;t_person&quot;, catalog=&quot;hibernateTest&quot;)
+public class Person {
+
+    // 生成UUID的主键生成策略
+    @Id
+    @GenericGenerator(name=&quot;myuuid&quot;, strategy=&quot;uuid&quot;) // 声明一种主键生成策略(uuid)
+    @GeneratedValue(generator=&quot;myuuid&quot;) // 引用uuid主键生成策略
+    private String id;
+
+    @Type(type=&quot;string&quot;) // 允许你去指定Hibernate里面的一些类型
+    private String name;
+
+    @Transient
+    private String msg; // 现在这个属性不想生成在表中
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+}</code></pre><p>最后在HibernateAnnotationTest单元测试类中编写如下一个方法：</p>
+<pre><code>public class HibernateAnnotationTest {
+
+    // 测试uuid的主键生成策略及不生成表中映射
+    @Test
+    public void test2() {
+        Session session = HibernateUtils.openSession();
+        session.beginTransaction();
+
+        Person p = new Person();
+        p.setName(&quot;李四&quot;);
+        p.setMsg(&quot;这是一个好人&quot;);
+
+        session.save(p);
+
+        session.getTransaction().commit();
+        session.close();
+    }
+
+}</code></pre><p>至此，两个问题就解决了。<br>注意：对于我们以上讲解的关于属性配置的注解，我们也可以在其对应的getXxx方法去使用。</p>
+<p>Hibernate关联映射——一对多（多对一）<br>仍以客户(Customer)和订单(Order)为例来开始我的表演。<br>在src目录下创建一个cn.itheima.oneToMany包，并在该包编写这两个实体类：</p>
+<p>客户(Customer)类</p>
+<pre><code>    // 客户 ---- 一的一方
+    @Entity
+    @Table(name=&quot;t_customer&quot;)
+    public class Customer {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Integer id; // 主键
+    private String name; // 姓名
+
+    // 描述客户可以有多个订单
+    /*
+     * targetEntity=&quot;...&quot;：相当于&lt;one-to-many &gt;
+     */
+    @OneToMany(targetEntity=Order.class,mappedBy=&quot;c&quot;)
+    private Set&lt;Order&gt; orders = new HashSet&lt;Order&gt;();
+
+    public Set&lt;Order&gt; getOrders() {
+        return orders;
+    }
+    public void setOrders(Set&lt;Order&gt; orders) {
+        this.orders = orders;
+    }
+    public Integer getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    }
+
+
+    订单(Order)类
+
+    // 订单 ---- 多的一方
+    @Entity
+    @Table(name=&quot;t_order&quot;)
+    public class Order {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Integer id;
+    private Double money;
+    private String receiverInfo; // 收货地址
+
+    // 订单与客户关联
+    @ManyToOne(targetEntity=Customer.class)
+    @JoinColumn(name=&quot;c_customer_id&quot;) // 指定外键列
+    private Customer c; // 描述订单属于某一个客户
+
+    public Customer getC() {
+        return c;
+    }
+    public void setC(Customer c) {
+        this.c = c;
+    }
+    public Integer getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    public Double getMoney() {
+        return money;
+    }
+    public void setMoney(Double money) {
+        this.money = money;
+    }
+    public String getReceiverInfo() {
+        return receiverInfo;
+    }
+    public void setReceiverInfo(String receiverInfo) {
+        this.receiverInfo = receiverInfo;
+    }
+
+}</code></pre><p>这儿用到了<code>@OneToMany</code>和<code>@ManyToOne</code>这两个注解。<br>以上两个实体类编写好之后，可以很明显的看出我们不需要写它们对应的映射配置文件了，是不是很爽呢！接下来，我就要编写测试程序测试一下了。现在我的需求是保存客户时，顺便保存订单，对于这种情况我们需要在Customer类中配置cascade操作，即配置cascade=”save-update”，配置的方式有两种，下面我细细说来：</p>
+<p>第一种方式，可以使用JPA提供的注解。<br>那么@OneToMany注解就应修改为：</p>
+<pre><code>@OneToMany(targetEntity=Order.class,mappedBy=&quot;c&quot;,cascade=CascadeType.ALL)
+private Set&lt;Order&gt; orders = new HashSet&lt;Order&gt;();</code></pre><p>第二种方式，可以使用Hibernate提供的注解。<br>那么@OneToMany注解就应修改为：</p>
+<pre><code>@OneToMany(targetEntity=Order.class,mappedBy=&quot;c&quot;)
+@Cascade(CascadeType.SAVE_UPDATE)
+private Set&lt;Order&gt; orders = new HashSet&lt;Order&gt;();</code></pre><p>两种方式都可以，口味任君选择，不过我倾向于第二种方式。<br>接下来在HibernateAnnotationTest单元测试类中编写如下方法进行测试：</p>
+<pre><code>public class HibernateAnnotationTest {
+
+    // 测试one-to-many注解操作(保存客户时级联保存订单)
+    @Test
+    public void test3() {
+        Session session = HibernateUtils.openSession();
+        session.beginTransaction();
+
+        // 1.创建一个客户
+        Customer c = new Customer();
+        c.setName(&quot;叶子&quot;);
+
+        // 2.创建两个订单
+        Order o1 = new Order();
+        o1.setMoney(1000d);
+        o1.setReceiverInfo(&quot;武汉&quot;);
+        Order o2 = new Order();
+        o2.setMoney(2000d);
+        o2.setReceiverInfo(&quot;天门&quot;);
+
+        // 3.建立关系
+        c.getOrders().add(o1);
+        c.getOrders().add(o2);
+
+        // 4.保存客户，并级联保存订单
+        session.save(c);
+
+        session.getTransaction().commit();
+        session.close();
+    }
+
+}</code></pre><p>这时运行以上方法，会发现虽然客户表的那条记录插进去了，但是订单表就变成这个鬼样了： </p>
+<p>订单表中没有关联客户的id，这是为什么呢？原因是我们在Customer类中配置了mappedBy=”c”，它代表的是外键的维护由Order方来维护，而Customer不维护，这时你在保存客户时，级联保存订单，是可以的，但是不能维护外键，所以，我们必须在代码中添加订单与客户之间的关系。所以须将test3方法修改为：</p>
+<pre><code>public class HibernateAnnotationTest {
+
+    // 测试one-to-many注解操作(保存客户时级联保存订单)
+    @Test
+    public void test3() {
+        Session session = HibernateUtils.openSession();
+        session.beginTransaction();
+
+        // 1.创建一个客户
+        Customer c = new Customer();
+        c.setName(&quot;叶子&quot;);
+
+        // 2.创建两个订单
+        Order o1 = new Order();
+        o1.setMoney(1000d);
+        o1.setReceiverInfo(&quot;武汉&quot;);
+        Order o2 = new Order();
+        o2.setMoney(2000d);
+        o2.setReceiverInfo(&quot;天门&quot;);
+
+        // 3.建立关系
+        // 原因：是为了维护外键，不然的话，外键就不能正确的生成！！！
+        o1.setC(c);
+        o2.setC(c);
+
+        // 原因：是为了进行级联操作
+        c.getOrders().add(o1);
+        c.getOrders().add(o2);
+
+        // 4.保存客户，并级联保存订单
+        session.save(c);
+
+        session.getTransaction().commit();
+        session.close();
+    }
+
+}</code></pre><p>这时再测试，就没有任何问题啦！</p>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><p>Hibernate注解@Cascade中的DELETE_ORPHAN已经过时了，如下： </p>
+<p>可使用下面方案来替换过时方案： </p>
+<p>Hibernate关联映射——多对多<br>以学生与老师为例开始我的表演，我是使用注解完成这种多对多的配置。使用@ManyToMany注解来配置多对多，只需要在一端配置中间表，另一端使用mappedBy表示放置外键的维护权。<br>在src目录下创建一个cn.itheima.manyToMany包，并在该包编写这两个实体类：</p>
+<p>学生类</p>
+<pre><code>@Entity
+@Table(name=&quot;t_student&quot;)
+public class Student {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Integer id;
+
+    private String name;
+
+    @ManyToMany(targetEntity=Teacher.class)
+    // @JoinTable：使用@JoinTable来描述中间表，并描述中间表中外键与Student、Teacher的映射关系
+    // joinColumns：它是用来描述Student与中间表的映射关系
+    // inverseJoinColumns：它是用来描述Teacher与中间表的映射关系
+    @JoinTable(name=&quot;s_t&quot;, joinColumns={@JoinColumn(name=&quot;c_student_id&quot;,referencedColumnName=&quot;id&quot;)}, inverseJoinColumns={@JoinColumn(name=&quot;c_teacher_id&quot;)}) 
+    private Set&lt;Teacher&gt; teachers = new HashSet&lt;Teacher&gt;();
+
+    public Integer getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public Set&lt;Teacher&gt; getTeachers() {
+        return teachers;
+    }
+    public void setTeachers(Set&lt;Teacher&gt; teachers) {
+        this.teachers = teachers;
+    }
+
+}</code></pre><p>老师类</p>
+<pre><code>@Entity
+@Table(name=&quot;t_teacher&quot;)
+public class Teacher {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Integer id;
+
+    private String name;
+
+    @ManyToMany(targetEntity=Student.class, mappedBy=&quot;teachers&quot;) // 代表由对方来维护外键
+    private Set&lt;Student&gt; students = new HashSet&lt;Student&gt;();
+
+    public Integer getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public Set&lt;Student&gt; getStudents() {
+        return students;
+    }
+    public void setStudents(Set&lt;Student&gt; students) {
+        this.students = students;
+    }
+
+}</code></pre><p>接下来，我就要编写测试程序测试一下了。 从上面可看出我们将外键的维护权利交由Student类来维护，现在我们演示保存学生时，将老师也级联保存，对于这种情况我们需要在Student类中配置cascade操作，即配置cascade=”save-update”，如下：</p>
+<pre><code>@JoinTable(name=&quot;s_t&quot;, joinColumns={@JoinColumn(name=&quot;c_student_id&quot;,referencedColumnName=&quot;id&quot;)}, inverseJoinColumns={@JoinColumn(name=&quot;c_teacher_id&quot;)}) 
+@Cascade(CascadeType.SAVE_UPDATE)
+private Set&lt;Teacher&gt; teachers = new HashSet&lt;Teacher&gt;();</code></pre><p>接下来在HibernateAnnotationTest单元测试类中编写如下方法进行测试：</p>
+<pre><code>public class HibernateAnnotationTest {
+
+    // 测试多对多级联保存(保存学生时同时保存老师)
+    @Test
+    public void test4() {
+        Session session = HibernateUtils.openSession();
+        session.beginTransaction();
+
+        // 1.创建两个老师
+        Teacher t1 = new Teacher();
+        t1.setName(&quot;Tom&quot;);
+
+        Teacher t2 = new Teacher();
+        t2.setName(&quot;Fox&quot;);
+
+        // 2.创建两个学生
+        Student s1 = new Student();
+        s1.setName(&quot;张丹&quot;);
+
+        Student s2 = new Student();
+        s2.setName(&quot;叶紫&quot;);
+
+        // 3.学生关联老师
+        s1.getTeachers().add(t1);
+        s1.getTeachers().add(t2);
+
+        s2.getTeachers().add(t1);
+        s2.getTeachers().add(t2);
+
+        // 保存学生同时保存老师
+        session.save(s1);
+        session.save(s2);
+
+        session.getTransaction().commit();
+        session.close();
+    }
+
+}</code></pre><p>运行以上方法，一切正常。<br>接着我们测试级联删除操作。见下图：<br>这里写图片描述</p>
+<p>可在HibernateAnnotationTest单元测试类中编写如下方法进行测试：</p>
+<pre><code>public class HibernateAnnotationTest {
+
+    // 测试多对多级联删除(前提是建立了双向的级联)
+    @Test
+    public void test5() {
+        Session session = HibernateUtils.openSession();
+        session.beginTransaction();
+
+        Student s = session.get(Student.class, 1);
+        session.delete(s);
+
+        session.getTransaction().commit();
+        session.close();
+    }
+
+}</code></pre><h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://segmentfault.com/a/1190000009707894" target="_blank" rel="noopener">https://segmentfault.com/a/1190000009707894</a></p>
+<p><a href="https://www.cnblogs.com/hysum/p/7100874.html" target="_blank" rel="noopener">https://www.cnblogs.com/hysum/p/7100874.html</a></p>
+<p><a href="http://c.biancheng.net/view/939.html" target="_blank" rel="noopener">http://c.biancheng.net/view/939.html</a></p>
+<p><a href="https://www.runoob.com/" target="_blank" rel="noopener">https://www.runoob.com/</a></p>
+<p><a href="https://blog.csdn.net/android_hl/article/details/53228348" target="_blank" rel="noopener">https://blog.csdn.net/android_hl/article/details/53228348</a></p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hibernate/" rel="tag"># hibernate</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/24/走进JavaWeb技术世界/走进JavaWeb技术世界12：从手动编译打包到项目构建工具Maven/" rel="next" title="走进JavaWeb技术世界12：从手动编译打包到项目构建工具Maven">
+                <i class="fa fa-chevron-left"></i> 走进JavaWeb技术世界12：从手动编译打包到项目构建工具Maven
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/26/走进JavaWeb技术世界/走进JavaWeb技术世界14：Mybatis入门/" rel="prev" title="走进JavaWeb技术世界14：Mybatis入门">
+                走进JavaWeb技术世界14：Mybatis入门 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ORM概述"><span class="nav-number">2.</span> <span class="nav-text">ORM概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">3.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关类"><span class="nav-number">4.</span> <span class="nav-text">相关类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展"><span class="nav-number">5.</span> <span class="nav-text">扩展</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">6.</span> <span class="nav-text">参考文章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">7.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">7.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">7.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

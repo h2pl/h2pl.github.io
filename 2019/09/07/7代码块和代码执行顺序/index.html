@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="代码块,构造方法,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透">
+<meta name="keywords" content="代码块,构造方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="夯实Java基础系列7：Java 代码块和执行顺序">
+<meta property="og:url" content="http://yoursite.com/2019/09/07/7代码块和代码执行顺序/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:23.927Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="夯实Java基础系列7：Java 代码块和执行顺序">
+<meta name="twitter:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/09/07/7代码块和代码执行顺序/">
+
+
+
+
+
+  <title>夯实Java基础系列7：Java 代码块和执行顺序 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/07/7代码块和代码执行顺序/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">夯实Java基础系列7：Java 代码块和执行顺序</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-07T15:56:26+08:00">
+                2019-09-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/" itemprop="url" rel="index">
+                    <span itemprop="name">Java技术江湖</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/Java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/09/07/7代码块和代码执行顺序/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/09/07/7代码块和代码执行顺序/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章首发于我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透彻，也整合了很多我认为不错的技术博客内容，引用其中了一些比较好的博客文章，如有侵权，请联系作者。<br>该系列博文会告诉你如何从入门到进阶，一步步地学习Java基础知识，并上手进行实战，接着了解每个Java知识点背后的实现原理，更完整地了解整个Java技术体系，形成自己的知识框架。为了更好地总结和检验你的学习成果，本系列文章也会提供每个知识点对应的面试题以及参考答案。</p>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+<a id="more"></a>
+
+<h2 id="Java中的构造方法"><a href="#Java中的构造方法" class="headerlink" title="Java中的构造方法"></a>Java中的构造方法</h2><h3 id="构造方法简介"><a href="#构造方法简介" class="headerlink" title="构造方法简介"></a>构造方法简介</h3><p>构造方法是类的一种特殊方法，用来初始化类的一个新的对象。<a href="http://c.biancheng.net/java/" target="_blank" rel="noopener">Java</a> 中的每个类都有一个默认的构造方法，它必须具有和类名相同的名称，而且没有返回类型。构造方法的默认返回类型就是对象类型本身，并且构造方法不能被 static、final、synchronized、abstract 和 native 修饰。</p>
+<p>提示：构造方法用于初始化一个新对象，所以用 static 修饰没有意义；构造方法不能被子类继承，所以用 final 和 abstract 修饰没有意义；多个线程不会同时创建内存地址相同的同一个对象，所以用 synchronized 修饰没有必要。</p>
+<p>构造方法的语法格式如下：</p>
+<pre>class class_name
+{
+    public class_name(){}    //默认无参构造方法
+    public ciass_name([paramList]){}    //定义构造方法
+    …
+    //类主体
+}</pre>
+
+<p>在一个类中，与类名相同的方法就是构造方法。每个类可以具有多个构造方法，但要求它们各自包含不同的方法参数。</p>
+<h3 id="构造方法实例"><a href="#构造方法实例" class="headerlink" title="构造方法实例"></a>构造方法实例</h3><h4 id="例-1"><a href="#例-1" class="headerlink" title="例 1"></a>例 1</h4><p>构造方法主要有无参构造方法和有参构造方法两种，示例如下：</p>
+<pre>public class MyClass
+{
+    private int m;    //定义私有变量
+    MyClass()
+    {
+        //定义无参的构造方法
+        m=0;
+    }
+    MyCiass(int m)
+    {
+        //定义有参的构造方法
+        this.m=m;
+    }
+}</pre>
+
+<p>该示例定义了两个构造方法，分别是无参构造方法和有参构造方法。在一个类中定义多个具有不同参数的同名方法，这就是方法的重载。这两个构造方法的名称都与类名相同，均为 MyClass。在实例化该类时可以调用不同的构造方法进行初始化。</p>
+<p>注意：类的构造方法不是要求必须定义的。如果在类中没有定义任何一个构造方法，则 Java 会自动为该类生成一个默认的构造方法。默认的构造方法不包含任何参数，并且方法体为空。如果类中显式地定义了一个或多个构造方法，则 Java 不再提供默认构造方法。</p>
+<h4 id="例-2"><a href="#例-2" class="headerlink" title="例 2"></a>例 2</h4><p>要在不同的条件下使用不同的初始化行为创建类的对象，这时候就需要在一个类中创建多个构造方法。下面通过一个示例来演示构造方法的使用。</p>
+<p>(1) 首先在员工类 Worker 中定义两个构造方法，代码如下：</p>
+<pre>public class Worker
+{
+    public String name;    //姓名
+    private int age;    //年龄
+    //定义带有一个参数的构造方法
+    public Worker(String name)
+    {
+        this.name=name;
+    }
+    //定义带有两个参数的构造方法
+    public Worker(String name,int age)
+    {
+        this.name=name;
+        this.age=age;
+    }
+    public String toString()
+    {
+        return"大家好！我是新来的员工，我叫"+name+"，今年"+age+"岁。";
+    }
+}</pre>
+
+<p>在 Worker 类中定义了两个属性，其中 name 属性不可改变。分别定义了带有一个参数和带有两个参数的构造方法，并对其属性进行初始化。最后定义了该类的 toString() 方法，返回一条新进员工的介绍语句。</p>
+<p>提示：Object 类具有一个 toString() 方法，该方法是个特殊的方法，创建的每个类都会继承该方法，它返回一个 String 类型的字符串。如果一个类中定义了该方法，则在调用该类对象时，将会自动调用该类对象的 toString() 方法返回一个字符串，然后使用“System.out.println(对象名)”就可以将返回的字符串内容打印出来。</p>
+<p>(2) 在 TestWorker 类中创建 main() 方法作为程序的入口处，在 main() 方法中调用不同的构造方法实例化 Worker 对象，并对该对象中的属性进行初始化，代码如下：</p>
+<pre>public class TestWorker
+{
+    public static void main(String[] args)
+    {
+        System.out.println("-----------带有一个参数的构造方法-----------");
+        //调用带有一个参数的构造方法，Staff类中的sex和age属性值不变
+        Worker worker1=new Worker("张强");
+        System.out.println(worker1);
+        System.out.println("-----------带有两个参数的构造方法------------");
+        //调用带有两个参数的构造方法，Staff类中的sex属性值不变
+        Worker worker2=new Worker("李丽",25);
+        System.out.println(worker2);
+    }
+}</pre>
+
+<p>在上述代码中，创建了两个不同的 Worker 对象：一个是姓名为张强的员工对象，一个是姓名为李丽、年龄为 25 的员工对象。对于第一个 Worker 对象 Worker1，并未指定 age 属性值，因此程序会将其值采用默认值 0。对于第二个 Worker 对象 Worker2，分别对其指定了 name 属性值和 age 属性值，因此程序会将传递的参数值重新赋值给 Worker 类中的属性值。</p>
+<p>运行 TestWorker 类，输出的结果如下：</p>
+<pre>-----------带有一个参数的构造方法-----------
+大家好！我是新来的员工，我叫张强，今年0岁。
+-----------带有两个参数的构造方法------------
+大家好！我是新来的员工，我叫李丽，今年25岁。</pre>
+
+<p>通过调用带参数的构造方法，在创建对象时，一并完成了对象成员的初始化工作，简化了对象初始化的代码。</p>
+<h2 id="Java中的几种构造方法详解"><a href="#Java中的几种构造方法详解" class="headerlink" title="Java中的几种构造方法详解"></a>Java中的几种构造方法详解</h2><h3 id="普通构造方法"><a href="#普通构造方法" class="headerlink" title="普通构造方法"></a>普通构造方法</h3><p>方法名与类名相同</p>
+<p>无返回类型</p>
+<p>子类不能继承父类的构造方法</p>
+<p>不能被static、final、abstract修饰（有final和static修饰的是不能被子类继承的，abstract修饰的是抽象类，抽象类是不能实例化的，也就是不能new）</p>
+<p>可以被private修饰，可以在本类里面实例化，但是外部不能实例化对象（注意！！！）</p>
+<pre><code>public class A{
+    int i=0;
+    public A(){
+        i=2;
+    }
+    public A(int i){
+        this.i=i;
+    }
+}</code></pre><h3 id="默认构造方法"><a href="#默认构造方法" class="headerlink" title="默认构造方法"></a>默认构造方法</h3><p>如果没有任何的构造方法，编译时系统会自动添加一个默认无参构造方法</p>
+<p>隐含的默认构造方法</p>
+<pre><code>public A(){}</code></pre><p>显示的默认构造方法</p>
+<pre><code>public A(){
+System.out.print(&quot;显示的默认构造方法&quot;)
+}</code></pre><h3 id="重载构造方法"><a href="#重载构造方法" class="headerlink" title="重载构造方法"></a>重载构造方法</h3><p>比如原本的类里的构造方法是一个参数的，现在新建的对象是有三个参数，此时就要重载构造方法</p>
+<p>当一个类中有多个构造方法，有可能会出现重复性操作，这时可以用this语句调用其他的构造方法。</p>
+<pre><code>public class A{
+    private int age;
+    private String name;
+    public A(int age,String name){
+        this.age=age;
+        this.name=name;
+    }
+    public A(int age){
+        this(age,&quot;无名氏&quot;);//调用 A(int age,String name)构造方法
+    }
+    public A(){
+        this(1);//调用 A(int age)构造方法
+    }
+    public void setName(String name) {this.name=name;}
+    public String getName() {return name;}
+    public void setAge(int age) {this.age=age;}
+    public int getAge() {return age;}
+}
+
+A a=new A(20,&quot;周一&quot;);
+A b=new A(20);
+A c=new A();
+String name = a.getName();
+String name1 = b.getName();
+int age = c.getAge();
+System.out.println(name);
+System.out.println(name1);
+System.out.println(age);</code></pre><h3 id="java子类构造方法调用父类构造方法"><a href="#java子类构造方法调用父类构造方法" class="headerlink" title="java子类构造方法调用父类构造方法"></a>java子类构造方法调用父类构造方法</h3><p>首先父类构造方法是绝对不能被子类继承的。</p>
+<p>子类构造方法调用父类的构造方法重点是：子类构造方法无论如何都要调用父类的构造方法。</p>
+<p>子类构造方法要么调用父类无参构造方法（包括当父类没有构造方法时。系统默认给的无参构造方法），要么调用父类有参构造方法。当子类构造方法调用父类无参构造方法，一般都是默认不写的，要写的话就是super（），且要放在构造方法的第一句。当子类构造方法要调用父类有参数的构造方法，那么子类的构造方法中必须要用super（参数）调用父类构造方法，且要放在构造方法的第一句。</p>
+<p>当子类的构造方法是无参构造方法时，必须调用父类无参构造方法。因为系统会自动找父类有没有无参构造方法，如果没有的话系统会报错：说父类没有定义无参构造方法。</p>
+<p>当子类构造方法是有参构造方法时，这时就会有两种情况。<br>第一种：子类构造方法没有写super，也就是说你默认调用父类无参构造方法，这样的话就和子类是无参构造方法一样。</p>
+<p>第二种：子类构造方法有super（参数）时，就是调用父类有参构造方法，系统会找父类有没有参数一致（参数数量，且类型顺序要相同）的有参构造方法，如果没有的话，同样也会报错。</p>
+<p>但是这里会遇到和重载构造方法this一样问题，一个参数的构造方法可以调用多个参数构造方法，没有的参数给一个自己定义值也是可以的。</p>
+<h2 id="Java中的代码块简介"><a href="#Java中的代码块简介" class="headerlink" title="Java中的代码块简介"></a>Java中的代码块简介</h2><p>在java中用{}括起来的称为代码块，代码块可分为以下四种：</p>
+<p><strong>一.简介</strong></p>
+<p><strong>1.普通代码块：</strong></p>
+<p>类中方法的方法体</p>
+<p><strong>2.构造代码块</strong>：</p>
+<p>构造块会在创建对象时被调用，每次创建时都会被调用，优先于类构造函数执行。</p>
+<p><strong>3.静态代码块：</strong></p>
+<p>用static{}包裹起来的代码片段，只会执行一次。静态代码块优先于构造块执行。</p>
+<p><strong>4.同步代码块：</strong></p>
+<p>使用synchronized（）{}包裹起来的代码块，在多线程环境下，对共享数据的读写操作是需要互斥进行的，否则会导致数据的不一致性。同步代码块需要写在方法中。</p>
+<p><strong>二.静态代码块和构造代码块的异同点</strong></p>
+<p>相同点：都是JVM加载类后且在构造函数执行之前执行，在类中可定义多个，一般在代码块中对一些static变量进行赋值。</p>
+<p>不同点：静态代码块在非静态代码块之前执行。静态代码块只在第一次new时执行一次，之后不在执行。而非静态代码块每new一次就执行一次。</p>
+<h2 id="Java代码块使用"><a href="#Java代码块使用" class="headerlink" title="Java代码块使用"></a>Java代码块使用</h2><h3 id="局部代码块"><a href="#局部代码块" class="headerlink" title="局部代码块"></a>局部代码块</h3><blockquote>
+<p>位置：局部位置（方法内部）</p>
+</blockquote>
+<blockquote>
+<p>作用：限定变量的生命周期，尽早释放，节约内存</p>
+</blockquote>
+<blockquote>
+<p>调用：调用其所在的方法时执行</p>
+</blockquote>
+<pre><code> public class 局部代码块 {
+@Test
+public void test (){
+    B b = new B();
+    b.go();
+}
+}
+class B {
+    B(){}
+    public void go() {
+        //方法中的局部代码块，一般进行一次性地调用，调用完立刻释放空间，避免在接下来的调用过程中占用栈空间
+        //因为栈空间内存是有限的，方法调用可能会会生成很多局部变量导致栈内存不足。
+        //使用局部代码块可以避免这样的情况发生。
+        {
+            int i = 1;
+            ArrayList&lt;Integer&gt; list = new ArrayList&lt;&gt;();
+            while (i &lt; 1000) {
+                list.add(i ++);
+            }
+            for (Integer j : list) {
+                System.out.println(j);
+            }
+            System.out.println(&quot;gogogo&quot;);
+        }
+        System.out.println(&quot;hello&quot;);
+    }
+}</code></pre><h3 id="构造代码块"><a href="#构造代码块" class="headerlink" title="构造代码块"></a>构造代码块</h3><blockquote>
+<p>位置：类成员的位置，就是类中方法之外的位置</p>
+</blockquote>
+<blockquote>
+<p>作用：把多个构造方法共同的部分提取出来，共用构造代码块</p>
+</blockquote>
+<blockquote>
+<p>调用：每次调用构造方法时，都会优先于构造方法执行，也就是每次new一个对象时自动调用，对  对象的初始化</p>
+</blockquote>
+<pre><code>class A{
+    int i = 1;
+    int initValue;//成员变量的初始化交给代码块来完成
+    {
+        //代码块的作用体现于此：在调用构造方法之前，用某段代码对成员变量进行初始化。
+        //而不是在构造方法调用时再进行。一般用于将构造方法的相同部分提取出来。
+        //
+        for (int i = 0;i &lt; 100;i ++) {
+            initValue += i;
+        }
+    }
+    {
+        System.out.println(initValue);
+        System.out.println(i);//此时会打印1
+        int i = 2;//代码块里的变量和成员变量不冲突，但会优先使用代码块的变量
+        System.out.println(i);//此时打印2
+        //System.out.println(j);//提示非法向后引用，因为此时j的的初始化还没开始。
+        //
+    }
+    {
+        System.out.println(&quot;代码块运行&quot;);
+    }
+    int j = 2;
+    {
+        System.out.println(j);
+        System.out.println(i);//代码块中的变量运行后自动释放，不会影响代码块之外的代码
+    }
+    A(){
+        System.out.println(&quot;构造方法运行&quot;);
+    }
+}
+public class 构造代码块 {
+    @Test
+    public void test() {
+        A a = new A();
+    }
+}</code></pre><h3 id="静态代码块"><a href="#静态代码块" class="headerlink" title="静态代码块"></a>静态代码块</h3><pre><code> 位置：类成员位置，用static修饰的代码块
+
+ 作用：对类进行一些初始化  只加载一次，当new多个对象时，只有第一次会调用静态代码块，因为，静态代码块                  是属于类的，所有对象共享一份
+
+ 调用: new 一个对象时自动调用
+
+ public class 静态代码块 {
+
+@Test
+public void test() {
+    C c1 = new C();
+    C c2 = new C();
+    //结果,静态代码块只会调用一次，类的所有对象共享该代码块
+    //一般用于类的全局信息初始化
+    //静态代码块调用
+    //代码块调用
+    //构造方法调用
+    //代码块调用
+    //构造方法调用
+}
+
+}
+class C{
+    C(){
+        System.out.println(&quot;构造方法调用&quot;);
+    }
+    {
+        System.out.println(&quot;代码块调用&quot;);
+    }
+    static {
+        System.out.println(&quot;静态代码块调用&quot;);
+    }
+}</code></pre><h2 id="Java代码块、构造方法（包含继承关系）的执行顺序"><a href="#Java代码块、构造方法（包含继承关系）的执行顺序" class="headerlink" title="Java代码块、构造方法（包含继承关系）的执行顺序"></a>Java代码块、构造方法（包含继承关系）的执行顺序</h2><p>这是一道常见的面试题，要回答这个问题，先看看这个实例吧。</p>
+<p>一共3个类：A、B、C<br>其中A是B的父类，C无继承仅作为输出</p>
+<p>A类：</p>
+<pre><code>public class A {
+
+static {
+    Log.i(&quot;HIDETAG&quot;, &quot;A静态代码块&quot;);
+}
+
+private static C c = new C(&quot;A静态成员&quot;);
+private  C c1 = new C(&quot;A成员&quot;);
+
+{
+    Log.i(&quot;HIDETAG&quot;, &quot;A代码块&quot;);
+}
+
+static {
+    Log.i(&quot;HIDETAG&quot;, &quot;A静态代码块2&quot;);
+}
+
+public A() {
+    Log.i(&quot;HIDETAG&quot;, &quot;A构造方法&quot;);
+}
+
+}</code></pre><p>B类：</p>
+<pre><code>public class B extends A {
+
+private static C c1 = new C(&quot;B静态成员&quot;);
+
+{
+    Log.i(&quot;HIDETAG&quot;, &quot;B代码块&quot;);
+}
+
+private C c = new C(&quot;B成员&quot;);
+
+static {
+    Log.i(&quot;HIDETAG&quot;, &quot;B静态代码块2&quot;);
+}
+
+static {
+    Log.i(&quot;HIDETAG&quot;, &quot;B静态代码块&quot;);
+}
+
+public B() {
+    Log.i(&quot;HIDETAG&quot;, &quot;B构造方法&quot;);
+
+}
+
+}</code></pre><p>C类：</p>
+<pre><code>public class C {
+
+public C(String str) {
+    Log.i(&quot;HIDETAG&quot;, str + &quot;构造方法&quot;);
+}
+}</code></pre><p>执行语句：new B();</p>
+<p>输出结果如下：</p>
+<pre><code>I/HIDETAG: A静态代码块
+I/HIDETAG: A静态成员构造方法
+I/HIDETAG: A静态代码块2
+I/HIDETAG: B静态成员构造方法
+I/HIDETAG: B静态代码块2
+I/HIDETAG: B静态代码块
+I/HIDETAG: A成员构造方法
+I/HIDETAG: A代码块
+I/HIDETAG: A构造方法
+I/HIDETAG: B代码块
+I/HIDETAG: B成员构造方法
+I/HIDETAG: B构造方法</code></pre><p>得出结论：</p>
+<pre><code>执行顺序依次为：
+父类的静态成员和代码块
+子类静态成员和代码块
+父类成员初始化和代码快
+父类构造方法
+子类成员初始化和代码块
+子类构造方法</code></pre><p>注意：可以发现，同一级别的代码块和成员初始化是按照代码顺序从上到下依次执行</p>
+<p><strong>看完上面这个demo，再来看看下面这道题，看看你搞得定吗？</strong></p>
+<p>看下面一段代码，求执行顺序：</p>
+<pre><code>class A {
+    public A() {
+        System.out.println(&quot;1A类的构造方法&quot;);
+    }
+    {
+        System.out.println(&quot;2A类的构造快&quot;);
+    }
+    static {
+        System.out.println(&quot;3A类的静态块&quot;);
+    }
+}
+
+public class B extends A {
+    public B() {
+        System.out.println(&quot;4B类的构造方法&quot;);
+    }
+    {
+        System.out.println(&quot;5B类的构造快&quot;);
+    }
+    static {
+        System.out.println(&quot;6B类的静态块&quot;);
+    }
+    public static void main(String[] args) {
+        System.out.println(&quot;7&quot;);
+        new B();
+        new B();
+        System.out.println(&quot;8&quot;);
+    }
+}</code></pre><p>执行顺序结果为：367215421548</p>
+<p>为什么呢？</p>
+<p>首先我们要知道下面这5点：</p>
+<p>每次new都会执行构造方法以及构造块。<br>构造块的内容会在构造方法之前执行。<br>非主类的静态块会在类加载时，构造方法和构造块之前执行，切只执行一次。<br>主类（public class）里的静态块会先于main执行。<br>继承中，子类实例化，会先执行父类的构造方法，产生父类对象，再调用子类构造方法。<br>所以题目里，由于主类B继承A，所以会先加载A，所以第一个执行的是第3句。</p>
+<p>从第4点我们知道6会在7之前执行，所以前三句是367。</p>
+<p>之后实例化了B两次，每次都会先实例化他的父类A，然后再实例化B，而根据第1、2、5点，知道顺序为2154。</p>
+<p>最后执行8</p>
+<p>所以顺序是367215421548</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://blog.csdn.net/likunkun__/article/details/83066062" target="_blank" rel="noopener">https://blog.csdn.net/likunkun__/article/details/83066062</a><br><a href="https://www.jianshu.com/p/6877aae403f7" target="_blank" rel="noopener">https://www.jianshu.com/p/6877aae403f7</a><br><a href="https://www.jianshu.com/p/49e45af288ea" target="_blank" rel="noopener">https://www.jianshu.com/p/49e45af288ea</a><br><a href="https://blog.csdn.net/du_du1/article/details/91383128" target="_blank" rel="noopener">https://blog.csdn.net/du_du1/article/details/91383128</a><br><a href="http://c.biancheng.net/view/976.html" target="_blank" rel="noopener">http://c.biancheng.net/view/976.html</a><br><a href="https://blog.csdn.net/evilcry2012/article/details/79499786" target="_blank" rel="noopener">https://blog.csdn.net/evilcry2012/article/details/79499786</a><br><a href="https://www.jb51.net/article/129990.htm" target="_blank" rel="noopener">https://www.jb51.net/article/129990.htm</a></p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/代码块/" rel="tag"># 代码块</a>
+          
+            <a href="/tags/构造方法/" rel="tag"># 构造方法</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/07/MySQL/重新学习Mysql数据库7：详解MyIsam与InnoDB引擎的锁实现/" rel="next" title="重新学习Mysql数据库7：详解MyIsam与InnoDB引擎的锁实现">
+                <i class="fa fa-chevron-left"></i> 重新学习Mysql数据库7：详解MyIsam与InnoDB引擎的锁实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/08/MySQL/重新学习Mysql数据库8：MySQL的事务隔离级别实战/" rel="prev" title="重新学习Mysql数据库8：MySQL的事务隔离级别实战">
+                重新学习Mysql数据库8：MySQL的事务隔离级别实战 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java中的构造方法"><span class="nav-number">1.</span> <span class="nav-text">Java中的构造方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#构造方法简介"><span class="nav-number">1.1.</span> <span class="nav-text">构造方法简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构造方法实例"><span class="nav-number">1.2.</span> <span class="nav-text">构造方法实例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#例-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">例 1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#例-2"><span class="nav-number">1.2.2.</span> <span class="nav-text">例 2</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java中的几种构造方法详解"><span class="nav-number">2.</span> <span class="nav-text">Java中的几种构造方法详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#普通构造方法"><span class="nav-number">2.1.</span> <span class="nav-text">普通构造方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#默认构造方法"><span class="nav-number">2.2.</span> <span class="nav-text">默认构造方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重载构造方法"><span class="nav-number">2.3.</span> <span class="nav-text">重载构造方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#java子类构造方法调用父类构造方法"><span class="nav-number">2.4.</span> <span class="nav-text">java子类构造方法调用父类构造方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java中的代码块简介"><span class="nav-number">3.</span> <span class="nav-text">Java中的代码块简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java代码块使用"><span class="nav-number">4.</span> <span class="nav-text">Java代码块使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#局部代码块"><span class="nav-number">4.1.</span> <span class="nav-text">局部代码块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构造代码块"><span class="nav-number">4.2.</span> <span class="nav-text">构造代码块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#静态代码块"><span class="nav-number">4.3.</span> <span class="nav-text">静态代码块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java代码块、构造方法（包含继承关系）的执行顺序"><span class="nav-number">5.</span> <span class="nav-text">Java代码块、构造方法（包含继承关系）的执行顺序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">6.</span> <span class="nav-text">参考文章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">7.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">7.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">7.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

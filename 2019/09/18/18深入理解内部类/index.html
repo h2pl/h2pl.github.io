@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java内部类,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透">
+<meta name="keywords" content="Java内部类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="夯实Java基础系列18：深入理解Java内部类及其实现原理">
+<meta property="og:url" content="http://yoursite.com/2019/09/18/18深入理解内部类/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p3.pstatp.com/large/pgc-image/1539338093053104f5529ec">
+<meta property="og:image" content="http://p1.pstatp.com/large/pgc-image/1539338144888f57662c7bc">
+<meta property="og:image" content="http://p1.pstatp.com/large/pgc-image/15393408957685bcddd1c64">
+<meta property="og:image" content="http://p3.pstatp.com/large/pgc-image/1539341219661a629a53b8c">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:23.918Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="夯实Java基础系列18：深入理解Java内部类及其实现原理">
+<meta name="twitter:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透">
+<meta name="twitter:image" content="http://p3.pstatp.com/large/pgc-image/1539338093053104f5529ec">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/09/18/18深入理解内部类/">
+
+
+
+
+
+  <title>夯实Java基础系列18：深入理解Java内部类及其实现原理 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/18/18深入理解内部类/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">夯实Java基础系列18：深入理解Java内部类及其实现原理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-18T15:56:26+08:00">
+                2019-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/" itemprop="url" rel="index">
+                    <span itemprop="name">Java技术江湖</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/Java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/09/18/18深入理解内部类/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/09/18/18深入理解内部类/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章首发于我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透彻，也整合了很多我认为不错的技术博客内容，引用其中了一些比较好的博客文章，如有侵权，请联系作者。<br>该系列博文会告诉你如何从入门到进阶，一步步地学习Java基础知识，并上手进行实战，接着了解每个Java知识点背后的实现原理，更完整地了解整个Java技术体系，形成自己的知识框架。为了更好地总结和检验你的学习成果，本系列文章也会提供每个知识点对应的面试题以及参考答案。</p>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+<a id="more"></a>
+
+
+<h2 id="内部类初探"><a href="#内部类初探" class="headerlink" title="内部类初探"></a>内部类初探</h2><h3 id="什么是内部类？"><a href="#什么是内部类？" class="headerlink" title="什么是内部类？"></a>什么是内部类？</h3><p>　　内部类是指在一个外部类的内部再定义一个类。内部类作为外部类的一个成员，并且依附于外部类而存在的。内部类可为静态，可用protected和private修饰（而外部类只能使用public和缺省的包访问权限）。内部类主要有以下几类：成员内部类、局部内部类、静态内部类、匿名内部类</p>
+<h3 id="内部类的共性"><a href="#内部类的共性" class="headerlink" title="内部类的共性"></a>内部类的共性</h3><blockquote>
+<p>(1)内部类仍然是一个独立的类，在编译之后内部类会被编译成独立的.class文件，但是前面冠以外部类的类名和$符号 。</p>
+<p>(2)内部类不能用普通的方式访问。</p>
+<p>(3)内部类声明成静态的，就不能随便的访问外部类的成员变量了，此时内部类只能访问外部类的静态成员变量 。</p>
+<p>(4)外部类不能直接访问内部类的的成员，但可以通过内部类对象来访问</p>
+</blockquote>
+<p>　　内部类是外部类的一个成员，因此内部类可以自由地访问外部类的成员变量，无论是否是private的。</p>
+<p>　　因为当某个外围类的对象创建内部类的对象时，此内部类会捕获一个隐式引用，它引用了实例化该内部对象的外围类对象。通过这个指针，可以访问外围类对象的全部状态。</p>
+<p>通过反编译内部类的字节码，分析之后主要是通过以下几步做到的： </p>
+<blockquote>
+<p>　　1 编译器自动为内部类添加一个成员变量， 这个成员变量的类型和外部类的类型相同， 这个成员变量就是指向外部类对象的引用； </p>
+</blockquote>
+<blockquote>
+<p>　　2 编译器自动为内部类的构造方法添加一个参数， 参数的类型是外部类的类型， 在构造方法内部使用这个参数为1中添加的成员变量赋值；</p>
+</blockquote>
+<blockquote>
+<p>　　3 在调用内部类的构造函数初始化内部类对象时， 会默认传入外部类的引用。</p>
+</blockquote>
+<h3 id="使用内部类的好处："><a href="#使用内部类的好处：" class="headerlink" title="使用内部类的好处："></a>使用内部类的好处：</h3><blockquote>
+<p>静态内部类的作用：</p>
+</blockquote>
+<blockquote>
+<p>1 只是为了降低包的深度，方便类的使用，静态内部类适用于包含类当中，但又不依赖与外在的类。</p>
+<p>2 由于Java规定静态内部类不能用使用外在类的非静态属性和方法，所以只是为了方便管理类结构而定义。于是我们在创建静态内部类的时候，不需要外部类对象的引用。</p>
+</blockquote>
+<blockquote>
+<p>非静态内部类的作用：</p>
+</blockquote>
+<blockquote>
+<p>1 内部类继承自某个类或实现某个接口，内部类的代码操作创建其他外围类的对象。所以你可以认为内部类提供了某种进入其外围类的窗口。</p>
+<p>2 使用内部类最吸引人的原因是:每个内部类都能独立地继承自一个(接口的)实现，所以无论外围类是否已经继承了某个(接口的)实现，对于内部类都没有影响</p>
+</blockquote>
+<blockquote>
+<p>3 如果没有内部类提供的可以继承多个具体的或抽象的类的能力，一些设计与编程问题就很难解决。<br> 从这个角度看，内部类使得多重继承的解决方案变得完整。接口解决了部分问题，而内部类有效地实现了”多重继承”。</p>
+</blockquote>
+<h3 id="那静态内部类与普通内部类有什么区别呢？"><a href="#那静态内部类与普通内部类有什么区别呢？" class="headerlink" title="那静态内部类与普通内部类有什么区别呢？"></a>那静态内部类与普通内部类有什么区别呢？</h3><p>问得好，区别如下：</p>
+<blockquote>
+<p>（1）静态内部类不持有外部类的引用<br>在普通内部类中，我们可以直接访问外部类的属性、方法，即使是private类型也可以访问，这是因为内部类持有一个外部类的引用，可以自由访问。而静态内部类，则只可以访问外部类的静态方法和静态属性（如果是private权限也能访问，这是由其代码位置所决定的），其他则不能访问。</p>
+<p>（2）静态内部类不依赖外部类<br>普通内部类与外部类之间是相互依赖的关系，内部类实例不能脱离外部类实例，也就是说它们会同生同死，一起声明，一起被垃圾回收器回收。而静态内部类是可以独立存在的，即使外部类消亡了，静态内部类还是可以存在的。</p>
+<p>（3）普通内部类不能声明static的方法和变量<br>普通内部类不能声明static的方法和变量，注意这里说的是变量，常量（也就是final static修饰的属性）还是可以的，而静态内部类形似外部类，没有任何限制。</p>
+</blockquote>
+<h3 id="为什么普通内部类不能有静态变量呢？"><a href="#为什么普通内部类不能有静态变量呢？" class="headerlink" title="为什么普通内部类不能有静态变量呢？"></a>为什么普通内部类不能有静态变量呢？</h3><blockquote>
+<p>1 成员内部类 之所以叫做成员 就是说他是类实例的一部分 而不是类的一部分 </p>
+</blockquote>
+<blockquote>
+<p>2 结构上来说 他和你声明的成员变量是一样的地位 一个特殊的成员变量 而静态的变量是类的一部分和实例无关</p>
+</blockquote>
+<blockquote>
+<p>3 你若声明一个成员内部类 让他成为主类的实例一部分 然后又想在内部类声明和实例无关的静态的东西 你让JVM情何以堪啊</p>
+</blockquote>
+<blockquote>
+<p>4 若想在内部类内声明静态字段 就必须将其内部类本身声明为静态 </p>
+</blockquote>
+<p>非静态内部类有一个很大的优点：可以自由使用外部类的所有变量和方法</p>
+<p>下面的例子大概地介绍了</p>
+<p>1 非静态内部类和静态内部类的区别。</p>
+<p>2 不同访问权限的内部类的使用。</p>
+<p>3 外部类和它的内部类之间的关系</p>
+<pre><code>//本节讨论内部类以及不同访问权限的控制
+//内部类只有在使用时才会被加载。
+//外部类B
+public class B{
+    int i = 1;
+    int j = 1;
+    static int s = 1;
+    static int ss = 1;
+    A a;
+    AA aa;
+    AAA aaa;
+    //内部类A
+
+    public class A {
+//        static void go () {
+//
+//        }
+//        static {
+//
+//        }
+//      static int b = 1;//非静态内部类不能有静态成员变量和静态代码块和静态方法，
+        // 因为内部类在外部类加载时并不会被加载和初始化。
+        //所以不会进行静态代码的调用
+        int i = 2;//外部类无法读取内部类的成员，而内部类可以直接访问外部类成员
+
+        public void test() {
+            System.out.println(j);
+            j = 2;
+            System.out.println(j);
+            System.out.println(s);//可以访问类的静态成员变量
+        }
+        public void test2() {
+            AA aa = new AA();
+            AAA aaa = new AAA();
+        }
+
+    }
+    //静态内部类S，可以被外部访问
+    public static class S {
+        int i = 1;//访问不到非静态变量。
+        static int s = 0;//可以有静态变量
+
+        public static void main(String[] args) {
+            System.out.println(s);
+        }
+        @Test
+        public void test () {
+//            System.out.println(j);//报错，静态内部类不能读取外部类的非静态变量
+            System.out.println(s);
+            System.out.println(ss);
+            s = 2;
+            ss = 2;
+            System.out.println(s);
+            System.out.println(ss);
+        }
+    }
+
+    //内部类AA，其实这里加protected相当于default
+    //因为外部类要调用内部类只能通过B。并且无法直接继承AA，所以必须在同包
+    //的类中才能调用到(这里不考虑静态内部类)，那么就和default一样了。
+    protected class AA{
+        int i = 2;//内部类之间不共享变量
+        public void test (){
+            A a = new A();
+            AAA aaa = new AAA();
+            //内部类之间可以互相访问。
+        }
+    }
+    //包外部依然无法访问，因为包没有继承关系，所以找不到这个类
+    protected static class SS{
+        int i = 2;//内部类之间不共享变量
+        public void test (){
+
+            //内部类之间可以互相访问。
+        }
+    }
+    //私有内部类A，对外不可见，但对内部类和父类可见
+    private class AAA {
+        int i = 2;//内部类之间不共享变量
+
+        public void test() {
+            A a = new A();
+            AA aa = new AA();
+            //内部类之间可以互相访问。
+        }
+    }
+    @Test
+    public void test(){
+        A a = new A();
+        a.test();
+        //内部类可以修改外部类的成员变量
+        //打印出 1 2
+        B b = new B();
+
+    }
+}</code></pre><p>​<br>    //另一个外部类<br>    class C {<br>        @Test<br>        public void test() {<br>            //首先，其他类内部类只能通过外部类来获取其实例。<br>            B.S s = new B.S();<br>            //静态内部类可以直接通过B类直接获取，不需要B的实例，和静态成员变量类似。<br>            //B.A a = new B.A();<br>            //当A不是静态类时这行代码会报错。<br>            //需要使用B的实例来获取A的实例<br>            B b = new B();<br>            B.A a = b.new A();<br>            B.AA aa = b.new AA();//B和C同包，所以可以访问到AA<br>    //      B.AAA aaa = b.new AAA();AAA为私有内部类，外部类不可见<br>            //当A使用private修饰时，使用B的实例也无法获取A的实例，这一点和私有变量是一样的。<br>            //所有普通的内部类与类中的一个变量是类似的。静态内部类则与静态成员类似。<br>        }<br>    }</p>
+<h2 id="内部类的加载"><a href="#内部类的加载" class="headerlink" title="内部类的加载"></a>内部类的加载</h2><p>可能刚才的例子中没办法直观地看到内部类是如何加载的，接下来用例子展示一下内部类加载的过程。</p>
+<blockquote>
+<p>1  内部类是延时加载的，也就是说只会在第一次使用时加载。不使用就不加载，所以可以很好的实现单例模式。</p>
+<p>2 不论是静态内部类还是非静态内部类都是在第一次使用时才会被加载。</p>
+<p>3 对于非静态内部类是不能出现静态模块（包含静态块，静态属性，静态方法等）</p>
+<p>4 非静态类的使用需要依赖于外部类的对象，详见上述对象innerClass 的初始化。</p>
+</blockquote>
+<p>简单来说，类的加载都是发生在类要被用到的时候。内部类也是一样</p>
+<blockquote>
+<p>1 普通内部类在第一次用到时加载，并且每次实例化时都会执行内部成员变量的初始化，以及代码块和构造方法。</p>
+</blockquote>
+<blockquote>
+<p>2 静态内部类也是在第一次用到时被加载。但是当它加载完以后就会将静态成员变量初始化，运行静态代码块，并且只执行一次。当然，非静态成员和代码块每次实例化时也会执行。</p>
+</blockquote>
+<p>总结一下Java类代码加载的顺序，万变不离其宗。</p>
+<blockquote>
+<p>规律一、初始化构造时，先父后子；只有在父类所有都构造完后子类才被初始化</p>
+<p>规律二、类加载先是静态、后非静态、最后是构造函数。</p>
+<p>静态构造块、静态类属性按出现在类定义里面的先后顺序初始化，同理非静态的也是一样的，只是静态的只在加载字节码时执行一次，不管你new多少次，非静态会在new多少次就执行多少次</p>
+<p>规律三、java中的类只有在被用到的时候才会被加载</p>
+<p>规律四、java类只有在类字节码被加载后才可以被构造成对象实例</p>
+</blockquote>
+<h3 id="成员内部类"><a href="#成员内部类" class="headerlink" title="成员内部类"></a>成员内部类</h3><p>在方法中定义的内部类称为局部内部类。与局部变量类似，局部内部类不能有访问说明符，因为它不是外围类的一部分，但是它可以访问当前代码块内的常量，和此外围类所有的成员。</p>
+<p>需要注意的是：<br>局部内部类只能在定义该内部类的方法内实例化，不可以在此方法外对其实例化。</p>
+<pre><code>public class 局部内部类 {
+    class A {//局部内部类就是写在方法里的类，只在方法执行时加载，一次性使用。
+        public void test() {
+            class B {
+                public void test () {
+                    class C {
+
+                    }
+                }
+            }
+        }
+    }
+    @Test
+    public void test () {
+        int i = 1;
+        final int j = 2;
+        class A {
+            @Test
+            public void test () {
+                System.out.println(i);
+                System.out.println(j);
+            }
+        }
+        A a = new A();
+        System.out.println(a);
+    }
+
+    static class B {
+        public static void test () {
+            //static class A报错，方法里不能定义静态内部类。
+            //因为只有在方法调用时才能进行类加载和初始化。
+
+        }
+    }
+}</code></pre><h3 id="匿名内部类"><a href="#匿名内部类" class="headerlink" title="匿名内部类"></a>匿名内部类</h3><p>简单地说：匿名内部类就是没有名字的内部类，并且，匿名内部类是局部内部类的一种特殊形式。什么情况下需要使用匿名内部类？如果满足下面的一些条件，使用匿名内部类是比较合适的：<br>只用到类的一个实例。<br>类在定义后马上用到。<br>类非常小（SUN推荐是在4行代码以下）<br>给类命名并不会导致你的代码更容易被理解。<br>在使用匿名内部类时，要记住以下几个原则：</p>
+<blockquote>
+<p>1 　匿名内部类不能有构造方法。</p>
+<p>2 　匿名内部类不能定义任何静态成员、方法和类。</p>
+<p>3 　匿名内部类不能是public,protected,private,static。</p>
+<p>4 　只能创建匿名内部类的一个实例。</p>
+<p>5   一个匿名内部类一定是在new的后面，用其隐含实现一个接口或实现一个类。</p>
+<p>6 　因匿名内部类为局部内部类，所以局部内部类的所有限制都对其生效。</p>
+</blockquote>
+<p>一个匿名内部类的例子：</p>
+<pre><code>    public class 匿名内部类 {
+
+}
+interface D{
+    void run ();
+}
+abstract class E{
+    E (){
+
+    }
+    abstract void work();
+}
+class A {
+
+        @Test
+        public void test (int k) {
+            //利用接口写出一个实现该接口的类的实例。
+            //有且仅有一个实例，这个类无法重用。
+            new Runnable() {
+                @Override
+                public void run() {
+//                    k = 1;报错，当外部方法中的局部变量在内部类使用中必须改为final类型。
+                    //因为方外部法中即使改变了这个变量也不会反映到内部类中。
+                    //所以对于内部类来讲这只是一个常量。
+                    System.out.println(100);
+                    System.out.println(k);
+                }
+            };
+            new D(){
+                //实现接口的匿名类
+                int i =1;
+                @Override
+                public void run() {
+                    System.out.println(&quot;run&quot;);
+                    System.out.println(i);
+                    System.out.println(k);
+                }
+            }.run();
+            new E(){
+                //继承抽象类的匿名类
+                int i = 1;
+                void run (int j) {
+                    j = 1;
+                }
+
+                @Override
+                void work() {
+
+                }
+            };
+        }
+
+}</code></pre><h3 id="匿名内部类里的final"><a href="#匿名内部类里的final" class="headerlink" title="匿名内部类里的final"></a>匿名内部类里的final</h3><p>使用的形参为何要为final</p>
+<p>参考文件：<a href="http://android.blog.51cto.com/268543/384844" target="_blank" rel="noopener">http://android.blog.51cto.com/268543/384844</a></p>
+<blockquote>
+<p>我们给匿名内部类传递参数的时候，若该形参在内部类中需要被使用，那么该形参必须要为final。也就是说：当所在的方法的形参需要被内部类里面使用时，该形参必须为final。</p>
+<p>为什么必须要为final呢？</p>
+<p>首先我们知道在内部类编译成功后，它会产生一个class文件，该class文件与外部类并不是同一class文件，仅仅只保留对外部类的引用。当外部类传入的参数需要被内部类调用时，从java程序的角度来看是直接被调用：</p>
+</blockquote>
+<pre><code>public class OuterClass {
+    public void display(final String name,String age){
+        class InnerClass{
+            void display(){
+                System.out.println(name);
+            }
+        }
+    }
+}</code></pre><p>从上面代码中看好像name参数应该是被内部类直接调用？其实不然，在java编译之后实际的操作如下：</p>
+<pre><code>public class OuterClass$InnerClass {
+    public InnerClass(String name,String age){
+        this.InnerClass$name = name;
+        this.InnerClass$age = age;
+    }</code></pre><p>​<br>        public void display(){<br>            System.out.println(this.InnerClass$name + “—-“ + this.InnerClass$age );<br>        }<br>    }</p>
+<p>  所以从上面代码来看，内部类并不是直接调用方法传递的参数，而是利用自身的构造器对传入的参数进行备份，自己内部方法调用的实际上时自己的属性而不是外部方法传递进来的参数。</p>
+<blockquote>
+<p>  直到这里还没有解释为什么是final</p>
+</blockquote>
+<blockquote>
+<p>在内部类中的属性和外部方法的参数两者从外表上看是同一个东西，但实际上却不是，所以他们两者是可以任意变化的，也就是说在内部类中我对属性的改变并不会影响到外部的形参，而然这从程序员的角度来看这是不可行的。</p>
+<p>毕竟站在程序的角度来看这两个根本就是同一个，如果内部类该变了，而外部方法的形参却没有改变这是难以理解和不可接受的，所以为了保持参数的一致性，就规定使用final来避免形参的不改变。</p>
+</blockquote>
+<p>  简单理解就是，拷贝引用，为了避免引用值发生改变，例如被外部类的方法修改等，而导致内部类得到的值不一致，于是用final来让该引用不可改变。</p>
+<p>  故如果定义了一个匿名内部类，并且希望它使用一个其外部定义的参数，那么编译器会要求该参数引用是final的。</p>
+<h2 id="内部类初始化"><a href="#内部类初始化" class="headerlink" title="内部类初始化"></a>内部类初始化</h2><p>我们一般都是利用构造器来完成某个实例的初始化工作的，但是匿名内部类是没有构造器的！那怎么来初始化匿名内部类呢？使用构造代码块！利用构造代码块能够达到为匿名内部类创建一个构造器的效果。</p>
+<pre><code>public class OutClass {
+    public InnerClass getInnerClass(final int age,final String name){
+        return new InnerClass() {
+            int age_ ;
+            String name_;
+            //构造代码块完成初始化工作
+            {
+                if(0 &lt; age &amp;&amp; age &lt; 200){
+                    age_ = age;
+                    name_ = name;
+                }
+            }
+            public String getName() {
+                return name_;
+            }
+
+            public int getAge() {
+                return age_;
+            }
+        };
+    }</code></pre><p>​        </p>
+<h2 id="内部类的重载"><a href="#内部类的重载" class="headerlink" title="内部类的重载"></a>内部类的重载</h2><p>　　如果你创建了一个内部类，然后继承其外围类并重新定义此内部类时，会发生什么呢？也就是说，内部类可以被重载吗？这看起来似乎是个很有用的点子，但是“重载”内部类就好像它是外围类的一个方法，其实并不起什么作用：</p>
+<pre><code>class Egg {
+       private Yolk y;
+
+       protected class Yolk {
+              public Yolk() {
+                     System.out.println(&quot;Egg.Yolk()&quot;);
+              }
+       }
+
+       public Egg() {
+              System.out.println(&quot;New Egg()&quot;);
+              y = new Yolk();
+       }
+}
+
+public class BigEgg extends Egg {
+       public class Yolk {
+              public Yolk() {
+                     System.out.println(&quot;BigEgg.Yolk()&quot;);
+              }
+       }
+
+       public static void main(String[] args) {
+              new BigEgg();
+       }
+}
+复制代码
+输出结果为：
+New Egg()
+Egg.Yolk()</code></pre><p>缺省的构造器是编译器自动生成的，这里是调用基类的缺省构造器。你可能认为既然创建了BigEgg 的对象，那么所使用的应该是被“重载”过的Yolk，但你可以从输出中看到实际情况并不是这样的。<br>这个例子说明，当你继承了某个外围类的时候，内部类并没有发生什么特别神奇的变化。这两个内部类是完全独立的两个实体，各自在自己的命名空间内。</p>
+<h2 id="内部类的继承"><a href="#内部类的继承" class="headerlink" title="内部类的继承"></a>内部类的继承</h2><p>因为内部类的构造器要用到其外围类对象的引用，所以在你继承一个内部类的时候，事情变得有点复杂。问题在于，那个“秘密的”外围类对象的引用必须被初始化，而在被继承的类中并不存在要联接的缺省对象。要解决这个问题，需使用专门的语法来明确说清它们之间的关联：</p>
+<pre><code>class WithInner {
+        class Inner {
+                Inner(){
+                        System.out.println(&quot;this is a constructor in WithInner.Inner&quot;);
+                };
+        }
+}
+
+public class InheritInner extends WithInner.Inner {
+        // ! InheritInner() {} // Won&apos;t compile
+        InheritInner(WithInner wi) {
+                wi.super();
+                System.out.println(&quot;this is a constructor in InheritInner&quot;);
+        }
+
+        public static void main(String[] args) {
+                WithInner wi = new WithInner();
+                InheritInner ii = new InheritInner(wi);
+        }
+}</code></pre><p>复制代码<br>输出结果为：<br>this is a constructor in WithInner.Inner<br>this is a constructor in InheritInner</p>
+<p>可以看到，InheritInner 只继承自内部类，而不是外围类。但是当要生成一个构造器时，缺省的构造器并不算好，而且你不能只是传递一个指向外围类对象的引用。此外，你必须在构造器内使用如下语法：<br>enclosingClassReference.super();<br>这样才提供了必要的引用，然后程序才能编译通过。</p>
+<p>有关匿名内部类实现回调，事件驱动，委托等机制的文章将在下一节讲述。</p>
+<h2 id="Java内部类的实现原理"><a href="#Java内部类的实现原理" class="headerlink" title="Java内部类的实现原理"></a>Java内部类的实现原理</h2><p>内部类为什么能够访问外部类的成员？</p>
+<p>定义内部类如下：</p>
+<p><img src="http://p3.pstatp.com/large/pgc-image/1539338093053104f5529ec" alt="Java 内部类"></p>
+<p>使用javap命令进行反编译。</p>
+<p>编译后得到Main.class Main$Inner.class两个文件，反编译Main$Inner.class文件如下：</p>
+<p><img src="http://p1.pstatp.com/large/pgc-image/1539338144888f57662c7bc" alt="Java 内部类"></p>
+<p>可以看到，内部类其实拥有外部类的一个引用，在构造函数中将外部类的引用传递进来。</p>
+<p>匿名内部类为什么只能访问局部的final变量？</p>
+<p>其实可以这样想，当方法执行完毕后，局部变量的生命周期就结束了，而局部内部类对象的生命周期可能还没有结束，那么在局部内部类中访问局部变量就不可能了，所以将局部变量改为final，改变其生命周期。</p>
+<p>编写代码如下：</p>
+<p><img src="http://p1.pstatp.com/large/pgc-image/15393408957685bcddd1c64" alt="Java 内部类"></p>
+<p>这段代码编译为Main.class Main$1.class两个文件，反编译Main$1.class文件如下：</p>
+<p><img src="http://p3.pstatp.com/large/pgc-image/1539341219661a629a53b8c" alt="Java 内部类"></p>
+<p>可以看到，java将编译时已经确定的值直接复制，进行替换，将无法确定的值放到了内部类的常量池中，并在构造函数中将其从常量池取出到字段中。</p>
+<p>可以看出，java将局部变量m直接进行复制，所以其并不是原来的值，若在内部类中将m更改，局部变量的m值不会变，就会出现数据不一致，所以java就将其限制为final，使其不能进行更改，这样数据不一致的问题就解决了。</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://www.cnblogs.com/hujingnb/p/10181621.html" target="_blank" rel="noopener">https://www.cnblogs.com/hujingnb/p/10181621.html</a><br><a href="https://blog.csdn.net/codingtu/article/details/79336026" target="_blank" rel="noopener">https://blog.csdn.net/codingtu/article/details/79336026</a><br><a href="https://www.cnblogs.com/woshimrf/p/java-inner-class.html" target="_blank" rel="noopener">https://www.cnblogs.com/woshimrf/p/java-inner-class.html</a><br><a href="https://www.cnblogs.com/dengchengchao/p/9713979.html" target="_blank" rel="noopener">https://www.cnblogs.com/dengchengchao/p/9713979.html</a></p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java内部类/" rel="tag"># Java内部类</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/17/17、多线程/" rel="next" title="夯实Java基础系列17：一文搞懂Java多线程使用方式、实现原理以及常见面试题">
+                <i class="fa fa-chevron-left"></i> 夯实Java基础系列17：一文搞懂Java多线程使用方式、实现原理以及常见面试题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/19/19、Java集合框架梳理/" rel="prev" title="夯实Java基础系列19：一文搞懂Java集合类框架，以及常见面试题">
+                夯实Java基础系列19：一文搞懂Java集合类框架，以及常见面试题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#内部类初探"><span class="nav-number">1.</span> <span class="nav-text">内部类初探</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是内部类？"><span class="nav-number">1.1.</span> <span class="nav-text">什么是内部类？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内部类的共性"><span class="nav-number">1.2.</span> <span class="nav-text">内部类的共性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用内部类的好处："><span class="nav-number">1.3.</span> <span class="nav-text">使用内部类的好处：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#那静态内部类与普通内部类有什么区别呢？"><span class="nav-number">1.4.</span> <span class="nav-text">那静态内部类与普通内部类有什么区别呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么普通内部类不能有静态变量呢？"><span class="nav-number">1.5.</span> <span class="nav-text">为什么普通内部类不能有静态变量呢？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内部类的加载"><span class="nav-number">2.</span> <span class="nav-text">内部类的加载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#成员内部类"><span class="nav-number">2.1.</span> <span class="nav-text">成员内部类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#匿名内部类"><span class="nav-number">2.2.</span> <span class="nav-text">匿名内部类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#匿名内部类里的final"><span class="nav-number">2.3.</span> <span class="nav-text">匿名内部类里的final</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内部类初始化"><span class="nav-number">3.</span> <span class="nav-text">内部类初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内部类的重载"><span class="nav-number">4.</span> <span class="nav-text">内部类的重载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内部类的继承"><span class="nav-number">5.</span> <span class="nav-text">内部类的继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java内部类的实现原理"><span class="nav-number">6.</span> <span class="nav-text">Java内部类的实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">7.</span> <span class="nav-text">参考文章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">8.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">8.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">8.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

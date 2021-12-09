@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="这部分内容主要是基于一些关于Linux系统的内核基础和基本命令的学习总结，内容不全面，只讲述了其中的一小部分，后续会再补充，如有错误，还请见谅。 Linux操作系统 Linux操作系统博大精深，其中对线程，IO，文件系统等概念的实现都很有借鉴意义。">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux内核与基础命令学习总结">
+<meta property="og:url" content="http://yoursite.com/2018/07/09/面试总结/Linux内核与基础命令学习总结/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="这部分内容主要是基于一些关于Linux系统的内核基础和基本命令的学习总结，内容不全面，只讲述了其中的一小部分，后续会再补充，如有错误，还请见谅。 Linux操作系统 Linux操作系统博大精深，其中对线程，IO，文件系统等概念的实现都很有借鉴意义。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif">
+<meta property="og:image" content="http://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="http://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif">
+<meta property="og:image" content="http://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="http://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://img-blog.csdn.net/20180703221736541?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2E3MjQ4ODg=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:24.022Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux内核与基础命令学习总结">
+<meta name="twitter:description" content="这部分内容主要是基于一些关于Linux系统的内核基础和基本命令的学习总结，内容不全面，只讲述了其中的一小部分，后续会再补充，如有错误，还请见谅。 Linux操作系统 Linux操作系统博大精深，其中对线程，IO，文件系统等概念的实现都很有借鉴意义。">
+<meta name="twitter:image" content="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/09/面试总结/Linux内核与基础命令学习总结/">
+
+
+
+
+
+  <title>Linux内核与基础命令学习总结 | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/09/面试总结/Linux内核与基础命令学习总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux内核与基础命令学习总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-09T22:33:14+08:00">
+                2018-07-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/后端/" itemprop="url" rel="index">
+                    <span itemprop="name">后端</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/后端/技术总结/" itemprop="url" rel="index">
+                    <span itemprop="name">技术总结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/07/09/面试总结/Linux内核与基础命令学习总结/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/07/09/面试总结/Linux内核与基础命令学习总结/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><p>这部分内容主要是基于一些关于Linux系统的内核基础和基本命令的学习总结，内容不全面，只讲述了其中的一小部分，后续会再补充，如有错误，还请见谅。</p>
+<p>Linux操作系统</p>
+<p>Linux操作系统博大精深，其中对线程，IO，文件系统等概念的实现都很有借鉴意义。</p>
+<a id="more"></a>
+
+
+<p>​        </p>
+<h2 id="文件系统和VFS"><a href="#文件系统和VFS" class="headerlink" title="文件系统和VFS"></a>文件系统和VFS</h2><p>文件系统的inode上面讲过了。VFS主要用于屏蔽底层的不同文件系统，比如接入网络中的nfs文件系统，亦或是windows文件系统，正常情况下难以办到，而vfs通过使用IO操作的posix规范来规定所有文件读写操作，每个文件系统只需要实现这些操作就可以接入VFS，不需要重新安装文件系统。</p>
+<h2 id="进程和线程"><a href="#进程和线程" class="headerlink" title="进程和线程"></a>进程和线程</h2><pre><code>&gt; 进程、程序与线程
+&gt; 
+&gt; 程序
+&gt; 
+&gt;  程序，简单的来说就是存在磁盘上的二进制文件，是可以内核所执行的代码 
+&gt; 
+&gt; 进程
+&gt; 
+&gt;  当一个用户启动一个程序，将会在内存中开启一块空间，这就创造了一个进程，一个进程包含一个独一无二的PID，和执行者的权限属性参数，以及程序所需代码与相关的资料。
+&gt;  进程是系统分配资源的基本单位。
+&gt;  一个进程可以衍生出其他的子进程，子进程的相关权限将会沿用父进程的相关权限。
+&gt; 
+&gt; 线程
+&gt; 
+&gt;  每个进程包含一个或多个线程，线程是进程内的活动单元，是负责执行代码和管理进程运行状态的抽象。
+&gt;  线程是独立运行和调度的基本单位。</code></pre><blockquote>
+<p> 子进程和父进程<br>进程的层次结构（父进程与子进程）在进程执行的过程中可能会衍生出其他的进程，称之为子进程，子进程拥有一个指明其父进程PID的PPID。子进程可以继承父进程的环境变量和权限参数。</p>
+<p>于是，linux系统中就诞生了进程的层次结构——进程树。<br>进程树的根是第一个进程（init进程）。</p>
+<p>过程调用的流程： fork &amp; exec一个进程生成子进程的过程是，系统首先复制(fork)一份父进程，生成一个暂存进程，这个暂存进程和父进程的区别是pid不一样，而且拥有一个ppid，这时候系统再去执行(exec)这个暂存进程，让他加载实际要运行的程序，最终成为一个子进程的存在。</p>
+<p>服务与进程</p>
+<p>简单的说服务(daemon)就是常驻内存的进程，通常服务会在开机时通过init.d中的一段脚本被启动。</p>
+<p>进程通信</p>
+<p>进程通信的几种基本方式：管道，信号量，消息队列，共享内存，快速用户控件互斥。 </p>
+</blockquote>
+<h2 id="fork方法"><a href="#fork方法" class="headerlink" title="fork方法"></a>fork方法</h2><p>  一个进程，包括代码、数据和分配给进程的资源。fork（）函数通过系统调用创建一个与原来进程几乎完全相同的进程，</p>
+<p>也就是两个进程可以做完全相同的事，但如果初始参数或者传入的变量不同，两个进程也可以做不同的事。</p>
+<pre><code>一个进程调用fork（）函数后，系统先给新的进程分配资源，例如存储数据和代码的空间。然后把原来的进程的所有值都</code></pre><p>复制到新的新进程中，只有少数值与原来的进程的值不同。相当于克隆了一个自己。</p>
+<pre><code>fork调用的一个奇妙之处就是它仅仅被调用一次，却能够返回两次，它可能有三种不同的返回值：
+    1）在父进程中，fork返回新创建子进程的进程ID；
+    2）在子进程中，fork返回0；
+    3）如果出现错误，fork返回一个负值；</code></pre><p>如何理解pid在父子进程中不同？</p>
+<p>其实就相当于链表，进程形成了链表，父进程的pid指向了子进程的pid，因为子进程没有子进程，所以pid为0。</p>
+<h2 id="写时复制"><a href="#写时复制" class="headerlink" title="写时复制"></a>写时复制</h2><pre><code>传统的fork机制是，调用fork时，内核会复制所有的内部数据结构，复制进程的页表项，然后把父进程的地址空间按页复制给子进程（非常耗时）。
+
+现代的fork机制采用了一种惰性算法的优化策略。
+
+为了避免复制时系统开销，就尽可能的减少“复制”操作，当多个进程需要读取他们自己那部分资源的副本时，并不复制多个副本出来，而是为每个进程设定一个文件指针，让它们读取同一个实际文件。
+
+显然这样的方式会在写入时产生冲突（类似并发），于是当某个进程想要修改自己的那个副本时，再去复制该资源，（只有写入时才复制，所以叫写时复制）这样就减少了复制的频率。</code></pre><h2 id="父子进程，僵尸进程，孤儿进程，守护进程"><a href="#父子进程，僵尸进程，孤儿进程，守护进程" class="headerlink" title="父子进程，僵尸进程，孤儿进程，守护进程"></a>父子进程，僵尸进程，孤儿进程，守护进程</h2><p>父进程通过fork产生子进程。</p>
+<p>孤儿进程：当子进程未结束时父进程异常退出，原本需要由父进程进行处理的子进程变成了孤儿进程，init系统进程会把这些进程领养，避免他们成为孤儿。</p>
+<p>僵尸进程：当子进程结束时，会在内存中保留一部分数据结构等待父亲进程显式结束，如果父进程没有执行结束操作，则会导致子进程的剩余结构无法被释放，占用空间造成严重后果。</p>
+<p>守护进程：守护进程用于监控其他进程，当发现大量僵尸进程时，会找到他们的父节点并杀死，同时让init线程认养他们以便释放这些空间。</p>
+<p>僵尸进程是有害的，孤儿进程由于内核进程的认养不会造成危害。</p>
+<h2 id="进程组和会话"><a href="#进程组和会话" class="headerlink" title="进程组和会话"></a>进程组和会话</h2><blockquote>
+<p>会话和进程组进程组每个进程都属于某个进程组，进程组就是由一个或者多个为了实现作业控制而相互关联的进程组成的。</p>
+<p>一个进程组的id是进程组首进程的pid（如果一个进程组只有一个进程，那进程组和进程其实没啥区别）。</p>
+<p>进程组的意义在于，信号可以发送给进程组中的所有进程。这样可以实现对多个进程的同时操作。<br>会话会话是一个或者多个进程组的集合。</p>
+<p>一般来说，会话(session)和shell没有什么本质上的区别。<br>我们通常使用用户登录一个终端进行一系列操作这样的例子来描述一次会话。</p>
+</blockquote>
+<p>举例</p>
+<p>$cat ship-inventory.txt | grep</p>
+<p>booty|sort上面就是在某次会话中的一个shell命令，它会产生一个由3个进程组成的进程组。</p>
+<h2 id="守护进程"><a href="#守护进程" class="headerlink" title="守护进程"></a>守护进程</h2><p>守护进程（服务）守护进程(daemon)运行在后台，不与任何控制终端相关联。通常在系统启动时通过init脚本被调用而开始运行。</p>
+<p>在linux系统中，守护进程和服务没有什么区别。<br>对于一个守护进程，有两个基本的要求：其一：必须作为init进程的子进程运行，其二：不与任何控制终端交互。</p>
+<h2 id="硬连接和软连接"><a href="#硬连接和软连接" class="headerlink" title="硬连接和软连接"></a>硬连接和软连接</h2><p>硬链接指的是不同的文件名指向同一个inode节点，比如某个目录下的a和另一个目录下的b，建立一个软连接让a指向b，则a和b共享同一个inode。</p>
+<p>软连接是指一个文件的inode节点不存数据，而是存储着另一个文件的绝对路径，访问文件内容时实际上是去访问对应路径下的文件inode，这样的话文件发生改动或者移动都会导致软连接失效。</p>
+<h2 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h2><p>线程基础概念线程是进程内的执行单元（比进程更低一层的概念），具体包括 虚拟处理器，堆栈，程序状态等。<br>可以认为 线程是操作系统调度的最小执行单元。</p>
+<p>现代操作系统对用户空间做两个基础抽象:虚拟内存和虚拟处理器。这使得进程内部“感觉”自己独占机器资源。</p>
+<p>虚拟内存系统会为每个进程分配独立的内存空间，这会让进程以为自己独享全部的RAM。</p>
+<p>但是同一个进程内的所有线程共享该进程的内存空间。<br>虚拟处理器这是一个针对线程的概念，它让每个线程都“感觉”自己独享CPU。实际上对于进程也是一样的。</p>
+<h2 id="线程模型"><a href="#线程模型" class="headerlink" title="线程模型"></a>线程模型</h2><p>线程模型线程的概念同时存在于内核和用户空间中。下面介绍三种线程模型。</p>
+<pre><code>内核级线程模型每个内核线程直接转换成用户空间的线程。即内核线程：用户空间线程=1：1
+
+用户级线程模型这种模型下，一个保护了n个线程的用户进程只会映射到一个内核进程。即n:1。
+可以减少上下文切换的成本，但在linux下没什么意义，因为linux下进程间的上下文切换本身就没什么消耗，所以很少使用。
+
+混合式线程模型上述两种模型的混合，即n:m型。
+很难实现。</code></pre><h2 id="内核线程实现"><a href="#内核线程实现" class="headerlink" title="内核线程实现"></a>内核线程实现</h2><p>系统线程实现：PThreads<br>原始的linux系统调用中，没有像C++11或者是Java那样完整的线程库。</p>
+<p>整体看来pthread的api比较冗余和复杂，但是基本操作也主要是 创建、退出等。</p>
+<p>1.创建线程</p>
+<pre><code>int pthread_create
+
+(若线程创建成功，则返回0。若线程创建失败，则返回出错编号)
+
+　　注意:线程创建者和新建线程之间没有fork()调用那样的父子关系，它们是对等关系。调用pthread_create()创建线程后，线程创建者和新建线程哪个先运行是不确定的，特别是在多处理机器上。</code></pre><p>2.终止线程</p>
+<pre><code>void pthread_exit(void *value_ptr);
+
+   线程调用pthread_exit()结束自己，参数value_ptr作为线程的返回值被调用pthread_join的线程使用。由于一个进程中的多个线程是共享数据段的，因此通常在线程退出之后，退出线程所占用的资源并不会随着线程的终止而得到释放，但是可以用pthread_join()函数来同步并释放资源</code></pre><p>3.取消线程</p>
+<pre><code>int pthread_cancel(pthread_t thread);
+
+　　注意：若是在整个程序退出时，要终止各个线程，应该在成功发送 CANCEL指令后，使用 pthread_join函数，等待指定的线程已经完全退出以后，再继续执行；否则，很容易产生 “段错误”。</code></pre><p>4.连接线程（阻塞）</p>
+<pre><code>  int pthread_join(pthread_t thread, void **value_ptr);
+
+　　等待线程thread结束，并设置*value_ptr为thread的返回值。pthread_join阻塞调用者，一直到线程thread结束为止。当函数返回时，被等待线程的资源被收回。如果进程已经结束，那么该函数会立即返回。并且thread指定的线程必须是joinable的。
+
+需要留意的一点是linux机制下，线程存在一个被称为joinable的状态。下面简要了解一下：</code></pre><p>Join和Detach<br>这块的概念，非常类似于之前父子进程那部分，等待子进程退出的内容（一系列的wait函数）。</p>
+<p>linux机制下，线程存在两种不同的状态：joinable和unjoinable。</p>
+<pre><code>如果一个线程被标记为joinable时，即便它的线程函数执行完了，或者使用了pthread_exit()结束了该线程，它所占用的堆栈资源和进程描述符都不会被释放（类似僵尸进程），这种情况应该由线程的创建者调用pthread_join()来等待线程的结束并回收其资源（类似wait系函数）。默认情况下创建的线程都是这种状态。
+
+如果一个线程被标记成unjoinable，称它被分离(detach)了，这时候如果该线程结束，所有它的资源都会被自动回收。省去了给它擦屁股的麻烦。
+
+因为创建的线程默认都是joinable的，所以要么在父线程调用pthread_detach(thread_id)将其分离，要么在线程内部，调用pthread_detach(pthread_self())来把自己标记成分离的。</code></pre><h2 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h2><pre><code>文件描述符在linux内核中，文件是用一个整数来表示的，称为 文件描述符，通俗的来说，你可以理解它是文件的id（唯一标识符）
+
+普通文件
+普通文件就是字节流组织的数据。
+文件并不是通过和文件名关联来实现的，而是通过关联索引节点来实现的，文件节点拥有文件系统为普通文件分配的唯一整数值(ino)，并且存放着一些文件的相关元数据。
+
+目录与链接
+正常情况下文件是通过文件名来打开的。
+目录是可读名称到索引编号之间的映射，名称和索引节点之间的配对称为链接。
+可以把目录看做普通文件，只是它包含着文件名称到索引节点的映射（链接）</code></pre><p>文件系统是基于底层存储建立的一个树形文件结构。比较经典的是Linux的文件系统，首先在硬盘的超级块中安装文件系统，磁盘引导时会加载文件系统的信息。</p>
+<p>linux使用inode来标识任意一个文件。inode存储除了文件名以外的文件信息，包括创建时间，权限，以及一个指向磁盘存储位置的指针，那里才是真正存放数据的地方。</p>
+<p>一个目录也是一个inode节点。</p>
+<p>详细阐述一次文件访问的过程：</p>
+<pre><code>首先用户ls查看目录。由于一个目录也是一个文件，所以相当于是看目录文件下有哪些东西。
+
+实际上目录文件是一个特殊的inode节点，它不需要存储实际数据，而只是维护一个文件名到inode的映射表。
+
+于是我们ls到另一个目录。同理他也是一个inode。我们在这个inode下执行vi操作打开某个文件，于是linux通过inode中的映射表找到了我们请求访问的文件名对应的inode。
+
+然后寻道到对应的磁盘位置，读取内容到缓冲区，通过系统调用把内容读到内存中，最后进行访问。</code></pre><h2 id="IO操作"><a href="#IO操作" class="headerlink" title="IO操作"></a>IO操作</h2><h1 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h1><p>　　对于内核而言，所有打开的文件都通过文件描述符引用。文件描述符是一个非负整数。当打开一个现有文件或创建一个新文件时，内核向进程返回一个文件描述符。当读或写一个文件时，使用open或create返回的文件描述符表示该文件，将其作为参数传给read或write函数。</p>
+<h1 id="write函数"><a href="#write函数" class="headerlink" title="write函数"></a>write函数</h1><p> 　　write函数定义如下：</p>
+<pre>#include <unistd> ssize_t write(int filedes, void *buf, size_t nbytes); // 返回：若成功则返回写入的字节数，若出错则返回-1 // filedes：文件描述符 // buf:待写入数据缓存区 // nbytes:要写入的字节数</unistd></pre>
+
+
+
+<p>　　同样，为了保证写入数据的完整性，在《UNIX网络编程 卷1》中，作者将该函数进行了封装，具体程序如下：</p>
+<p><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt></p>
+<p><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></p>
+<pre> 1 ssize_t                        /* Write "n" bytes to a descriptor. */
+ 2 writen(int fd, const void *vptr, size_t n)
+ 3 {
+ 4     size_t nleft;
+ 5     ssize_t nwritten;
+ 6     const char *ptr;
+ 7 
+ 8     ptr = vptr; 9     nleft = n; 10     while (nleft > 0) { 11         if ( (nwritten = write(fd, ptr, nleft)) <= 0 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 0) { if (nwritten < && errno="=" eintr) nwritten="0;" * and call write() again else return(-1); error } nleft -="nwritten;" ptr +="nwritten;" return(n); end writen void writen(int fd, *ptr, size_t nbytes) (writen(fd, ptr, !="nbytes)" err_sys("writen error"); }< pre>
+
+<p><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></p>
+<h1 id="read函数"><a href="#read函数" class="headerlink" title="read函数"></a>read函数</h1><p>　　read函数定义如下：</p>
+<pre>#include <unistd> ssize_t read(int filedes, void *buf, size_t nbytes); // 返回：若成功则返回读到的字节数，若已到文件末尾则返回0，若出错则返回-1 // filedes：文件描述符 // buf:读取数据缓存区 // nbytes:要读取的字节数</unistd></pre>
+
+
+
+<p> 　　有几种情况可使实际读到的字节数少于要求读的字节数：</p>
+<p>　　1）读普通文件时，在读到要求字节数之前就已经达到了文件末端。例如，若在到达文件末端之前还有30个字节，而要求读100个字节，则read返回30，下一次再调用read时，它将返回0（文件末端）。</p>
+<p>　　2）当从终端设备读时，通常一次最多读一行。</p>
+<p>　　3）当从网络读时，网络中的缓存机构可能造成返回值小于所要求读的字结束。</p>
+<p>　　4）当从管道或FIFO读时，如若管道包含的字节少于所需的数量，那么read将只返回实际可用的字节数。</p>
+<p>　　5）当从某些面向记录的设备（例如磁带）读时，一次最多返回一个记录。</p>
+<p>　　6）当某一个信号造成中断，而已经读取了部分数据。</p>
+<p>　　在《UNIX网络编程 卷1》中，作者将该函数进行了封装，以确保数据读取的完整，具体程序如下：</p>
+<p><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt></p>
+<p><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></p>
+<pre> 1 ssize_t                        /* Read "n" bytes from a descriptor. */
+ 2 readn(int fd, void *vptr, size_t n)
+ 3 {
+ 4     size_t nleft;
+ 5     ssize_t nread;
+ 6     char *ptr;
+ 7 
+ 8     ptr = vptr; 9     nleft = n; 10     while (nleft > 0) { 11         if ( (nread = read(fd, ptr, nleft)) < 0) { 12             if (errno == EINTR) 13                 nread = 0;        /* and call read() again */
+14             else
+15                 return(-1); 16         } else if (nread == 0) 17             break;                /* EOF */
+18 
+19         nleft -= nread; 20         ptr   += nread; 21 } 22     return(n - nleft);        /* return >= 0 */
+23 } 24 /* end readn */
+25 
+26 ssize_t 27 Readn(int fd, void *ptr, size_t nbytes) 28 { 29 ssize_t        n; 30 
+31     if ( (n = readn(fd, ptr, nbytes)) < 0) 32         err_sys("readn error"); 33     return(n); 34 }</pre>
+
+<p><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></p>
+<p>本文下半部分摘自博文<a href="http://www.cnblogs.com/promise6522/archive/2012/03/03/2377935.html" target="_blank" rel="noopener">浅谈TCP/IP网络编程中socket的行为</a>。</p>
+<h1 id="read-write的语义：为什么会阻塞？"><a href="#read-write的语义：为什么会阻塞？" class="headerlink" title="read/write的语义：为什么会阻塞？"></a><strong>read/write的语义：为什么会阻塞？</strong></h1><p>　　先从write说起：</p>
+<pre>#include <unistd.h> ssize_t write(int fd, const void *buf, size_t count);</unistd.h></pre>
+
+
+
+<p>　　首先，write成功返回，<strong>只是buf中的数据被复制到了kernel中的TCP发送缓冲区。</strong>至于数据什么时候被发往网络，什么时候被对方主机接收，什么时候被对方进程读取，系统调用层面不会给予任何保证和通知。</p>
+<p>　　write在什么情况下会阻塞？当kernel的该socket的发送缓冲区已满时。对于每个socket，拥有自己的send buffer和receive buffer。从Linux 2.6开始，两个缓冲区大小都由系统来自动调节（autotuning），但一般在default和max之间浮动。</p>
+<pre># 获取socket的发送/接受缓冲区的大小：（后面的值是在Linux 2.6.38 x86_64上测试的结果）</pre>
+
+<pre>sysctl net.core.wmem_default       #126976
+sysctl net.core.wmem_max　　　　    #131071</pre>
+
+
+
+<p>　　已经发送到网络的数据依然需要暂存在send buffer中，只有收到对方的ack后，kernel才从buffer中清除这一部分数据，为后续发送数据腾出空间。接收端将收到的数据暂存在receive buffer中，自动进行确认。但如果socket所在的进程不及时将数据从receive buffer中取出，最终导致receive buffer填满，由于TCP的滑动窗口和拥塞控制，接收端会阻止发送端向其发送数据。这些控制皆发生在TCP/IP栈中，对应用程序是透明的，应用程序继续发送数据，最终导致send buffer填满，write调用阻塞。</p>
+<p>　　一般来说，由于<strong>接收端进程从socket读数据的速度</strong>跟不上<strong>发送端进程向socket写数据的速度</strong>，最终导致<strong>发送端write调用阻塞。</strong></p>
+<p>　　而read调用的行为相对容易理解，从socket的receive buffer中拷贝数据到应用程序的buffer中。read调用阻塞，通常是发送端的数据没有到达。</p>
+<h2 id="Linux常用命令和基础知识"><a href="#Linux常用命令和基础知识" class="headerlink" title="Linux常用命令和基础知识"></a>Linux常用命令和基础知识</h2><h3 id="查看进程"><a href="#查看进程" class="headerlink" title="查看进程"></a>查看进程</h3><pre><code>1. ps
+查看某个时间点的进程信息
+
+示例一：查看自己的进程
+
+# ps -l
+示例二：查看系统所有进程
+
+# ps aux
+示例三：查看特定的进程
+
+# ps aux | grep threadx
+
+2. top
+实时显示进程信息
+
+示例：两秒钟刷新一次
+
+# top -d 2
+3. pstree
+查看进程树
+
+示例：查看所有进程树
+
+# pstree -A
+4. netstat
+查看占用端口的进程
+
+示例：查看特定端口的进程
+
+# netstat -anp | grep port</code></pre><h3 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h3><p>ls -a  ,all列出全部文件包括隐藏</p>
+<p>ls -l，list显示文件的全部属性</p>
+<p>ls -d,仅列出目录本身</p>
+<p>cd mkdir rmdir 常用不解释 rm -rf永久删除 cp复制 mv移动或改名</p>
+<p>touch，更新文件时间或者建立新文件。</p>
+<h3 id="权限操作"><a href="#权限操作" class="headerlink" title="权限操作"></a>权限操作</h3><pre><code>chmod rwx 分别对应 421
+
+ chmod 754 .bashrc 将权限改为rwxr-xr--
+
+对应权限分配是对于 拥有者，所属群组，以及其他人。</code></pre><p>文件默认权限</p>
+<p>文件默认权限：文件默认没有可执行权限，因此为 666，也就是 -rw-rw-rw- 。</p>
+<p>目录默认权限：目录必须要能够进入，也就是必须拥有可执行权限，因此为 777 ，也就是 drwxrwxrwx。</p>
+<p>目录的权限</p>
+<p>ps:拥有目录权限才能修改文件名，拥有文件权限是没用的</p>
+<pre><code>文件名不是存储在一个文件的内容中，而是存储在一个文件所在的目录中。因此，拥有文件的 w 权限并不能对文件名进行修改。</code></pre><p>目录存储文件列表，一个目录的权限也就是对其文件列表的权限。因此，目录的 r 权限表示可以读取文件列表；w 权限表示可以修改文件列表，具体来说，就是添加删除文件，对文件名进行修改；x 权限可以让该目录成为工作目录，x 权限是 r 和 w 权限的基础，如果不能使一个目录成为工作目录，也就没办法读取文件列表以及对文件列表进行修改了。</p>
+<h2 id="连接操作"><a href="#连接操作" class="headerlink" title="连接操作"></a>连接操作</h2><p>硬链接：</p>
+<pre><code>使用ln建立了一个硬连接，通过ll -i获得他们的inode节点。发现他们的inode节点是相同的。符合硬连接规定。</code></pre><p>​<br>    # ln /etc/crontab .<br>    # ll -i /etc/crontab crontab<br><br>    34474855 -rw-r–r–. 2 root root 451 Jun 10 2014 crontab<br>    34474855 -rw-r–r–. 2 root root 451 Jun 10 2014 /etc/crontab</p>
+<p>软连接：</p>
+<pre><code>符号链接文件保存着源文件所在的绝对路径，在读取时会定位到源文件上，可以理解为 Windows 的快捷方式。
+
+当源文件被删除了或者被移动到其他位置了，链接文件就打不开了。
+
+可以为目录建立链接。
+
+# ll -i /etc/crontab /root/crontab2
+
+34474855 -rw-r--r--. 2 root root 451 Jun 10 2014 /etc/crontab
+53745909 lrwxrwxrwx. 1 root root 12 Jun 23 22:31 /root/crontab2 -&gt; /etc/crontab</code></pre><h2 id="获取内容"><a href="#获取内容" class="headerlink" title="获取内容"></a>获取内容</h2><p>cat 读取内容 加上-n 按行打印</p>
+<p>tac是cat的反向操作</p>
+<p>more允许翻页查看，而不像cat一次显示全部内容</p>
+<p>less可以先前翻页和向后翻页，more只能向前翻页</p>
+<p>head 和tail 负责取得文件的前几行和后几行</p>
+<h2 id="搜索和定位"><a href="#搜索和定位" class="headerlink" title="搜索和定位"></a>搜索和定位</h2><pre><code>1 which负责指令搜索，并显示第一条 比如which pwd，会找到pwd对应的程序。加-a 打印全部。
+
+2 whereis负责搜索文件， 后面接上dirname/filename
+
+文件搜索。速度比较快，因为它只搜索几个特定的目录。
+比如 whereis /bin hello.c
+
+3 locate
+文件搜索。可以用关键字或者正则表达式进行搜索。
+
+locate 使用 /var/lib/mlocate/ 这个数据库来进行搜索，它存储在内存中，并且每天更新一次，所以无法用 locate 搜索新建的文件。可以使用 updatedb 来立即更新数据库。
+
+# locate [-ir] keyword
+-r：正则表达式
+
+locate hello 
+locate he*
+vi heeee
+updatedb
+locate he?
+
+4. find
+文件搜索。可以使用文件的属性和权限进行搜索。
+
+# find [basedir] [option]
+example: find . -name &quot;shadow*&quot;
+
+find -name &quot;hike&quot;
+find +属性后缀 &quot;属性&quot;
+
+（一）与时间有关的选项
+
+-mtime  n ：列出在 n 天前的那一天修改过内容的文件
+
+（二）与文件拥有者和所属群组有关的选项
+
+-uid n
+-gid n
+-user name
+
+（三）与文件权限和名称有关的选项
+
+-name filename
+-size [+-]SIZE：搜寻比 SIZE 还要大 (+) 或小 (-) 的文件。这个 SIZE 的规格有：c: 代表 byte，k: 代表 1024bytes。所以，要找比 50KB 还要大的文件，就是 -size +50k
+-type TYPE</code></pre><h2 id="压缩"><a href="#压缩" class="headerlink" title="压缩"></a>压缩</h2><pre><code>gzip压缩和解压，还有bzip，xz等压缩
+
+而tar可以用打包，打包的时候也可以执行压缩
+
+压缩指令只能对一个文件进行压缩，而打包能够将多个文件打包成一个大文件。tar 不仅可以用于打包，也可以使用 gip、bzip2、xz 将打包文件进行压缩。
+
+$ tar [-z|-j|-J] [cv] [-f 新建的 tar 文件] filename...  ==打包压缩
+$ tar [-z|-j|-J] [tv] [-f 已有的 tar 文件]              ==查看
+$ tar [-z|-j|-J] [xv] [-f 已有的 tar 文件] [-C 目录]    ==解压缩</code></pre><h2 id="管道指令"><a href="#管道指令" class="headerlink" title="管道指令"></a>管道指令</h2><p>1 |</p>
+<p>2 cut切分数据，分成多列，last显示登陆者信息</p>
+<h2 id="正则"><a href="#正则" class="headerlink" title="正则"></a>正则</h2><p>grep</p>
+<pre><code>g/re/p（globally search a regular expression and print)，使用正则表示式进行全局查找并打印。
+
+$ grep [-acinv] [--color=auto] 搜寻字符串 filename
+-c ： 计算找到个数
+-i ： 忽略大小写
+-n ： 输出行号
+-v ： 反向选择，亦即显示出没有 搜寻字符串 内容的那一行
+--color=auto ：找到的关键字加颜色显示</code></pre><p>awk</p>
+<pre><code>$ awk &apos;条件类型 1 {动作 1} 条件类型 2 {动作 2} ...&apos; filename
+示例 2：/etc/passwd 文件第三个字段为 UID，对 UID 小于 10 的数据进行处理。
+
+$ cat /etc/passwd | awk &apos;BEGIN {FS=&quot;:&quot;} $3 &lt; 10 {print $1 &quot;\t &quot; $3}&apos;
+root 0
+bin 1
+daemon 2
+sed
+
+示例 3：输出正在处理的行号，并显示每一行有多少字段
+
+$ last -n 5 | awk &apos;{print $1 &quot;\t lines: &quot; NR &quot;\t columns: &quot; NF}&apos;
+dmtsai lines: 1 columns: 10
+dmtsai lines: 2 columns: 10
+dmtsai lines: 3 columns: 10
+dmtsai lines: 4 columns: 10
+dmtsai lines: 5 columns: 9</code></pre><p>sed:</p>
+<pre><code>awk用于匹配每一行中的内容并打印
+而sed负责把文件内容重定向到输出，所以sed读取完文件并重定向到输出并且通过awk匹配这些内容并打印。
+
+他们俩经常搭配使用。</code></pre><h2 id="linux指令实践和常见场景"><a href="#linux指令实践和常见场景" class="headerlink" title="linux指令实践和常见场景"></a>linux指令实践和常见场景</h2><h2 id="查看进程状态"><a href="#查看进程状态" class="headerlink" title="查看进程状态"></a>查看进程状态</h2><p>Linux进程状态(ps stat)之R、S、D、T、Z、X</p>
+<pre><code>D    不可中断     Uninterruptible sleep (usually IO)
+R    正在运行，或在队列中的进程
+S    处于休眠状态
+T    停止或被追踪
+Z    僵尸进程
+W    进入内存交换（从内核2.6开始无效）
+X    死掉的进程
+
+
+&lt;    高优先级
+N    低优先级
+L    有些页被锁进内存
+s    包含子进程
++    位于后台的进程组；
+l    多线程，克隆线程  multi-threaded (using CLONE_THREAD, like NPTL pthreads do)</code></pre><p>ps aux</p>
+<p><img src="https://img-blog.csdn.net/20180703221736541?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2E3MjQ4ODg=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt></p>
+<h2 id="strace"><a href="#strace" class="headerlink" title="strace"></a>strace</h2><p>strace用于跟踪程序执行过程中的系统调用，如跟踪test进程，只需要：</p>
+<p>strace -p [test_pid] 或直接strace ./test</p>
+<p>比如，跟踪pid为12345的进程中所有线程的read和write系统调用，输出字符串的长度限制为1024：</p>
+<p>strace -s 1024 -f -e trace=read,write -p 12345</p>
+<h2 id="tcpdump"><a href="#tcpdump" class="headerlink" title="tcpdump"></a>tcpdump</h2><p>tcpdump是Linux上的抓包工具，如抓取eth0网卡上的包，使用:</p>
+<p>sudo tcpdump -i eth0</p>
+<p>比如，抓取80端口的HTTP报文，以文本形式展示：</p>
+<p>sudo tcpdump -i any port 80 -A<br>这样你就可以清楚看到GET、POST请求的内容了。</p>
+<h2 id="nc"><a href="#nc" class="headerlink" title="nc"></a>nc</h2><p>nc可以在Linux上开启TCP Server、TCP Client、UDP Server、UDP Client。</p>
+<p>如在端口号12345上开启TCP Server和Client模拟TCP通信：</p>
+<p>Server:  nc -l 127.0.0.1 12345<br>Client:  nc 127.0.0.1 12345<br>在端口号12345上开启UDP Server和Client模拟TCP通信：</p>
+<p>Server:  nc -ul 127.0.0.1 12345<br>Client:  nc -u 127.0.0.1 12345<br>Unix Socket通信示例:</p>
+<p>Server:  nc -Ul /tmp/1.sock<br>Client:  nc -U /tmp/1.sock</p>
+<h2 id="curl"><a href="#curl" class="headerlink" title="curl"></a>curl</h2><p>curl用于模拟HTTP请求，在终端模拟请求时常用，如最基本的用法：</p>
+<p>curl <a href="http://www.baidu.com" target="_blank" rel="noopener">http://www.baidu.com</a></p>
+<h2 id="lsof"><a href="#lsof" class="headerlink" title="lsof"></a>lsof</h2><p>lsof命令主要用法包括：</p>
+<p>sudo lsof -i :[port] 查看端口占用进程信息，经常用于端口绑定失败时确认端口被哪个进程占用</p>
+<p>sudo lsof -p [pid] 查看进程打开了哪些文件或套接字</p>
+<h2 id="ss"><a href="#ss" class="headerlink" title="ss"></a>ss</h2><p>Linux上的ss命令可以用于替换netstat，ss直接读取解析/proc/net下的统计信息，相比netstat遍历/proc下的每个PID目录，速度快很多。</p>
+<h2 id="awk-sed"><a href="#awk-sed" class="headerlink" title="awk/sed"></a>awk/sed</h2><p>awk和sed在文本处理方面十分强大，其中，awk按列进行处理，sed按行进行处理。</p>
+<p>如采用冒号分隔数据，输出第一列数据（$0代表行全部列数据，$1代表第一列，$2代表第二列…）</p>
+<p>awk -F “:” ‘{print $1}’<br>在awk的结果基础上，结合sort、uniq和head等命令可以轻松完成频率统计等功能</p>
+<p>查看文件的第100行到第200行：<br>sed -n ‘100,200p’ log.txt<br>替换字符串中的特定子串<br>echo “int charset=gb2312 float”|sed “s/charset=gb2312/charset=UTF-8/g”<br>替换test文件每行匹配ab的部分为cd<br>sed -i ‘s/ab/cd/g’ test</p>
+<h2 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h2><p>打开文件并跳到第10行</p>
+<p>$ vim +10 filename.txt<br>打开文件跳到第一个匹配的行</p>
+<p>$ vim +/search-term filename.txt<br>以只读模式打开文件</p>
+<p>$ vim -R /etc/passwd</p>
+<h2 id="crontab"><a href="#crontab" class="headerlink" title="crontab"></a>crontab</h2><p>查看某个用户的crontab入口</p>
+<p>$ crontab -u john -l<br>设置一个每十分钟执行一次的计划任务</p>
+<p>*/10 * * * * /home/ramesh/check-disk-space<br>更多示例：Linux Crontab: 15 Awesome Cron Job Examples</p>
+<h2 id="service"><a href="#service" class="headerlink" title="service"></a>service</h2><p>service命令用于运行System V init脚本，这些脚本一般位于/etc/init.d文件下，这个命令可以直接运行这个文件夹里面的脚本，而不用加上路径</p>
+<p>查看服务状态</p>
+<p>$ service ssh status<br>查看所有服务状态</p>
+<p>$ service –status-all<br>重启服务</p>
+<p>$ service ssh restart</p>
+<h2 id="free"><a href="#free" class="headerlink" title="free"></a>free</h2><p>这个命令用于显示系统当前内存的使用情况，包括已用内存、可用内存和交换内存的情况</p>
+<p>默认情况下free会以字节为单位输出内存的使用量</p>
+<pre><code>$ free
+             total       used       free     shared    buffers     cached
+Mem:       3566408    1580220    1986188          0     203988     902960
+-/+ buffers/cache:     473272    3093136
+Swap:      4000176          0    4000176</code></pre><p>如果你想以其他单位输出内存的使用量，需要加一个选项，-g为GB，-m为MB，-k为KB，-b为字节</p>
+<pre><code>$ free -g
+             total       used       free     shared    buffers     cached
+Mem:             3          1          1          0          0          0
+-/+ buffers/cache:          0          2
+Swap:            3          0          3</code></pre><p>如果你想查看所有内存的汇总，请使用-t选项，使用这个选项会在输出中加一个汇总行</p>
+<pre><code>ramesh@ramesh-laptop:~$ free -t
+             total       used       free     shared    buffers     cached
+Mem:       3566408    1592148    1974260          0     204260     912556
+-/+ buffers/cache:     475332    3091076
+Swap:      4000176          0    4000176
+Total:     7566584    1592148    5974436</code></pre><h2 id="top"><a href="#top" class="headerlink" title="top"></a>top</h2><p>top命令会显示当前系统中占用资源最多的一些进程（默认以CPU占用率排序）如果你想改变排序方式，可以在结果列表中点击O（大写字母O）会显示所有可用于排序的列，这个时候你就可以选择你想排序的列</p>
+<pre><code>Current Sort Field:  P  for window 1:Def
+Select sort field via field letter, type any other key to return
+
+  a: PID        = Process Id              v: nDRT       = Dirty Pages count
+  d: UID        = User Id                 y: WCHAN      = Sleeping in Function
+  e: USER       = User Name               z: Flags      = Task Flags
+  ........</code></pre><p>如果只想显示某个特定用户的进程，可以使用-u选项</p>
+<p>$ top -u oracle</p>
+<h2 id="df"><a href="#df" class="headerlink" title="df"></a>df</h2><p>显示文件系统的磁盘使用情况，默认情况下df -k 将以字节为单位输出磁盘的使用量</p>
+<p>$ df -k</p>
+<pre><code>Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/sda1             29530400   3233104  24797232  12% /
+/dev/sda2            120367992  50171596  64082060  44% /home</code></pre><p>使用-h选项可以以更符合阅读习惯的方式显示磁盘使用量</p>
+<p>$ df -h</p>
+<pre><code>Filesystem                  Size   Used  Avail Capacity  iused      ifree %iused  Mounted on
+/dev/disk0s2               232Gi   84Gi  148Gi    37% 21998562   38864868   36%   /
+devfs                      187Ki  187Ki    0Bi   100%      648          0  100%   /dev
+map -hosts                   0Bi    0Bi    0Bi   100%        0          0  100%   /net
+map auto_home                0Bi    0Bi    0Bi   100%        0          0  100%   /home
+/dev/disk0s4               466Gi   45Gi  421Gi    10%   112774  440997174    0%   /Volumes/BOOTCAMP
+//app@izenesoft.cn/public  2.7Ti  1.3Ti  1.4Ti    48% </code></pre><h2 id="kill"><a href="#kill" class="headerlink" title="kill"></a>kill</h2><p>kill用于终止一个进程。一般我们会先用ps -ef查找某个进程得到它的进程号，然后再使用kill -9 进程号终止该进程。你还可以使用killall、pkill、xkill来终止进程</p>
+<p>$ ps -ef | grep vim<br>ramesh    7243  7222  9 22:43 pts/2    00:00:00 vim</p>
+<p>$ kill -9 7243</p>
+<h2 id="mount"><a href="#mount" class="headerlink" title="mount"></a>mount</h2><p>如果要挂载一个文件系统，需要先创建一个目录，然后将这个文件系统挂载到这个目录上</p>
+<p>mkdir /u01<br>mount /dev/sdb1 /u01<br>也可以把它添加到fstab中进行自动挂载，这样任何时候系统重启的时候，文件系统都会被加载</p>
+<p>/dev/sdb1 /u01 ext2 defaults 0 2</p>
+<h2 id="chmod"><a href="#chmod" class="headerlink" title="chmod"></a>chmod</h2><p>chmod用于改变文件和目录的权限</p>
+<p>给指定文件的属主和属组所有权限(包括读、写、执行)</p>
+<p>$ chmod ug+rwx file.txt<br>删除指定文件的属组的所有权限</p>
+<p>$ chmod g-rwx file.txt<br>修改目录的权限，以及递归修改目录下面所有文件和子目录的权限</p>
+<p>$ chmod -R ug+rwx file.txt<br>更多示例：7 Chmod Command Examples for Beginners</p>
+<h2 id="chown"><a href="#chown" class="headerlink" title="chown"></a>chown</h2><p>chown用于改变文件属主和属组</p>
+<p>同时将某个文件的属主改为oracle，属组改为db</p>
+<p>$ chown oracle:dba dbora.sh<br>使用-R选项对目录和目录下的文件进行递归修改</p>
+<p>$ chown -R oracle:dba /home/oracle</p>
+<h2 id="ifconfig"><a href="#ifconfig" class="headerlink" title="ifconfig"></a>ifconfig</h2><p>ifconfig用于查看和配置Linux系统的网络接口</p>
+<h2 id="uname"><a href="#uname" class="headerlink" title="uname"></a>uname</h2><p>uname可以显示一些重要的系统信息，例如内核名称、主机名、内核版本号、处理器类型之类的信息 </p>
+<h2 id="实际场景问题"><a href="#实际场景问题" class="headerlink" title="实际场景问题"></a>实际场景问题</h2><pre><code>1 cpu占用率
+
+top可以看
+ps看不了
+但是ps -aux可以看到各个线程的cpu和内存占用
+
+2 进程状态：
+
+ps -ef看不了
+ps aux可以看进程状态S R之类
+
+3 IO
+iostat查看io状态
+
+4网络
+netstat查看tcp连接状态和socket情况，
+
+ipconfig查看网络设备
+
+lsof可以查看端口使用情况
+
+5内存
+free</code></pre><h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></=></pre></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/09/面试总结/操作系统学习总结/" rel="next" title="操作系统学习总结">
+                <i class="fa fa-chevron-left"></i> 操作系统学习总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/09/面试总结/设计模式学习总结/" rel="prev" title="设计模式学习总结">
+                设计模式学习总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#文件系统和VFS"><span class="nav-number">1.</span> <span class="nav-text">文件系统和VFS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程和线程"><span class="nav-number">2.</span> <span class="nav-text">进程和线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fork方法"><span class="nav-number">3.</span> <span class="nav-text">fork方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写时复制"><span class="nav-number">4.</span> <span class="nav-text">写时复制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#父子进程，僵尸进程，孤儿进程，守护进程"><span class="nav-number">5.</span> <span class="nav-text">父子进程，僵尸进程，孤儿进程，守护进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程组和会话"><span class="nav-number">6.</span> <span class="nav-text">进程组和会话</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#守护进程"><span class="nav-number">7.</span> <span class="nav-text">守护进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#硬连接和软连接"><span class="nav-number">8.</span> <span class="nav-text">硬连接和软连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程"><span class="nav-number">9.</span> <span class="nav-text">线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程模型"><span class="nav-number">10.</span> <span class="nav-text">线程模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内核线程实现"><span class="nav-number">11.</span> <span class="nav-text">内核线程实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件系统"><span class="nav-number">12.</span> <span class="nav-text">文件系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IO操作"><span class="nav-number">13.</span> <span class="nav-text">IO操作</span></a></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#文件描述符"><span class="nav-number"></span> <span class="nav-text">文件描述符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#write函数"><span class="nav-number"></span> <span class="nav-text">write函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#read函数"><span class="nav-number"></span> <span class="nav-text">read函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#read-write的语义：为什么会阻塞？"><span class="nav-number"></span> <span class="nav-text">read/write的语义：为什么会阻塞？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux常用命令和基础知识"><span class="nav-number">1.</span> <span class="nav-text">Linux常用命令和基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看进程"><span class="nav-number">1.1.</span> <span class="nav-text">查看进程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件操作"><span class="nav-number">1.2.</span> <span class="nav-text">文件操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#权限操作"><span class="nav-number">1.3.</span> <span class="nav-text">权限操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#连接操作"><span class="nav-number">2.</span> <span class="nav-text">连接操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取内容"><span class="nav-number">3.</span> <span class="nav-text">获取内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搜索和定位"><span class="nav-number">4.</span> <span class="nav-text">搜索和定位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#压缩"><span class="nav-number">5.</span> <span class="nav-text">压缩</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#管道指令"><span class="nav-number">6.</span> <span class="nav-text">管道指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正则"><span class="nav-number">7.</span> <span class="nav-text">正则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#linux指令实践和常见场景"><span class="nav-number">8.</span> <span class="nav-text">linux指令实践和常见场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看进程状态"><span class="nav-number">9.</span> <span class="nav-text">查看进程状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#strace"><span class="nav-number">10.</span> <span class="nav-text">strace</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tcpdump"><span class="nav-number">11.</span> <span class="nav-text">tcpdump</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nc"><span class="nav-number">12.</span> <span class="nav-text">nc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#curl"><span class="nav-number">13.</span> <span class="nav-text">curl</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lsof"><span class="nav-number">14.</span> <span class="nav-text">lsof</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ss"><span class="nav-number">15.</span> <span class="nav-text">ss</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#awk-sed"><span class="nav-number">16.</span> <span class="nav-text">awk/sed</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vim"><span class="nav-number">17.</span> <span class="nav-text">vim</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#crontab"><span class="nav-number">18.</span> <span class="nav-text">crontab</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#service"><span class="nav-number">19.</span> <span class="nav-text">service</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#free"><span class="nav-number">20.</span> <span class="nav-text">free</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#top"><span class="nav-number">21.</span> <span class="nav-text">top</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#df"><span class="nav-number">22.</span> <span class="nav-text">df</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kill"><span class="nav-number">23.</span> <span class="nav-text">kill</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mount"><span class="nav-number">24.</span> <span class="nav-text">mount</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chmod"><span class="nav-number">25.</span> <span class="nav-text">chmod</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#chown"><span class="nav-number">26.</span> <span class="nav-text">chown</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ifconfig"><span class="nav-number">27.</span> <span class="nav-text">ifconfig</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#uname"><span class="nav-number">28.</span> <span class="nav-text">uname</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实际场景问题"><span class="nav-number">29.</span> <span class="nav-text">实际场景问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">30.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">30.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">30.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

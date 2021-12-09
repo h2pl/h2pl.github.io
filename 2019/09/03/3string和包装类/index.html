@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="String,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="程序员黄小斜" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透">
+<meta name="keywords" content="String">
+<meta property="og:type" content="article">
+<meta property="og:title" content="夯实Java基础系列3：一文搞懂String常见面试题，从基础到实战，更有原理分析和源码解析！">
+<meta property="og:url" content="http://yoursite.com/2019/09/03/3string和包装类/index.html">
+<meta property="og:site_name" content="程序员黄小斜">
+<meta property="og:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/710412/201902/710412-20190213220237169-1966705420.png">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/710412/201902/710412-20190214223341972-1204335921.png">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/710412/201902/710412-20190214224055939-746946317.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190829222750556.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190805090108984.jpg">
+<meta property="og:updated_time" content="2021-11-24T08:03:23.924Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="夯实Java基础系列3：一文搞懂String常见面试题，从基础到实战，更有原理分析和源码解析！">
+<meta name="twitter:description" content="本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看  https://github.com/h2pl/Java-Tutorial  喜欢的话麻烦点下Star哈 文章首发于我的个人博客：  www.how2playlife.com  本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透">
+<meta name="twitter:image" content="https://img2018.cnblogs.com/blog/710412/201902/710412-20190213220237169-1966705420.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/09/03/3string和包装类/">
+
+
+
+
+
+  <title>夯实Java基础系列3：一文搞懂String常见面试题，从基础到实战，更有原理分析和源码解析！ | 程序员黄小斜</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2289335dd443797b5867abbd156e7575";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员黄小斜</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术江湖</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+<div id="container">
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/03/3string和包装类/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄小斜学Java">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/hxx.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员黄小斜">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">夯实Java基础系列3：一文搞懂String常见面试题，从基础到实战，更有原理分析和源码解析！</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-03T15:56:26+08:00">
+                2019-09-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/" itemprop="url" rel="index">
+                    <span itemprop="name">Java技术江湖</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java技术江湖/Java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/09/03/3string和包装类/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/09/03/3string和包装类/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv">本文总阅读量
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div id="vip-container"><p>本系列文章将整理到我在GitHub上的《Java面试指南》仓库，更多精彩内容请到我的仓库里查看</p>
+<blockquote>
+<p><a href="https://github.com/h2pl/Java-Tutorial" target="_blank" rel="noopener">https://github.com/h2pl/Java-Tutorial</a></p>
+</blockquote>
+<p>喜欢的话麻烦点下Star哈</p>
+<p>文章首发于我的个人博客：</p>
+<blockquote>
+<p><a href="http://www.how2playlife.com" target="_blank" rel="noopener">www.how2playlife.com</a></p>
+</blockquote>
+<p>本文是微信公众号【Java技术江湖】的《夯实Java基础系列博文》其中一篇，本文部分内容来源于网络，为了把本文主题讲得清晰透彻，也整合了很多我认为不错的技术博客内容，引用其中了一些比较好的博客文章，如有侵权，请联系作者。<br>该系列博文会告诉你如何从入门到进阶，一步步地学习Java基础知识，并上手进行实战，接着了解每个Java知识点背后的实现原理，更完整地了解整个Java技术体系，形成自己的知识框架。为了更好地总结和检验你的学习成果，本系列文章也会提供每个知识点对应的面试题以及参考答案。</p>
+<p>如果对本系列文章有什么建议，或者是有什么疑问的话，也可以关注公众号【Java技术江湖】联系作者，欢迎你参与本系列博文的创作和修订。</p>
+<p>[TOC]</p>
+<a id="more"></a>
+
+
+<h2 id="string基础"><a href="#string基础" class="headerlink" title="string基础"></a>string基础</h2><h3 id="Java-String-类"><a href="#Java-String-类" class="headerlink" title="Java String 类"></a>Java String 类</h3><p>字符串广泛应用 在 Java 编程中，在 Java 中字符串属于对象，Java 提供了 String 类来创建和操作字符串。</p>
+<h3 id="创建字符串"><a href="#创建字符串" class="headerlink" title="创建字符串"></a>创建字符串</h3><p>创建字符串最简单的方式如下:</p>
+<p>String greeting = “菜鸟教程”;</p>
+<p>在代码中遇到字符串常量时，这里的值是 “<strong>菜鸟教程</strong>“”，编译器会使用该值创建一个 String 对象。</p>
+<p>和其它对象一样，可以使用关键字和构造方法来创建 String 对象。</p>
+<p>String 类有 11 种构造方法，这些方法提供不同的参数来初始化字符串，比如提供一个字符数组参数:</p>
+<h3 id="StringDemo-java-文件代码："><a href="#StringDemo-java-文件代码：" class="headerlink" title="StringDemo.java 文件代码："></a>StringDemo.java 文件代码：</h3><pre><code>public class StringDemo{    public static void main(String args[]){       char[] helloArray = { &apos;r&apos;, &apos;u&apos;, &apos;n&apos;, &apos;o&apos;, &apos;o&apos;, &apos;b&apos;};       String helloString = new String(helloArray);         System.out.println( helloString );    } }</code></pre><p>以上实例编译运行结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">runoob</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意:</strong>String 类是不可改变的，所以你一旦创建了 String 对象，那它的值就无法改变了（详看笔记部分解析）。</p>
+<p>如果需要对字符串做很多修改，那么应该选择使用 <a href="https://www.runoob.com/java/java-stringbuffer.html" target="_blank" rel="noopener">StringBuffer &amp; StringBuilder 类</a>。</p>
+<h2 id="String基本用法"><a href="#String基本用法" class="headerlink" title="String基本用法"></a>String基本用法</h2><h3 id="创建String对象的常用方法"><a href="#创建String对象的常用方法" class="headerlink" title="创建String对象的常用方法"></a>创建String对象的常用方法</h3><p>（1） String s1 = “mpptest”</p>
+<p>  (2)  String s2 = new String();</p>
+<p>  (3) String s3 = new String(“mpptest”)</p>
+<h3 id="String中常用的方法，用法如图所示，具体问度娘"><a href="#String中常用的方法，用法如图所示，具体问度娘" class="headerlink" title="String中常用的方法，用法如图所示，具体问度娘"></a>String中常用的方法，用法如图所示，具体问度娘</h3><p><img src="https://img2018.cnblogs.com/blog/710412/201902/710412-20190213220237169-1966705420.png" alt></p>
+<h3 id="三个方法的使用：-lenth-substring-charAt"><a href="#三个方法的使用：-lenth-substring-charAt" class="headerlink" title="三个方法的使用： lenth()   substring()   charAt()"></a>三个方法的使用： lenth()   substring()   charAt()</h3><pre>package com.mpp.string; public class StringDemo1 { public static void main(String[] args) { //定义一个字符串"晚来天欲雪 能饮一杯无"
+        String str = "晚来天欲雪 能饮一杯无";
+        System.out.println("字符串的长度是："+str.length()); //字符串的雪字打印输出  charAt(int index)
+        System.out.println(str.charAt(4)); //取出子串  天欲
+        System.out.println(str.substring(2));   //取出从index2开始直到最后的子串，包含2
+        System.out.println(str.substring(2,4));  //取出index从2到4的子串，包含2不包含4  顾头不顾尾
+ }
+}</pre>
+
+
+
+<p> 两个方法的使用,求字符或子串第一次/最后一次在字符串中出现的位置： indexOf()   lastIndexOf()  </p>
+<pre>package com.mpp.string; public class StringDemo2 { public static void main(String[] args) {
+        String str = new String("赵客缦胡缨 吴钩胡缨霜雪明"); //查找胡在字符串中第一次出现的位置
+        System.out.println("\"胡\"在字符串中第一次出现的位置："+str.indexOf("胡")); //查找子串"胡缨"在字符串中第一次出现的位置
+        System.out.println("\"胡缨\"在字符串中第一次出现的位置"+str.indexOf("胡缨")); //查找胡在字符串中最后一次次出现的位置
+        System.out.println(str.lastIndexOf("胡")); //查找子串"胡缨"在字符串中最后一次出现的位置
+        System.out.println(str.lastIndexOf("胡缨")); //从indexof为5的位置，找第一次出现的"吴"
+        System.out.println(str.indexOf("吴",5));
+    }
+}</pre>
+
+
+
+
+<h3 id="字符串与byte数组间的相互转换"><a href="#字符串与byte数组间的相互转换" class="headerlink" title="字符串与byte数组间的相互转换"></a>字符串与byte数组间的相互转换</h3><pre>package com.mpp.string; import java.io.UnsupportedEncodingException; public class StringDemo3 { public static void main(String[] args) throws UnsupportedEncodingException { //字符串和byte数组之间的相互转换
+ String str = new String("hhhabc银鞍照白马 飒沓如流星"); //将字符串转换为byte数组，并打印输出
+        byte[] arrs = str.getBytes("GBK"); for(int i=0;i){
+            System.out.print(arrs[i]);
+        } //将byte数组转换成字符串
+ System.out.println();
+        String str1 = new String(arrs,"GBK");  //保持字符集的一致，否则会出现乱码
+ System.out.println(str1);
+    }
+}</pre>
+
+
+<h3 id="运算符和equals之间的区别："><a href="#运算符和equals之间的区别：" class="headerlink" title="==运算符和equals之间的区别："></a>==运算符和equals之间的区别：</h3><pre>引用指向的内容和引用指向的地址</pre>
+
+<p><img src="https://img2018.cnblogs.com/blog/710412/201902/710412-20190214223341972-1204335921.png" alt></p>
+<pre>package com.mpp.string; public class StringDemo5 { public static void main(String[] args) {
+        String str1 = "mpp";
+        String str2 = "mpp";
+        String str3 = new String("mpp");
+
+        System.out.println(str1.equals(str2)); //true  内容相同
+        System.out.println(str1.equals(str3));   //true  内容相同
+        System.out.println(str1==str2);   //true   地址相同
+        System.out.println(str1==str3);   //false  地址不同
+ }
+}</pre>
+
+
+<h3 id="字符串的不可变性"><a href="#字符串的不可变性" class="headerlink" title="字符串的不可变性"></a>字符串的不可变性</h3><p>String的对象一旦被创建，则不能修改，是不可变的</p>
+<p>所谓的修改其实是创建了新的对象，所指向的内存空间不变</p>
+<p><img src="https://img2018.cnblogs.com/blog/710412/201902/710412-20190214224055939-746946317.png" alt></p>
+<p>上图中，s1不再指向imooc所在的内存空间，而是指向了hello,imooc</p>
+<h3 id="String的连接"><a href="#String的连接" class="headerlink" title="String的连接"></a>String的连接</h3><pre><code>@Test
+public void contact () {
+    //1连接方式
+    String s1 = &quot;a&quot;;
+    String s2 = &quot;a&quot;;
+    String s3 = &quot;a&quot; + s2;
+    String s4 = &quot;a&quot; + &quot;a&quot;;
+    String s5 = s1 + s2;
+    //表达式只有常量时，编译期完成计算
+    //表达式有变量时，运行期才计算，所以地址不一样
+    System.out.println(s3 == s4); //f
+    System.out.println(s3 == s5); //f
+    System.out.println(s4 == &quot;aa&quot;); //t
+
+}</code></pre><h3 id="String、String-builder和String-buffer的区别"><a href="#String、String-builder和String-buffer的区别" class="headerlink" title="String、String builder和String buffer的区别"></a>String、String builder和String buffer的区别</h3><p>String是Java中基础且重要的类，并且String也是Immutable类的典型实现，被声明为final class，除了hash这个属性其它属性都声明为final,因为它的不可变性，所以例如拼接字符串时候会产生很多无用的中间对象，如果频繁的进行这样的操作对性能有所影响。</p>
+<p>StringBuffer就是为了解决大量拼接字符串时产生很多中间对象问题而提供的一个类，提供append和add方法，可以将字符串添加到已有序列的末尾或指定位置，它的本质是一个线程安全的可修改的字符序列，把所有修改数据的方法都加上了synchronized。但是保证了线程安全是需要性能的代价的。</p>
+<p>在很多情况下我们的字符串拼接操作不需要线程安全，这时候StringBuilder登场了，StringBuilder是JDK1.5发布的，它和StringBuffer本质上没什么区别，就是去掉了保证线程安全的那部分，减少了开销。</p>
+<p>StringBuffer 和 StringBuilder 二者都继承了 AbstractStringBuilder ，底层都是利用可修改的char数组(JDK 9 以后是 byte数组)。</p>
+<p>所以如果我们有大量的字符串拼接，如果能预知大小的话最好在new StringBuffer 或者StringBuilder 的时候设置好capacity，避免多次扩容的开销。扩容要抛弃原有数组，还要进行数组拷贝创建新的数组。</p>
+<p>我们平日开发通常情况下少量的字符串拼接其实没太必要担心，例如</p>
+<p>String str = “aa”+”bb”+”cc”;</p>
+<p>像这种没有变量的字符串，编译阶段就直接合成”aabbcc”了，然后看字符串常量池（下面会说到常量池）里有没有，有也直接引用，没有就在常量池中生成，返回引用。</p>
+<p>如果是带变量的，其实影响也不大，JVM会帮我们优化了。</p>
+<blockquote>
+<p>1、在字符串不经常发生变化的业务场景优先使用String(代码更清晰简洁)。如常量的声明，少量的字符串操作(拼接，删除等)。</p>
+<p>2、在单线程情况下，如有大量的字符串操作情况，应该使用StringBuilder来操作字符串。不能使用String”+”来拼接而是使用，避免产生大量无用的中间对象，耗费空间且执行效率低下（新建对象、回收对象花费大量时间）。如JSON的封装等。</p>
+<p>3、在多线程情况下，如有大量的字符串操作情况，应该使用StringBuffer。如HTTP参数解析和封装等。</p>
+</blockquote>
+<h2 id="String类的源码分析"><a href="#String类的源码分析" class="headerlink" title="String类的源码分析"></a>String类的源码分析</h2><h3 id="String类型的intern"><a href="#String类型的intern" class="headerlink" title="String类型的intern"></a>String类型的intern</h3><pre><code>public void intern () {
+    //2：string的intern使用
+    //s1是基本类型，比较值。s2是string实例，比较实例地址
+    //字符串类型用equals方法比较时只会比较值
+    String s1 = &quot;a&quot;;
+    String s2 = new String(&quot;a&quot;);
+    //调用intern时,如果s2中的字符不在常量池，则加入常量池并返回常量的引用
+    String s3 = s2.intern();
+    System.out.println(s1 == s2);
+    System.out.println(s1 == s3);
+}</code></pre><h3 id="String类型的equals"><a href="#String类型的equals" class="headerlink" title="String类型的equals"></a>String类型的equals</h3><pre><code>//字符串的equals方法
+//    public boolean equals(Object anObject) {
+//            if (this == anObject) {
+//                return true;
+//            }
+//            if (anObject instanceof String) {
+//                String anotherString = (String)anObject;
+//                int n = value.length;
+//                if (n == anotherString.value.length) {
+//                    char v1[] = value;
+//                    char v2[] = anotherString.value;
+//                    int i = 0;
+//                    while (n-- != 0) {
+//                        if (v1[i] != v2[i])
+//                            return false;
+//                        i++;
+//                    }
+//                    return true;
+//                }
+//            }
+//            return false;
+//        }</code></pre><h3 id="StringBuffer和Stringbuilder"><a href="#StringBuffer和Stringbuilder" class="headerlink" title="StringBuffer和Stringbuilder"></a>StringBuffer和Stringbuilder</h3><p>底层是继承父类的可变字符数组value</p>
+<pre><code>/**
+
+- The value is used for character storage.
+  */
+  char[] value;
+  初始化容量为16
+
+/**
+
+- Constructs a string builder with no characters in it and an
+- initial capacity of 16 characters.
+  */
+  public StringBuilder() {
+  super(16);
+  }
+  这两个类的append方法都是来自父类AbstractStringBuilder的方法
+
+public AbstractStringBuilder append(String str) {
+    if (str == null)
+        return appendNull();
+    int len = str.length();
+    ensureCapacityInternal(count + len);
+    str.getChars(0, len, value, count);
+    count += len;
+    return this;
+}
+@Override
+public StringBuilder append(String str) {
+    super.append(str);
+    return this;
+}
+
+@Override
+public synchronized StringBuffer append(String str) {
+    toStringCache = null;
+    super.append(str);
+    return this;
+}</code></pre><h3 id="append方法"><a href="#append方法" class="headerlink" title="append方法"></a>append方法</h3><p>Stringbuffer在大部分涉及字符串修改的操作上加了synchronized关键字来保证线程安全，效率较低。</p>
+<p>String类型在使用 + 运算符例如</p>
+<p>String a = “a”</p>
+<p>a = a + a;时，实际上先把a封装成stringbuilder，调用append方法后再用tostring返回，所以当大量使用字符串加法时，会大量地生成stringbuilder实例，这是十分浪费的，这种时候应该用stringbuilder来代替string。</p>
+<h3 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h3><p>#注意在append方法中调用到了一个函数</p>
+<p>ensureCapacityInternal(count + len);<br>该方法是计算append之后的空间是否足够，不足的话需要进行扩容</p>
+<pre><code>public void ensureCapacity(int minimumCapacity) {
+    if (minimumCapacity &gt; 0)
+        ensureCapacityInternal(minimumCapacity);
+}
+private void ensureCapacityInternal(int minimumCapacity) {
+    // overflow-conscious code
+    if (minimumCapacity - value.length &gt; 0) {
+        value = Arrays.copyOf(value,
+                newCapacity(minimumCapacity));
+    }
+}</code></pre><p>如果新字符串长度大于value数组长度则进行扩容</p>
+<p>扩容后的长度一般为原来的两倍 + 2；</p>
+<p>假如扩容后的长度超过了jvm支持的最大数组长度MAX_ARRAY_SIZE。</p>
+<p>考虑两种情况</p>
+<p>如果新的字符串长度超过int最大值，则抛出异常，否则直接使用数组最大长度作为新数组的长度。</p>
+<pre><code>private int hugeCapacity(int minCapacity) {
+    if (Integer.MAX_VALUE - minCapacity &lt; 0) { // overflow
+        throw new OutOfMemoryError();
+    }
+    return (minCapacity &gt; MAX_ARRAY_SIZE)
+        ? minCapacity : MAX_ARRAY_SIZE;
+}</code></pre><h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p>这两个类型的删除操作：</p>
+<p>都是调用父类的delete方法进行删除</p>
+<pre><code>public AbstractStringBuilder delete(int start, int end) {
+    if (start &lt; 0)
+        throw new StringIndexOutOfBoundsException(start);
+    if (end &gt; count)
+        end = count;
+    if (start &gt; end)
+        throw new StringIndexOutOfBoundsException();
+    int len = end - start;
+    if (len &gt; 0) {
+        System.arraycopy(value, start+len, value, start, count-end);
+        count -= len;
+    }
+    return this;
+}</code></pre><p>事实上是将剩余的字符重新拷贝到字符数组value。</p>
+<p>这里用到了system.arraycopy来拷贝数组，速度是比较快的</p>
+<h3 id="system-arraycopy方法"><a href="#system-arraycopy方法" class="headerlink" title="system.arraycopy方法"></a>system.arraycopy方法</h3><p>转自知乎：</p>
+<blockquote>
+<p>在主流高性能的JVM上（HotSpot VM系、IBM J9 VM系、JRockit系等等），可以认为System.arraycopy()在拷贝数组时是可靠高效的——如果发现不够高效的情况，请报告performance bug，肯定很快就会得到改进。</p>
+<p>java.lang.System.arraycopy()方法在Java代码里声明为一个native方法。所以最naïve的实现方式就是通过JNI调用JVM里的native代码来实现。</p>
+<p>String的不可变性<br>关于String的不可变性，这里转一个不错的回答</p>
+<p>什么是不可变？<br>String不可变很简单，如下图，给一个已有字符串”abcd”第二次赋值成”abcedl”，不是在原内存地址上修改数据，而是重新指向一个新对象，新地址。</p>
+</blockquote>
+<h2 id="String和JVM的关系"><a href="#String和JVM的关系" class="headerlink" title="String和JVM的关系"></a>String和JVM的关系</h2><p>下面我们了解下Java栈、Java堆、方法区和常量池：</p>
+<p>Java栈（线程私有数据区）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">每个Java虚拟机线程都有自己的Java虚拟机栈，Java虚拟机栈用来存放栈帧，每个方法被执行的时候都会同时创建一个栈帧（Stack Frame）用于存储局部变量表、操作栈、动态链接、方法出口等信息。每一个方法被调用直至执行完成的过程，就对应着一个栈帧在虚拟机栈中从入栈到出栈的过程。</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Java堆（线程共享数据区）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在虚拟机启动时创建，此内存区域的唯一目的就是存放对象实例，几乎所有的对象实例都在这里分配。</span><br></pre></td></tr></table></figure>
+
+
+
+<p>方法区（线程共享数据区）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">方法区在虚拟机启动的时候被创建，它存储了每一个类的结构信息，例如运行时常量池、字段和方法数据、构造函数和普通方法的字节码内容、还包括在类、实例、接口初始化时用到的特殊方法。在JDK8之前永久代是方法区的一种实现，而JDK8元空间替代了永久代，永久代被移除，也可以理解为元空间是方法区的一种实现。</span><br></pre></td></tr></table></figure>
+
+
+
+<p>常量池（线程共享数据区）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">常量池常被分为两大类：静态常量池和运行时常量池。</span><br><span class="line"></span><br><span class="line">静态常量池也就是Class文件中的常量池，存在于Class文件中。</span><br><span class="line"></span><br><span class="line">运行时常量池（Runtime Constant Pool）是方法区的一部分，存放一些运行时常量数据。</span><br></pre></td></tr></table></figure>
+
+<p>下面重点了解的是字符串常量池：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">字符串常量池存在运行时常量池之中（在JDK7之前存在运行时常量池之中，在JDK7已经将其转移到堆中）。</span><br><span class="line"></span><br><span class="line">字符串常量池的存在使JVM提高了性能和减少了内存开销。</span><br><span class="line"></span><br><span class="line">使用字符串常量池，每当我们使用字面量（String s=”1”;）创建字符串常量时，JVM会首先检查字符串常量池，如果该字符串已经存在常量池中，那么就将此字符串对象的地址赋值给引用s（引用s在Java栈中）。如果字符串不存在常量池中，就会实例化该字符串并且将其放到常量池中，并将此字符串对象的地址赋值给引用s（引用s在Java栈中）。</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">使用字符串常量池，每当我们使用关键字new（String s=new String(”1”);）创建字符串常量时，JVM会首先检查字符串常量池，如果该字符串已经存在常量池中，那么不再在字符串常量池创建该字符串对象，而直接堆中复制该对象的副本，然后将堆中对象的地址赋值给引用s，如果字符串不存在常量池中，就会实例化该字符串并且将其放到常量池中，然后在堆中复制该对象的副本，然后将堆中对象的地址赋值给引用s。</span><br></pre></td></tr></table></figure>
+
+<h2 id="String为什么不可变？"><a href="#String为什么不可变？" class="headerlink" title="String为什么不可变？"></a>String为什么不可变？</h2><p>翻开JDK源码，java.lang.String类起手前三行，是这样写的：</p>
+<pre><code>public final class String implements java.io.Serializable, Comparable&lt;String&gt;, CharSequence {   
+  /** String本质是个char数组. 而且用final关键字修饰.*/     
+private final char value[];  ...  ...
+ } </code></pre><p>首先String类是用final关键字修饰，这说明String不可继承。再看下面，String类的主力成员字段value是个char[]数组，而且是用final修饰的。</p>
+<p>final修饰的字段创建以后就不可改变。 有的人以为故事就这样完了，其实没有。因为虽然value是不可变，也只是value这个引用地址不可变。挡不住Array数组是可变的事实。</p>
+<p>Array的数据结构看下图。</p>
+<p>也就是说Array变量只是stack上的一个引用，数组的本体结构在heap堆。</p>
+<p>String类里的value用final修饰，只是说stack里的这个叫value的引用地址不可变。没有说堆里array本身数据不可变。看下面这个例子，</p>
+<pre><code>final int[] value={1,2,3} ；
+int[] another={4,5,6};
+ value=another;    //编译器报错，final不可变 value用final修饰，编译器不允许我把value指向堆区另一个地址。
+但如果我直接对数组元素动手，分分钟搞定。
+
+ final int[] value={1,2,3};
+ value[2]=100;  //这时候数组里已经是{1,2,100}   所以String是不可变，关键是因为SUN公司的工程师。
+ 在后面所有String的方法里很小心的没有去动Array里的元素，没有暴露内部成员字段。private final char value[]这一句里，private的私有访问权限的作用都比final大。而且设计师还很小心地把整个String设成final禁止继承，避免被其他人继承后破坏。所以String是不可变的关键都在底层的实现，而不是一个final。考验的是工程师构造数据类型，封装数据的功力。 </code></pre><h3 id="不可变有什么好处？"><a href="#不可变有什么好处？" class="headerlink" title="不可变有什么好处？"></a>不可变有什么好处？</h3><p>这个最简单地原因，就是为了安全。看下面这个场景（有评论反应例子不够清楚，现在完整地写出来），一个函数appendStr( )在不可变的String参数后面加上一段“bbb”后返回。appendSb( )负责在可变的StringBuilder后面加“bbb”。</p>
+<p>总结以下String的不可变性。</p>
+<blockquote>
+<p>1 首先final修饰的类只保证不能被继承，并且该类的对象在堆内存中的地址不会被改变。</p>
+<p>2 但是持有String对象的引用本身是可以改变的，比如他可以指向其他的对象。</p>
+<p>3 final修饰的char数组保证了char数组的引用不可变。但是可以通过char[0] = ‘a’来修改值。不过String内部并不提供方法来完成这一操作，所以String的不可变也是基于代码封装和访问控制的。</p>
+</blockquote>
+<p>举个例子</p>
+<pre><code>final class Fi {
+    int a;
+    final int b = 0;
+    Integer s;
+
+}
+final char[]a = {&apos;a&apos;};
+final int[]b = {1};
+@Test
+public void final修饰类() {
+    //引用没有被final修饰，所以是可变的。
+    //final只修饰了Fi类型，即Fi实例化的对象在堆中内存地址是不可变的。
+    //虽然内存地址不可变，但是可以对内部的数据做改变。
+    Fi f = new Fi();
+    f.a = 1;
+    System.out.println(f);
+    f.a = 2;
+    System.out.println(f);
+    //改变实例中的值并不改变内存地址。</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Fi ff = f;</span><br><span class="line">//让引用指向新的Fi对象，原来的f对象由新的引用ff持有。</span><br><span class="line">//引用的指向改变也不会改变原来对象的地址</span><br><span class="line">f = new Fi();</span><br><span class="line">System.out.println(f);</span><br><span class="line">System.out.println(ff);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的对f.a的修改可以理解为char[0] = ‘a’这样的操作。只改变数据值，不改变内存值。</p>
+<h2 id="String常用工具类"><a href="#String常用工具类" class="headerlink" title="String常用工具类"></a>String常用工具类</h2><p>问题描述<br>很多时候我们需要对字符串进行很多固定的操作,而这些操作在JDK/JRE中又没有预置,于是我们想到了apache-commons组件,但是它也不能完全覆盖我们的业务需求,所以很多时候还是要自己写点代码的,下面就是基于apache-commons组件写的部分常用方法:</p>
+<pre><code>MAVEN依赖
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+    &lt;artifactId&gt;commons-lang3&lt;/artifactId&gt;
+    &lt;version&gt;${commons-lang3.version}&lt;/version&gt;
+ &lt;/dependency&gt;</code></pre><p>代码成果</p>
+<pre><code>public class StringUtils extends org.apache.commons.lang3.StringUtils {
+
+/** 值为&quot;NULL&quot;的字符串 */
+private static final String NULL_STRING = &quot;NULL&quot;;
+
+private static final char SEPARATOR = &apos;_&apos;;
+
+
+/**
+ * 满足一下情况返回true&lt;br/&gt;
+ * ①.入参为空
+ * ②.入参为空字符串
+ * ③.入参为&quot;null&quot;字符串
+ *
+ * @param string 需要判断的字符型
+ * @return boolean
+ */
+public static boolean isNullOrEmptyOrNULLString(String string) {
+    return isBlank(string) || NULL_STRING.equalsIgnoreCase(string);
+}
+
+/**
+ * 把字符串转为二进制码&lt;br/&gt;
+ * 本方法不会返回null
+ *
+ * @param str 需要转换的字符串
+ * @return 二进制字节码数组
+ */
+public static byte[] toBytes(String str) {
+    return isBlank(str) ? new byte[]{} : str.getBytes();
+}
+
+/**
+ * 把字符串转为二进制码&lt;br/&gt;
+ * 本方法不会返回null
+ *
+ * @param str     需要转换的字符串
+ * @param charset 编码类型
+ * @return 二进制字节码数组
+ * @throws UnsupportedEncodingException 字符串转换的时候编码不支持时出现
+ */
+public static byte[] toBytes(String str, Charset charset) throws UnsupportedEncodingException {
+    return isBlank(str) ? new byte[]{} : str.getBytes(charset.displayName());
+}
+
+/**
+ * 把字符串转为二进制码&lt;br/&gt;
+ * 本方法不会返回null
+ *
+ * @param str     需要转换的字符串
+ * @param charset 编码类型
+ * @param locale  编码类型对应的地区
+ * @return 二进制字节码数组
+ * @throws UnsupportedEncodingException 字符串转换的时候编码不支持时出现
+ */
+public static byte[] toBytes(String str, Charset charset, Locale locale) throws UnsupportedEncodingException {
+    return isBlank(str) ? new byte[]{} : str.getBytes(charset.displayName(locale));
+}
+
+/**
+ * 二进制码转字符串&lt;br/&gt;
+ * 本方法不会返回null
+ *
+ * @param bytes 二进制码
+ * @return 字符串
+ */
+public static String bytesToString(byte[] bytes) {
+    return bytes == null || bytes.length == 0 ? EMPTY : new String(bytes);
+}
+
+/**
+ * 二进制码转字符串&lt;br/&gt;
+ * 本方法不会返回null
+ *
+ * @param bytes   二进制码
+ * @param charset 编码集
+ * @return 字符串
+ * @throws UnsupportedEncodingException 当前二进制码可能不支持传入的编码
+ */
+public static String byteToString(byte[] bytes, Charset charset) throws UnsupportedEncodingException {
+    return bytes == null || bytes.length == 0 ? EMPTY : new String(bytes, charset.displayName());
+}
+
+/**
+ * 二进制码转字符串&lt;br/&gt;
+ * 本方法不会返回null
+ *
+ * @param bytes   二进制码
+ * @param charset 编码集
+ * @param locale  本地化
+ * @return 字符串
+ * @throws UnsupportedEncodingException 当前二进制码可能不支持传入的编码
+ */
+public static String byteToString(byte[] bytes, Charset charset, Locale locale) throws UnsupportedEncodingException {
+    return bytes == null || bytes.length == 0 ? EMPTY : new String(bytes, charset.displayName(locale));
+}
+
+/**
+ * 把对象转为字符串
+ *
+ * @param object 需要转化的字符串
+ * @return 字符串, 可能为空
+ */
+public static String parseString(Object object) {
+    if (object == null) {
+        return null;
+    }
+    if (object instanceof byte[]) {
+        return bytesToString((byte[]) object);
+    }
+    return object.toString();
+}
+
+/**
+ * 把字符串转为int类型
+ *
+ * @param str 需要转化的字符串
+ * @return int
+ * @throws NumberFormatException 字符串格式不正确时抛出
+ */
+public static int parseInt(String str) throws NumberFormatException {
+    return isBlank(str) ? 0 : Integer.parseInt(str);
+}
+
+/**
+ * 把字符串转为double类型
+ *
+ * @param str 需要转化的字符串
+ * @return double
+ * @throws NumberFormatException 字符串格式不正确时抛出
+ */
+public static double parseDouble(String str) throws NumberFormatException {
+    return isBlank(str) ? 0D : Double.parseDouble(str);
+}
+
+/**
+ * 把字符串转为long类型
+ *
+ * @param str 需要转化的字符串
+ * @return long
+ * @throws NumberFormatException 字符串格式不正确时抛出
+ */
+public static long parseLong(String str) throws NumberFormatException {
+    return isBlank(str) ? 0L : Long.parseLong(str);
+}
+
+/**
+ * 把字符串转为float类型
+ *
+ * @param str 需要转化的字符串
+ * @return float
+ * @throws NumberFormatException 字符串格式不正确时抛出
+ */
+public static float parseFloat(String str) throws NumberFormatException {
+    return isBlank(str) ? 0L : Float.parseFloat(str);
+}
+
+/**
+ * 获取i18n字符串
+ *
+ * @param code
+ * @param args
+ * @return
+ */
+public static String getI18NMessage(String code, Object[] args) {
+    //LocaleResolver localLocaleResolver = (LocaleResolver) SpringContextHolder.getBean(LocaleResolver.class);
+    //HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+    //Locale locale = localLocaleResolver.resolveLocale(request);
+    //return SpringContextHolder.getApplicationContext().getMessage(code, args, locale);
+    return &quot;&quot;;
+}
+
+/**
+ * 获得用户远程地址
+ *
+ * @param request 请求头
+ * @return 用户ip
+ */
+public static String getRemoteAddr(HttpServletRequest request) {
+    String remoteAddr = request.getHeader(&quot;X-Real-IP&quot;);
+    if (isNotBlank(remoteAddr)) {
+        remoteAddr = request.getHeader(&quot;X-Forwarded-For&quot;);
+    } else if (isNotBlank(remoteAddr)) {
+        remoteAddr = request.getHeader(&quot;Proxy-Client-IP&quot;);
+    } else if (isNotBlank(remoteAddr)) {
+        remoteAddr = request.getHeader(&quot;WL-Proxy-Client-IP&quot;);
+    }
+    return remoteAddr != null ? remoteAddr : request.getRemoteAddr();
+}
+
+/**
+ * 驼峰命名法工具
+ *
+ * @return toCamelCase(&quot; hello_world &quot;) == &quot;helloWorld&quot;
+ * toCapitalizeCamelCase(&quot;hello_world&quot;) == &quot;HelloWorld&quot;
+ * toUnderScoreCase(&quot;helloWorld&quot;) = &quot;hello_world&quot;
+ */
+public static String toCamelCase(String s, Locale locale, char split) {
+    if (isBlank(s)) {
+        return &quot;&quot;;
+    }
+
+    s = s.toLowerCase(locale);
+
+    StringBuilder sb = new StringBuilder();
+    for (char c : s.toCharArray()) {
+        sb.append(c == split ? Character.toUpperCase(c) : c);
+    }
+
+    return sb.toString();
+}
+
+public static String toCamelCase(String s) {
+    return toCamelCase(s, Locale.getDefault(), SEPARATOR);
+}
+
+public static String toCamelCase(String s, Locale locale) {
+    return toCamelCase(s, locale, SEPARATOR);
+}
+
+public static String toCamelCase(String s, char split) {
+    return toCamelCase(s, Locale.getDefault(), split);
+}
+
+public static String toUnderScoreCase(String s, char split) {
+    if (isBlank(s)) {
+        return &quot;&quot;;
+    }
+
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i &lt; s.length(); i++) {
+        char c = s.charAt(i);
+        boolean nextUpperCase = (i &lt; (s.length() - 1)) &amp;&amp; Character.isUpperCase(s.charAt(i + 1));
+        boolean upperCase = (i &gt; 0) &amp;&amp; Character.isUpperCase(c);
+        sb.append((!upperCase || !nextUpperCase) ? split : &quot;&quot;).append(Character.toLowerCase(c));
+    }
+
+    return sb.toString();
+}
+
+public static String toUnderScoreCase(String s) {
+    return toUnderScoreCase(s, SEPARATOR);
+}
+
+/**
+ * 把字符串转换为JS获取对象值的三目运算表达式
+ *
+ * @param objectString 对象串
+ *                     例如：入参:row.user.id/返回：!row?&apos;&apos;:!row.user?&apos;&apos;:!row.user.id?&apos;&apos;:row.user.id
+ */
+public static String toJsGetValueExpression(String objectString) {
+    StringBuilder result = new StringBuilder();
+    StringBuilder val = new StringBuilder();
+    String[] fileds = split(objectString, &quot;.&quot;);
+    for (int i = 0; i &lt; fileds.length; i++) {
+        val.append(&quot;.&quot; + fileds[i]);
+        result.append(&quot;!&quot; + (val.substring(1)) + &quot;?&apos;&apos;:&quot;);
+    }
+    result.append(val.substring(1));
+    return result.toString();
+}
+
+
+}</code></pre><h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://blog.csdn.net/qq_34490018/article/details/82110578" target="_blank" rel="noopener">https://blog.csdn.net/qq_34490018/article/details/82110578</a><br><a href="https://www.runoob.com/java/java-string.html" target="_blank" rel="noopener">https://www.runoob.com/java/java-string.html</a><br><a href="https://www.cnblogs.com/zhangyinhua/p/7689974.html" target="_blank" rel="noopener">https://www.cnblogs.com/zhangyinhua/p/7689974.html</a><br><a href="https://blog.csdn.net/sinat_21925975/article/details/86493248" target="_blank" rel="noopener">https://blog.csdn.net/sinat_21925975/article/details/86493248</a><br><a href="https://www.cnblogs.com/niew/p/9597379.html" target="_blank" rel="noopener">https://www.cnblogs.com/niew/p/9597379.html</a></p>
+<h2 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h2><h3 id="个人公众号：程序员黄小斜"><a href="#个人公众号：程序员黄小斜" class="headerlink" title="个人公众号：程序员黄小斜"></a>个人公众号：程序员黄小斜</h3><p>微信公众号【程序员黄小斜】新生代青年聚集地，程序员成长充电站。作者黄小斜，职业是阿里程序员，身份是斜杠青年，希望和更多的程序员交朋友，一起进步和成长！这一次，我们一起出发。</p>
+<p>关注公众号后回复“2019”领取我这两年整理的学习资料，涵盖自学编程、求职面试、算法刷题、Java技术、计算机基础和考研等8000G资料合集。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190829222750556.jpg" alt></p>
+<h3 id="技术公众号：Java技术江湖"><a href="#技术公众号：Java技术江湖" class="headerlink" title="技术公众号：Java技术江湖"></a>技术公众号：Java技术江湖</h3><p>微信公众号【Java技术江湖】一位阿里 Java 工程师的技术小站，专注于 Java 相关技术：SSM、SpringBoot、MySQL、分布式、中间件、集群、Linux、网络、多线程，偶尔讲点Docker、ELK，同时也分享技术干货和学习经验，致力于Java全栈开发！</p>
+<p>关注公众号后回复“PDF”即可领取200+页的《Java工程师面试指南》强烈推荐，几乎涵盖所有Java工程师必知必会的知识点。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190805090108984.jpg" alt></p>
+<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+<script>
+    const btw = new BTWPlugin();
+    btw.init({
+        id: 'container',
+        blogId: '15310-1577469423472-640',
+        name: '程序员黄小斜',
+        qrcode: 'https://s2.ax1x.com/2019/12/28/le9CwT.jpg',
+        keyword: '验证码',
+    });
+</script></div>
+
+			<script src="https://my.openwrite.cn/js/readmore.js" type="text/javascript"></script>
+			<script>
+			var isMobile = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+			if (!isMobile) {
+			    var btw = new BTWPlugin();
+			    btw.init({
+			        "id": "vip-container",
+			        "blogId": "15310-1577469423472-640",
+			        "name": "黄小斜学Java",
+			        "qrcode": "https://s2.ax1x.com/2019/12/28/le9CwT.jpg",
+			        "keyword": "关键词"
+			    });
+			}
+			</script>
+		
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/weixin.jpg" alt="黄小斜学Java 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="黄小斜学Java 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/String/" rel="tag"># String</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/03/MySQL/重新学习Mysql数据库3：Mysql存储引擎与数据存储原理/" rel="next" title="重新学习Mysql数据库3：Mysql存储引擎与数据存储原理">
+                <i class="fa fa-chevron-left"></i> 重新学习Mysql数据库3：Mysql存储引擎与数据存储原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/04/MySQL/重新学习Mysql数据库4：Mysql索引实现原理和相关数据结构算法/" rel="prev" title="重新学习Mysql数据库4：Mysql索引实现原理和相关数据结构算法">
+                重新学习Mysql数据库4：Mysql索引实现原理和相关数据结构算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  </div>
+
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+
+
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/hxx.jpeg" alt="黄小斜学Java">
+            
+              <p class="site-author-name" itemprop="name">黄小斜学Java</p>
+              <p class="site-description motion-element" itemprop="description">本博客后续不再维护更新，新的文章内容请移步我的微信公众号【程序员黄小斜】阅读。 目前专注分享Java领域干货，不限于BAT面试，算法、计算机基础、数据库、分布式、spring全家桶、微服务、高并发、JVM、Docker容器，ELK、大数据等相关知识，希望我们可以一起进步。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">82</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/h2pl" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://blog.csdn.net/a724888" target="_blank" title="CSDN">
+                      
+                        <i class="fa fa-fw fa-globe"></i>CSDN</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.jianshu.com/u/9ab8d7b38c4e" target="_blank" title="简书">
+                      
+                        <i class="fa fa-fw fa-globe"></i>简书</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.zhihu.com/people/h2pl" target="_blank" title="知乎">
+                      
+                        <i class="fa fa-fw fa-globe"></i>知乎</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.csdn.net/a724888" title="CSDN博客" target="_blank">CSDN博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#string基础"><span class="nav-number">1.</span> <span class="nav-text">string基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-String-类"><span class="nav-number">1.1.</span> <span class="nav-text">Java String 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建字符串"><span class="nav-number">1.2.</span> <span class="nav-text">创建字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StringDemo-java-文件代码："><span class="nav-number">1.3.</span> <span class="nav-text">StringDemo.java 文件代码：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String基本用法"><span class="nav-number">2.</span> <span class="nav-text">String基本用法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建String对象的常用方法"><span class="nav-number">2.1.</span> <span class="nav-text">创建String对象的常用方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String中常用的方法，用法如图所示，具体问度娘"><span class="nav-number">2.2.</span> <span class="nav-text">String中常用的方法，用法如图所示，具体问度娘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三个方法的使用：-lenth-substring-charAt"><span class="nav-number">2.3.</span> <span class="nav-text">三个方法的使用： lenth()   substring()   charAt()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串与byte数组间的相互转换"><span class="nav-number">2.4.</span> <span class="nav-text">字符串与byte数组间的相互转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运算符和equals之间的区别："><span class="nav-number">2.5.</span> <span class="nav-text">==运算符和equals之间的区别：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串的不可变性"><span class="nav-number">2.6.</span> <span class="nav-text">字符串的不可变性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String的连接"><span class="nav-number">2.7.</span> <span class="nav-text">String的连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String、String-builder和String-buffer的区别"><span class="nav-number">2.8.</span> <span class="nav-text">String、String builder和String buffer的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String类的源码分析"><span class="nav-number">3.</span> <span class="nav-text">String类的源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#String类型的intern"><span class="nav-number">3.1.</span> <span class="nav-text">String类型的intern</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String类型的equals"><span class="nav-number">3.2.</span> <span class="nav-text">String类型的equals</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StringBuffer和Stringbuilder"><span class="nav-number">3.3.</span> <span class="nav-text">StringBuffer和Stringbuilder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#append方法"><span class="nav-number">3.4.</span> <span class="nav-text">append方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩容"><span class="nav-number">3.5.</span> <span class="nav-text">扩容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除"><span class="nav-number">3.6.</span> <span class="nav-text">删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#system-arraycopy方法"><span class="nav-number">3.7.</span> <span class="nav-text">system.arraycopy方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String和JVM的关系"><span class="nav-number">4.</span> <span class="nav-text">String和JVM的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String为什么不可变？"><span class="nav-number">5.</span> <span class="nav-text">String为什么不可变？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#不可变有什么好处？"><span class="nav-number">5.1.</span> <span class="nav-text">不可变有什么好处？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String常用工具类"><span class="nav-number">6.</span> <span class="nav-text">String常用工具类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">7.</span> <span class="nav-text">参考文章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#微信公众号"><span class="nav-number">8.</span> <span class="nav-text">微信公众号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#个人公众号：程序员黄小斜"><span class="nav-number">8.1.</span> <span class="nav-text">个人公众号：程序员黄小斜</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术公众号：Java技术江湖"><span class="nav-number">8.2.</span> <span class="nav-text">技术公众号：Java技术江湖</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">©2018 by 黄小斜,程序员江湖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'vR9M1gbfLTI6fXyVUdqbAajG-gzGzoHsz',
+        appKey: 'kHXQgB5OhW5g5dvDAPOY6gvc',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
